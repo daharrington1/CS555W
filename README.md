@@ -11,10 +11,10 @@ CS555 GedCom Checker Program.
 * Roles/Responsiblities: we can discuss in Thursday's meeting.   
 
 # Proj 3 Roles  
-** Joseph Allen: Object for printing information
-** Debbie Harrington: DB design - will provide interface to Joeseph/Yikun by Wed.
-** Yikun Han: Expand current parser for collecting data per individual and family
-** Chengyi Zhang: Write and Execute Unit Tests
+* Joseph Allen: Object for printing information
+* Debbie Harrington: DB design - will provide interface to Joeseph/Yikun by Wed.
+* Yikun Han: Expand current parser for collecting data per individual and family
+* Chengyi Zhang: Write and Execute Unit Tests
 
 # Team Members
 
