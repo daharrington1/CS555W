@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[5]:
+# In[9]:
 
 
 from nltk import word_tokenize
@@ -19,24 +19,22 @@ input: GEDCOM file path, string type e.g 'ModernFamily.txt'
 output: individuals, familys two dic of dic, the inner dic may not have the same number of keys
         individuals{
             individual_id:{
-                NAME: [...]
-                SEX: [...]
-                BIRT: [...]
-                DATE: [...]
-                DEAT: [...]
-                FAMS: [...]
-                FAMC: [...]
-                NOTE: [...]
+                NAME: [...] #list of full name in string
+                SEX: [...] #list of F or M in string
+                BIRT: [...] #list of birthday in string
+                DEAT: [...] #list of death date in string
+                FAMS: [...] #list of familys' id in string
+                FAMC: [...] #list of familys' id in string
+                NOTE: [...] 
             }
         }
         familys{
             family_id:{
-                HUSB: [...]
-                WIFE: [...]
-                CHIL: [...]
-                MARR: [...]
-                DATE: [...]
-                DIV: [...]
+                HUSB: [...] #list of individuals' id in string
+                WIFE: [...] #list of individuals' id in string
+                CHIL: [...] #list of individuals' id in string
+                MARR: [...] #list of marry date in string
+                DIV: [...] #list of divorce date in string
                 NOTE: [...]
             }
         }
@@ -93,20 +91,38 @@ def raw2dic(file):
             i += 1
         else:
             if collection == 1:
-                indi_feature = tokens[1]
-                if indi_feature not in individuals[index]:
-                    individuals[index][indi_feature] = []
-                individuals[index][indi_feature].append(" ".join(tokens[2:]))
+                #premise: one DATE must follow below tags
+                if tokens[1] in ['BIRT', 'DEAT', 'MARR', 'DIV']:
+                    indi_feature = tokens[1]
+                    if indi_feature not in individuals[index]:
+                        individuals[index][indi_feature] = []
+                    i += 1
+                    tempdate = word_tokenize(clean_lines[i])
+                    individuals[index][indi_feature].append(" ".join(tempdate[2:]))
+                else:
+                    indi_feature = tokens[1]
+                    if indi_feature not in individuals[index]:
+                        individuals[index][indi_feature] = []
+                    individuals[index][indi_feature].append(" ".join(tokens[2:]))
             elif collection == 2:
-                fam_feature = tokens[1]
-                if fam_feature not in familys[index]:
-                    familys[index][fam_feature] = []
-                familys[index][fam_feature].append(" ".join(tokens[2:]))
+                #premise: one DATE must follow below tags
+                if tokens[1] in ['BIRT', 'DEAT', 'MARR', 'DIV']:
+                    fam_feature = tokens[1]
+                    if fam_feature not in familys[index]:
+                        familys[index][fam_feature] = []
+                    i += 1
+                    tempdate = word_tokenize(clean_lines[i])
+                    familys[index][fam_feature].append(" ".join(tempdate[2:]))
+                else:
+                    fam_feature = tokens[1]
+                    if fam_feature not in familys[index]:
+                        familys[index][fam_feature] = []
+                    familys[index][fam_feature].append(" ".join(tokens[2:]))
             i += 1
     return individuals, familys
 
 
-# In[6]:
+# In[10]:
 
 
 raw2dic('ModernFamily.txt')
