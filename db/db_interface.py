@@ -13,14 +13,6 @@ from bson import ObjectId
 import pymongo.errors
 from pprint import pprint
 
-MONGO_URI='mongodb://localhost:27017/'
-MONGO_DB='gemcon_data'
-MONGO_INDIVIDUALS='individuals'
-MONGO_FAMILIES='families'
-
-VALID_IND_TAGS = ['NAME', 'SEX', 'BIRT', 'DEAT', 'FAMS', 'NOTE']
-
-VALID_FAM_TAGS = ['HUSB', 'WIFE', 'CHIL', 'MARR', 'DIV', 'NOTE']
 
 # COllection Layouts
 #Individual Document:
@@ -47,9 +39,18 @@ class GenComDb:
     collection = None
     collection_id = None
 
+    MONGO_URI='mongodb://localhost:27017/'
+    MONGO_DB='gemcon_data'
+    MONGO_INDIVIDUALS='individuals'
+    MONGO_FAMILIES='families'
+
+    VALID_IND_TAGS = ['NAME', 'SEX', 'BIRT', 'DEAT', 'FAMS', 'NOTE']
+
+    VALID_FAM_TAGS = ['HUSB', 'WIFE', 'CHIL', 'MARR', 'DIV', 'NOTE']
+
     def __init__(self, collection):
-        self.client = MongoClient(MONGO_URI)
-        self.db=self.client[MONGO_DB]
+        self.client = MongoClient(self.MONGO_URI)
+        self.db=self.client[self.MONGO_DB]
         self.collection = self.db[collection]
         self.collection_id = collection
 
@@ -66,7 +67,7 @@ class GenComDb:
                 print ("ID MUST BE SPECIFIED and NON BLANK");
                 return None;
 
-        if self.collection_id==MONGO_INDIVIDUALS:
+        if self.collection_id==self.MONGO_INDIVIDUALS:
             tag="INDI";
         else:
             tag="FAM";
@@ -85,7 +86,7 @@ class GenComDb:
         print("[addObj] Adding object.....");
         pprint(obj);
 
-        if self.collection_id==MONGO_INDIVIDUALS:
+        if self.collection_id==self.MONGO_INDIVIDUALS:
             tag="INDI";
         else:
             tag="FAM";
@@ -117,15 +118,15 @@ class GenComDb:
                 print ("TAG MUST BE SPECIFIED and NON BLANK");
                 return 0;
 
-        if self.collection_id==MONGO_INDIVIDUALS and (tag not in VALID_IND_TAGS):
+        if self.collection_id==self.MONGO_INDIVIDUALS and (tag not in self.VALID_IND_TAGS):
                 print ("TAG {} IS NOT A VALID INDIVIDUAL TAG".format(tag));
                 return 0;
 
-        if self.collection_id==MONGO_FAMILIES and (tag not in VALID_FAM_TAGS):
+        if self.collection_id==self.MONGO_FAMILIES and (tag not in self.VALID_FAM_TAGS):
                 print ("TAG {} IS NOT A VALID FAMILY TAG".format(tag));
                 return 0;
 
-        if self.collection_id==MONGO_INDIVIDUALS:
+        if self.collection_id==self.MONGO_INDIVIDUALS:
               genComIdTag="INDI"
         else:
               genComIdTag="FAM"
@@ -144,16 +145,17 @@ class GenComDb:
         ind={tag:val}
         docs=[]
 
-        if self.collection_id==MONGO_INDIVIDUALS:
-              print("Received Individual tag: {}, val: {}\n".format(tag, val))
-        else:
-              print("Received Family tag: {}, val: {}\n".format(tag, val))
+        #if self.collection_id==self.MONGO_INDIVIDUALS:
+              #print("Received Individual tag: {}, val: {}\n".format(tag, val))
+        #else:
+              #print("Received Family tag: {}, val: {}\n".format(tag, val))
 
-        print("Received tag: {}, val: {}\n".format(tag, val))
+        #print("ind:")
+        #pprint(ind)
         try:
              #get the data from the database and throw into a list
              docs=list(self.collection.find(ind))
-             pprint(doc)
+             #pprint(docs)
         except:
              print("Exception finding index {}".format(ind));
 
@@ -161,7 +163,7 @@ class GenComDb:
 
 
     def getDoc(self, ID):
-        if self.collection_id==MONGO_INDIVIDUALS:
+        if self.collection_id==self.MONGO_INDIVIDUALS:
               genComId="INDI"
         else:
               genComId="FAM"
@@ -177,7 +179,7 @@ class GenComDb:
 
 
     def getName(self, ID):
-        if self.collection_id==MONGO_INDIVIDUALS:
+        if self.collection_id==self.MONGO_INDIVIDUALS:
               print("Setting tag to INDI");
               genComTag="INDI"
         else:
@@ -202,7 +204,7 @@ class GenComDb:
         # get all individual ids
         docs=[]
 
-        if self.collection_id==MONGO_INDIVIDUALS:
+        if self.collection_id==self.MONGO_INDIVIDUALS:
               genComTag="INDI"
         else:
               genComTag="FAM"
@@ -220,7 +222,7 @@ class GenComDb:
 
     def seed_data(self):
 
-        if self.collection_id==MONGO_INDIVIDUALS:
+        if self.collection_id==self.MONGO_INDIVIDUALS:
              print("Seeing data in Individual Collection");
              # Add individual one
              indiv = {
@@ -300,23 +302,25 @@ class GenComDb:
     #find all families where you are the spouse
     def getFamSpouse(self, ID):
         docs=[]
-        if self.collection_id==MONGO_INDIVIDUALS:
+        if self.collection_id==self.MONGO_INDIVIDUALS:
               print("Function not supported for Individuals")
               return
         else:
               genComTag="FAM"
 
         try:
-            ret=getDocMatch("HUSB", ID)
+            ret=self.getDocMatch("HUSB", ID)
+            #print("Found Husband Match:")
             for i in ret:
+                #pprint(i)
                 docs.append(ret["FAM"])
 
-            ret=getDocMatch("WIFE", ID)
+            ret=self.getDocMatch("WIFE", ID)
             for i in ret:
-                docs.append(ret["FAM"])
+                #pprint(i)
+                docs.append(i["FAM"])
 
-            print("Found as Spouse in Family IDs:")
-            pprint(docs)
+            #pprint(docs)
             return docs
         except:
             print("Exception matching spouse index {}".format(ID));
@@ -326,22 +330,26 @@ class GenComDb:
     #gives list of families where you are a child-addInd(Id)
     def getFamChild(self, ID):
         docs=[]
-        if self.collection_id==MONGO_INDIVIDUALS:
+        if self.collection_id==self.MONGO_INDIVIDUALS:
               print("Function not supported for Individuals")
               return
         else:
               genComTag="FAM"
 
         try:
-            ret=getDocMatch("CHIL", ID)
+            #print("Matching on CHIL for ID {}".format(ID))
+            ret=self.getDocMatch("CHIL", ID)
             for i in ret:
-                docs.append(ret["FAM"])
+                #pprint(i)
+                docs.append(i["FAM"])
 
-            print("Found as Child in Family IDs:")
-            pprint(docs)
+            #print("Found as Child in Family IDs:")
+            #pprint(docs)
             return docs
         except:
-            print("Exception matching spouse index {}".format(ID));
+            print("Exception matching child index {}".format(ID));
+            return None
+
 
     def dropCollection(self):
         print("+++++++++++++DROPPING COLLECTION: {} ++++++++++++++++++".format(self.collection))
@@ -351,89 +359,3 @@ class GenComDb:
         print("+++++++++++++DROPPING DATABASE: {} ++++++++++++++++++".format(MONGO_DB))
         self.client.drop_database(MONGO_DB);
 
-      
-# declare a test object
-indObj = GenComDb(MONGO_INDIVIDUALS)
-indObj.dropCollection();
-indObj.seed_data()
-
-famObj = GenComDb(MONGO_FAMILIES)
-famObj.dropCollection();
-famObj.seed_data()
-
-
-# print all the Individual Ids
-print("Individual IDs:")
-ret=indObj.getAllIds()
-for i in ret:
-    print("Record for id: {}".format(i["INDI"]))
-    doc=indObj.getDoc(i["INDI"])
-    pprint(doc)
-
-# print all the Individual Ids
-print("Family IDs:")
-ret=famObj.getAllIds()
-for i in ret:
-    print("Record for family: {}".format(i["FAM"]))
-    doc=famObj.getDoc(i["FAM"])
-    pprint(doc)
-
-
-# Test adding just the ID of an individual
-print("\n\nInserting Individual Record Field by Field");
-ret=indObj.addId("I6")
-if ret==None:
-    print("FAILED ADDING OBJECT\n")
-else:
-    print("OBJECT SUCCESFFULLY ADDED\n");
-
-#Update entry
-ret=indObj.updateId("I6", "NAME", "Claire /Pritchett/")
-print("{} entries modified".format(ret))
-ret=indObj.updateId("I6", "SEX", "F")
-print("{} entries modified".format(ret))
-ret=indObj.updateId("I6", "BIRT", "3 MAR 1970")
-print("{} entries modified".format(ret))
-ret=indObj.updateId("I6", "FAMS", ["F2","F6"])
-print("{} entries modified".format(ret))
-
-print("\nUpdated Entry for {}".format("I6"))
-ret=indObj.getDoc("I6")
-pprint(ret)
-
-
-# Test adding just the ID of an individual
-print("\n\nInserting Family Record Field by Field");
-ret=famObj.addId("F2")
-if ret==None:
-    print("FAILED ADDING OBJECT\n")
-else:
-    print("OBJECT SUCCESFFULLY ADDED\n");
-
-#Update entry
-ret=famObj.updateId("F2", "HUSB", "I8")
-print("{} entries modified".format(ret))
-ret=famObj.updateId("F2", "WIFE", "I2")
-print("{} entries modified".format(ret))
-ret=famObj.updateId("F2", "CHIL", ["I9"])
-print("{} entries modified".format(ret))
-ret=famObj.updateId("F2", "MARR", "1 JAN 1995")
-print("{} entries modified".format(ret))
-ret=famObj.updateId("F2", "DIV", "1 JAN 2006")
-print("{} entries modified".format(ret))
-
-print("\nUpdated Entry for {}".format("F2"))
-ret=famObj.getDoc("F2")
-pprint(ret)
-
-
-#ret=indObj.getName("b3a5")
-print("\nGetting name for I1:")
-ret=indObj.getName("I1")
-if ret==None:
-    print("ID NOT FOUND")
-else:
-    print("NAME is {}".format(ret))
-
-#indObj.show_collections()
-#indObj.my_collection()
