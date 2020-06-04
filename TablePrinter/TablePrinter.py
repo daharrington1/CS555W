@@ -3,53 +3,9 @@ import string
 # Used only for data mocking
 import random
 
-
-# Concrete data can be either dictionaries or concrete classes. As long as the data required in these are
-# provided in some form the code can easily be adapted
-
-# Placeholder individual
-class IndividualPlaceholder:
-    id = ""
-    name = ""
-    sex = ""
-    birt = ""
-    age = 0
-    deat = ""
-    fams = ""
-    famc = ""
-
-    def __init__(self, id, name, sex, birt, age, deat, fams, famc):
-        self.id = id
-        self.name = name
-        self.sex = sex
-        self.birt = birt
-        self.age = age
-        self.deat = deat
-        self.fams = fams
-        self.famc = famc
-
-
-# Placeholder Family object
-class FamilyPlaceholder:
-    id = ""
-    married = ""
-    divorced = False
-    husband_id = ""
-    husband_name = ""
-    wife_id = ""
-    wife_name = ""
-    children = []
-
-    def __init__(self, id, married, divorced, husband_id, husband_name, wife_id, wife_name, children):
-        self.id = id
-        self.married = married
-        self.divorced = divorced
-        self.husband_id = husband_id
-        self.husband_name = husband_name
-        self.wife_id = wife_id
-        self.wife_name = wife_name
-        self.children = children
-
+# Overrall notes: Currently to fit the required format of the submitted table, the code read values of
+# "AGE" in individuals and "HUSN" and "WIFN" to fill the data. This will most likely need to be replaced by
+# querying the database to get access to these fields, or adding a wrapper function to fetch the data
 
 class TablePrinter:
     """
@@ -65,15 +21,15 @@ class TablePrinter:
     def print_individuals(cls, individuals):
         """
         Prints the provided list/tuple of individuals as a table.
-        An individual is an object which has these fields:
-        - id -- Expected String
-        - name -- Expected String
-        - sex -- Expected char of 'M' or 'F'
-        - birt -- String of a date in form "MM DD YYYY"
-        - age -- Non-negative Integer
-        - deat -- String of death date, in form "MM DD YYYY" if it exists, None if they are alive
-        - famc -- The family id of where they are a child, None if they are not a child
-        - fams -- The family id of where they are a spouse, None if they are unmarried
+        An individual is a dictionary which has these fields:
+        - INDI-- Expected String
+        - NAME -- Expected String
+        - SEX -- Expected char of 'M' or 'F'
+        - BIRT -- String of a date in form ready to be displayed
+        - AGE -- Non-negative Integer
+        - DEAT -- String of death date, in form ready to be displayed if it exists, None if they are alive
+        - FAMC -- The family id of where they are a child, None if they are not a child
+        - FAMS -- The family id of where they are a spouse, None if they are unmarried
         :param individuals: A list / tuple of individuals. No-ops on none or empty input
         :return: None
         """
@@ -82,11 +38,12 @@ class TablePrinter:
         # - Set isAlive based on the logical not of the individual's death date
         # - Deat, famc, and fams are replaced with "N/a" if not present, or taken literally if they are
         headers = ["Id", "Name", "Gender", "Birthday", " Age", "Alive", "Death", "Child", "Spouse"]
-        mapper = lambda individual: (individual.id, individual.name, individual.sex, individual.birt, individual.age,
-                                     False if individual.deat is not None else True,
-                                     individual.deat if individual.deat is not None else "N/a",
-                                     individual.famc if individual.famc is not None else "N/a",
-                                     individual.fams if individual.fams is not None else "N/a")
+        mapper = lambda individual: (
+            individual["INDI"], individual["NAME"], individual["SEX"], individual["BIRT"], individual["AGE"],
+            False if individual["DEAT"] is not None else True,
+            individual["DEAT"] if individual["DEAT"] is not None else "N/a",
+            individual["FAMC"] if individual["FAMC"] is not None else "N/a",
+            individual["FAMS"] if individual["FAMS"] is not None else "N/a")
 
         cls._print_sorted_mapped_table(cls._table_label_individual, individuals, headers, mapper)
 
@@ -95,23 +52,23 @@ class TablePrinter:
         """
          Prints the provided list/tuple of familes as a table.
          A family is defined as having these fields:
-         - id -- String, The id of the family
-         - married --  String, a date of format "MM DD YYYY"
-         - divorced -- boolean
-         - husbandId -- String, The id of individual which is the husband
-         - husbandName -- String, the name of the individual with husbandID
-         - wifeId -- String, The id of individual which is the wife
-         - wifeName -- String, the name of the individual with wifeID
-         - Children -- List, if no children then None
+         - FAM -- String, The id of the family
+         - MARR -- String, a date of format ready to be displayed
+         - DIV -- String, date of format ready to be displayed, or None if no divorce
+         - HUSB -- String, The id of individual which is the husband
+         - HUSN -- String, the name of the individual with husbandID
+         - WIFE -- String, The id of individual which is the wife
+         - WIFN -- String, the name of the individual with wifeID
+         - CHIL -- List, if no children then None
         :param families: The list/tuple to print. If None or empty, the function no-ops
         :return: None
         """
         headers = ["Id", "Married", "Divorced", "Husband Id", "Husband Name", "Wife Id", "Wife Name", "Children"]
         # Map 1:1, except replace divorced with "N/a" if there was no divorce
         # If children is None or size 0, map to string "None", otherwise sorted in ascending order
-        mapper = lambda fam: (fam.id, fam.married, fam.divorced if fam.divorced else "N/a", fam.husband_id,
-                              fam.husband_name, fam.wife_id, fam.wife_name,
-                              sorted(fam.children) if fam.children is not None and len(fam.children) > 0 else "None")
+        mapper = lambda fam: (fam["FAM"], fam["MARR"], fam["DIV"] if fam["DIV"] else "N/a", fam["HUSB"],
+                              fam["HUSN"], fam["WIFE"], fam["WIFN"],
+                              sorted(fam["CHIL"]) if fam["CHIL"] is not None and len(fam["CHIL"]) > 0 else "None")
 
         cls._print_sorted_mapped_table(cls._table_label_family, families, headers, mapper)
 
@@ -145,9 +102,17 @@ class TestDataRunner:
             name = cls._generate_full_name()
             gender = random.choice("M" + "F")
             birth = cls._generate_date()
-            generated.append(IndividualPlaceholder(generated_id, name, gender, birth, random.randint(18, 100),
-                                                   cls._generate_date(), cls._generate_id_or_none(),
-                                                   cls._generate_id_or_none()))
+            generated.append({
+                'INDI': generated_id,
+                'NAME': name,
+                'SEX': gender,
+                'BIRT': birth,
+                'AGE': random.randint(18, 100),
+                'DEAT': cls._generateDateOrNone(),
+                'FAMC': cls._generateDateOrNone(),
+                'FAMS': cls._generate_id()
+            })
+
         return generated
 
     @classmethod
@@ -156,9 +121,17 @@ class TestDataRunner:
         generated = []
         for x in range(amount):
             children = list(cls._generate_id() for i in range(random.randint(0, 3)))
-            generated.append(FamilyPlaceholder(cls._generate_id(), cls._generate_date(), cls._generateDateOrNone(),
-                                               cls._generate_id(), cls._generate_full_name(), cls._generate_id(),
-                                               cls._generate_full_name(), children))
+            generated.append({
+                'FAM': cls._generate_id(),
+                'MARR': cls._generate_date(),
+                'DIV': cls._generateDateOrNone(),
+                'HUSB': cls._generate_id(),
+                'HUSN': cls._generate_full_name(),
+                'WIFE': cls._generate_id(),
+                'WIFN': cls._generate_full_name(),
+                'CHIL': children
+            })
+
         return generated
 
     # Shared mocked data generators
