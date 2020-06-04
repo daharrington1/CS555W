@@ -5,6 +5,7 @@
 #
 # Thisp oroject is using mongodb.   There is one database defined by MONGO_URI.
 # There are 2 collections in the database: MONGO_INDIVIDUALS & MONGO_FAMILYS
+#############################################################################
 import json, sys, pprint
 
 import pymongo 
@@ -19,17 +20,17 @@ from pprint import pprint
 #    INDI: ID read in  
 #    NAME: entire name - string
 #    SEX: string
-#    BIRTH: date
-#    FAM: list of IDs (need to expand on this)
+#    BIRTH: string
+#    FAM: list of string IDs
 #    DEATH: date
                            
 #Family document:
-#    INDI: family ID
+#    FAM: family ID
 #    HUSB: ID
 #    WIFE: ID
-#    CHILDREN: list of ids
-#    MARR: date
-#    DIV: date
+#    CHILDREN: list of string ids
+#    MARR: string
+#    DIV: string
 
 
 class GenComDb:
