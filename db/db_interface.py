@@ -79,13 +79,13 @@ class GenComDb:
              return None;
         else:
              result=self.collection.insert_one({tag:ID})
-             print("Created record - id {}\n".format(result.inserted_id))
-             return result;
+             #print("Created record - id {}\n".format(result.inserted_id))
+             return result.inserted_id;
 
 
     def AddObj(self, obj):
-        print("[addObj] Adding object.....");
-        pprint(obj);
+        #print("[addObj] Adding object.....");
+        #pprint(obj);
 
         if self.collection_id==self.MONGO_INDIVIDUALS:
             tag="INDI";
@@ -99,8 +99,8 @@ class GenComDb:
                 return None;
             else:
                 result=self.collection.insert_one(obj)
-                print("Created record - id {}\n".format(result.inserted_id))
-                return result;
+                #print("Created record - id {}\n".format(result.inserted_id))
+                return result.inserted_id;
         else:
             print ("FAILURE: {} MUST BE SPECIFIED".format(tag));
             return None;
@@ -169,19 +169,19 @@ class GenComDb:
         else:
               genComId="FAM"
 
-        docs=[]
+        doc=None
         try:
              #get the data from the database
-             docs=list(self.collection.find({genComId:ID}))
+             doc=self.collection.find_one({genComId:ID})
         except:
              print("Exception finding index {}".format(ID));
 
-        return docs
+        return doc
 
 
     def getName(self, ID):
         if self.collection_id==self.MONGO_INDIVIDUALS:
-              print("Setting tag to INDI");
+              #print("Setting tag to INDI");
               genComTag="INDI"
         else:
               print("Function not supported for families yet")
@@ -212,10 +212,10 @@ class GenComDb:
 
         try:
             count=self.collection.find().count()
-            print("Number of records: {}\n".format(count))
+            #print("Number of records: {}\n".format(count))
             docs=list(self.collection.find({}, {genComTag: 1, "_id":0}))
-            for doc in docs:
-                    pprint(doc[genComTag])
+            #for doc in docs:
+            #        pprint(doc[genComTag])
         except:
             print("Error in getting all {} ids\n".format(genComTag))
 

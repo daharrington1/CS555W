@@ -12,7 +12,6 @@ famObj.seed_data()
 
 
 # print all the Individual Ids
-print("Individual IDs:")
 ret=indObj.getAllIds()
 for i in ret:
     print("Record for id: {}".format(i["INDI"]))
@@ -20,7 +19,6 @@ for i in ret:
     print(doc)
 
 # print all the Individual Ids
-print("Family IDs:")
 ret=famObj.getAllIds()
 for i in ret:
     print("Record for family: {}".format(i["FAM"]))
@@ -34,7 +32,7 @@ ret=indObj.addId("I6")
 if ret==None:
     print("FAILED ADDING OBJECT\n")
 else:
-    print("OBJECT SUCCESFFULLY ADDED\n");
+    print("Created Individual record - id {}\n".format(ret))
 
 #Update entry
 ret=indObj.updateId("I6", "NAME", "Claire /Pritchett/")
@@ -57,7 +55,7 @@ ret=famObj.addId("F2")
 if ret==None:
     print("FAILED ADDING OBJECT\n")
 else:
-    print("OBJECT SUCCESFFULLY ADDED\n");
+    print("Created Family record - id {}\n".format(ret))
 
 #Update entry
 ret=famObj.updateId("F2", "HUSB", "I1")
