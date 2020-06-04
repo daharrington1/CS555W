@@ -2,8 +2,8 @@
 CS555 GedCom Checker Program.
 
 # Team Choices
-* Programming Language: Java
-* Database: MongoDb 
+* Programming Language: Python
+* Database: Python
 
 # Team Logistics
 * Zoom Meeting: 7PM, Mondays & Thursdays
