@@ -1,6 +1,6 @@
 # CS555W
 CS555 GedCom Checker Program.
-
+---
 # Team Choices
 * Programming Language: Python3
    * Dependent Packages: 
