@@ -45,7 +45,7 @@ class GenComDb:
     MONGO_INDIVIDUALS='individuals'
     MONGO_FAMILIES='families'
 
-    VALID_IND_FLDS = ['NAME', 'SEX', 'BIRT', 'DEAT', 'FAMS', 'NOTE', "AGE"]
+    VALID_IND_FLDS = ['NAME', 'SEX', 'BIRT', 'DEAT', 'FAMC', 'FAMS', 'NOTE', "AGE"]
 
     VALID_FAM_FLDS = ['HUSB', 'WIFE', 'CHIL', 'MARR', 'DIV', 'NOTE']
 
