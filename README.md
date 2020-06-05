@@ -5,16 +5,17 @@ CS555 GedCom Checker Program.
 * Programming Language: Python3
 * Dependent Packages: 
 	---
-	> pymongo
-	> nltk 
-	> tabulate 
-	> punkt 
+	pymongo
+	nltk 
+	tabulate 
+	punkt 
 	---
 		---
-		> > $ python3
-		> > $ "select download option"
-		> > $ type in package: punkit
+		$ python3
+		$ "select download option"
+		$ type in package: punkit
 		---
+	---
 * Database: MongoDB
 
 # Team Logistics
