@@ -1,13 +1,8 @@
-# CS555W
-CS555 GedCom Checker Program.
+# CS555W GedCom Checker Program.
 ---
 # Team Choices
 * Programming Language: Python3
-   * Dependent Packages: 
-      * pymongo 
-      * nltk
-      * tabulate
-      * punkt
+   * Dependent Packages: pymongo, nltk, tabulate, punkt
    * Installing punkit: 
       * $ python3
       * $ "select download option"
