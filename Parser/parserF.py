@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[9]:
+# In[1]:
 
 
 from nltk import word_tokenize
 import datetime
 
 
-# In[10]:
+# In[11]:
 
 
 """
@@ -134,8 +134,6 @@ def raw2dic(file):
                     individuals[index][indi_feature] = []
                     for di in range(2,5):
                         individuals[index][indi_feature].append(int(tempdate[di]))
-                    if tokens[1] == 'BIRT':
-                        individuals[index]['Age'] = current_time.year - int(tempdate[4])
                 elif tokens[1] in ['FAMS', 'FAMC']:
                     indi_feature = tokens[1]
                     if indi_feature not in individuals[index]:
@@ -166,18 +164,45 @@ def raw2dic(file):
     return individuals, familys
 
 
-# In[11]:
 
 
-import datetime  
-current_time = datetime.datetime.now()
-cyear = current_time.year
+"""
+input: dic of individuals
+output: dic added 'AGE' attribute of individuals
+individuals{
+        individual_id:{
+            NAME: ... #name in string
+            SEX: ... #F or M in string
+            AGE: ... #age in int
+            BIRT: [...] #list of day, month, year in int e.g [1,1,2020]
+            DEAT: [...] #list of day, month, year in int
+            FAMS: [...] #list of familys' id in string
+            FAMC: [...] #list of familys' id in string
+            NOTE: [...] 
+        }
+}
+"""
+def add_age(indi_dic):
+    for id in indi_dic.keys():
+        if 'DEAT' in indi_dic[id]:
+            indi_dic[id]['AGE'] = indi_dic[id]['DEAT'][2] - indi_dic[id]['BIRT'][2]
+        else:
+            current_time = datetime.datetime.now()
+            indi_dic[id]['AGE'] = current_time.year - indi_dic[id]['BIRT'][2]
+    return indi_dic
 
 
-# In[12]:
+# In[14]:
 
 
-raw2dic('ModernFamilyO.txt')
+individual_dic, family_dic = raw2dic('ModernFamilyO.txt')
+print(individual_dic)
+
+
+# In[13]:
+
+
+add_age(individual_dic)
 
 
 # In[ ]:
