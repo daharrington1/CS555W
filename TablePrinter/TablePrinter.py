@@ -3,92 +3,104 @@ import string
 # Used only for data mocking
 import random
 
-# Overrall notes: Currently to fit the required format of the submitted table, the code read values of
-# "AGE" in individuals and "HUSN" and "WIFN" to fill the data. This will most likely need to be replaced by
-# querying the database to get access to these fields, or adding a wrapper function to fetch the data
-
+"""
+Class which contains the logic to print out individuals or families into a formatted table
+"""
 class TablePrinter:
-    """
-    Static class which contains the logic to print out individuals or families into a formatted table
-    """
+
+    def __init__(self, individual_database):
+        self.individual_database = individual_database
+
+    individual_database = None
 
     # String defines, minus for headers
     _table_format_type = "pretty"
     _table_label_individual = "Individuals"
     _table_label_family = "Families"
 
-    @classmethod
-    def print_individuals(cls, individuals):
+    def print_individuals(self, individuals):
         """
-        Prints the provided list/tuple of individuals as a table.
-        An individual is a dictionary which has these fields:
-        - INDI-- Expected String
-        - NAME -- Expected String
-        - SEX -- Expected char of 'M' or 'F'
-        - BIRT -- String of a date in form ready to be displayed
-        - AGE -- Non-negative Integer
-        - DEAT -- String of death date, in form ready to be displayed if it exists, None if they are alive
-        - FAMC -- The family id of where they are a child, None if they are not a child
-        - FAMS -- The family id of where they are a spouse, None if they are unmarried
-        :param individuals: A list / tuple of individuals. No-ops on none or empty input
-        :return: None
-        """
+    Prints the provided list/tuple of individuals as a table.
+    An individual is a dictionary which has these fields:
+    - INDI-- Expected String
+    - NAME -- Expected String
+    - SEX -- Expected char of 'M' or 'F'
+    - BIRT -- String of a date in form ready to be displayed
+    - AGE -- Non-negative Integer, will be replaced with a "-" if not in object
+    - DEAT -- String of death date, in form ready to be displayed if it exists, None if they are alive
+    - FAMC -- The family id of where they are a child, None if they are not a child
+    - FAMS -- The family id of where they are a spouse, None if they are unmarried
+    :param individuals: A list / tuple of individuals. No-ops on none or empty input
+    :return: None
+    """
 
         # Map 1:1, except
         # - Set isAlive based on the logical not of the individual's death date
         # - Deat, famc, and fams are replaced with "N/a" if not present, or taken literally if they are
         headers = ["Id", "Name", "Gender", "Birthday", " Age", "Alive", "Death", "Child", "Spouse"]
         mapper = lambda individual: (
-            individual["INDI"], individual["NAME"], individual["SEX"], individual["BIRT"], individual["AGE"],
-            False if individual["DEAT"] is not None else True,
-            individual["DEAT"] if individual["DEAT"] is not None else "N/a",
-            individual["FAMC"] if individual["FAMC"] is not None else "N/a",
-            individual["FAMS"] if individual["FAMS"] is not None else "N/a")
+            individual["INDI"],
+            individual["NAME"],
+            individual["SEX"],
+            individual["BIRT"],
+            individual["AGE"] if "AGE" in individual else "-",
+            False if "DEAT" in individual else True,
+            individual["DEAT"] if "DEAT" in individual else "N/a",
+            individual["FAMC"] if "FAMC" in individual else "N/a",
+            individual["FAMS"] if "FAMS" in individual else "N/a")
 
-        cls._print_sorted_mapped_table(cls._table_label_individual, individuals, headers, mapper)
+        self._print_sorted_mapped_table(self._table_label_individual, individuals, headers, mapper)
 
-    @classmethod
-    def print_families(cls, families):
-        """
-         Prints the provided list/tuple of familes as a table.
-         A family is defined as having these fields:
-         - FAM -- String, The id of the family
-         - MARR -- String, a date of format ready to be displayed
-         - DIV -- String, date of format ready to be displayed, or None if no divorce
-         - HUSB -- String, The id of individual which is the husband
-         - HUSN -- String, the name of the individual with husbandID
-         - WIFE -- String, The id of individual which is the wife
-         - WIFN -- String, the name of the individual with wifeID
-         - CHIL -- List, if no children then None
-        :param families: The list/tuple to print. If None or empty, the function no-ops
-        :return: None
-        """
+    """
+     Prints the provided list/tuple of familes as a table.
+     A family is defined as having these fields:
+     - FAM -- String, The id of the family
+     - MARR -- String, a date of format ready to be displayed
+     - DIV -- String, date of format ready to be displayed, or None if no divorce
+     - HUSB -- String, The id of individual which is the husband
+     - WIFE -- String, The id of individual which is the wife
+     - CHIL -- List, if no children then None
+    :param families: The list/tuple to print. If None or empty, the function no-ops
+    :return: None
+    """
+    def print_families(self, families):
+
         headers = ["Id", "Married", "Divorced", "Husband Id", "Husband Name", "Wife Id", "Wife Name", "Children"]
         # Map 1:1, except replace divorced with "N/a" if there was no divorce
         # If children is None or size 0, map to string "None", otherwise sorted in ascending order
-        mapper = lambda fam: (fam["FAM"], fam["MARR"], fam["DIV"] if fam["DIV"] else "N/a", fam["HUSB"],
-                              fam["HUSN"], fam["WIFE"], fam["WIFN"],
-                              sorted(fam["CHIL"]) if fam["CHIL"] is not None and len(fam["CHIL"]) > 0 else "None")
+        mapper = lambda fam: (fam["FAM"],
+                              fam["MARR"],
+                              fam["DIV"] if "DIV" in fam else "N/a",
+                              fam["HUSB"],
+                              self._look_up_name_by_id(fam["HUSB"]),
+                              fam["WIFE"],
+                              self._look_up_name_by_id(fam["WIFE"]),
+                              sorted(fam["CHIL"]) if "Chil" in fam and len(fam["CHIL"]) > 0 else "None")
 
-        cls._print_sorted_mapped_table(cls._table_label_family, families, headers, mapper)
+        self._print_sorted_mapped_table(self._table_label_family, families, headers, mapper)
 
-    @classmethod
-    def _print_sorted_mapped_table(cls, printed_label, data, headers, data_map_lambda):
-        """
-        Prints the formatted table with ids in ascending order
-        Sorts the data based off the 0th index
-        :param printed_label: The label to print above the table.
-        :param data: The raw data which to be processed by the data_map_lambda
-        :param headers: The headers to display at the top
-        :param data_map_lambda: The mapping lambda to process the data. 0th index of resulting map will be the sort key
-        :return:
-        """
+    """
+    Prints the formatted table with ids in ascending order
+    Sorts the data based off the 0th index
+    :param printed_label: The label to print above the table.
+    :param data: The raw data which to be processed by the data_map_lambda
+    :param headers: The headers to display at the top
+    :param data_map_lambda: The mapping lambda to process the data. 0th index of resulting map will be the sort key
+    :return:
+    """
+    def _print_sorted_mapped_table(self, printed_label, data, headers, data_map_lambda):
         if data is None or type(data) is not list and type(data) is not tuple:
             return
 
         print(printed_label)
         mapped_data = sorted(list(map(data_map_lambda, data)), key=lambda it: it[0])
-        print(tabulate(mapped_data, headers, cls._table_format_type))
+        print(tabulate(mapped_data, headers, self._table_format_type))
+
+    def _look_up_name_by_id(self, id,):
+        if id is None or id == "ERR":
+            return "ERR"
+        # Remove the "@" as they are not in the user id
+        return self.individual_database.getName(id[0].replace("@", "").strip())
 
 
 class TestDataRunner:
@@ -115,6 +127,7 @@ class TestDataRunner:
 
         return generated
 
+    # WARNING: THIS WAS NOT UPDATED TO THE NEW DB LOOK UP, THIS *WILL* not give the correct value without being updated
     @classmethod
     def generate_test_families(cls, amount):
         random.seed()
