@@ -45,9 +45,9 @@ class GenComDb:
     MONGO_INDIVIDUALS='individuals'
     MONGO_FAMILIES='families'
 
-    VALID_IND_TAGS = ['NAME', 'SEX', 'BIRT', 'DEAT', 'FAMS', 'NOTE']
+    VALID_IND_FLDS = ['NAME', 'SEX', 'BIRT', 'DEAT', 'FAMS', 'NOTE', "AGE"]
 
-    VALID_FAM_TAGS = ['HUSB', 'WIFE', 'CHIL', 'MARR', 'DIV', 'NOTE']
+    VALID_FAM_FLDS = ['HUSB', 'WIFE', 'CHIL', 'MARR', 'DIV', 'NOTE']
 
     def __init__(self, collection):
         self.client = MongoClient(self.MONGO_URI)
@@ -119,11 +119,11 @@ class GenComDb:
                 print ("TAG MUST BE SPECIFIED and NON BLANK");
                 return 0;
 
-        if self.collection_id==self.MONGO_INDIVIDUALS and (tag not in self.VALID_IND_TAGS):
+        if self.collection_id==self.MONGO_INDIVIDUALS and (tag not in self.VALID_IND_FLDS):
                 print ("TAG {} IS NOT A VALID INDIVIDUAL TAG".format(tag));
                 return 0;
 
-        if self.collection_id==self.MONGO_FAMILIES and (tag not in self.VALID_FAM_TAGS):
+        if self.collection_id==self.MONGO_FAMILIES and (tag not in self.VALID_FAM_FLDS):
                 print ("TAG {} IS NOT A VALID FAMILY TAG".format(tag));
                 return 0;
 
