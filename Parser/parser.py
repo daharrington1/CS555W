@@ -17,7 +17,7 @@ OR
 >>> pip install --user -U nltk (normal pip install)
 
 in the same directory, import function by
->>> from project3F import raw2dic
+>>> from parser import raw2dic
 
 input: GEDCOM file path, string type e.g 'ModernFamily.txt'
 output: individuals, familys two dic of dic, the inner dic may not have the same number of keys
@@ -98,7 +98,6 @@ def raw2dic(file):
         elif tokens[0] == '2':
             if tokens[1] == 'DATE':
                 clean_lines.append(line)
-    print(len(clean_lines))
     
     #aggregate info of an individual or a family
     individuals = {} #collection id 1
@@ -110,13 +109,13 @@ def raw2dic(file):
         line = clean_lines[i]
         tokens = word_tokenize(line)
         if tokens[0] == '0' and tokens[-1] == 'INDI':
-            inid = tokens[1]
+            inid = tokens[2]
             individuals[inid] = {}
             collection = 1
             index = inid
             i += 1
         elif tokens[0] == '0' and tokens[-1] == 'FAM':
-            famid = tokens[1]
+            famid = tokens[2]
             familys[famid] = {}
             collection = 2
             index =  famid
@@ -165,7 +164,7 @@ def raw2dic(file):
 # In[7]:
 
 
-raw2dic('ModernFamily.txt')
+
 
 
 # In[ ]:

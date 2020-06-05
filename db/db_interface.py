@@ -56,7 +56,7 @@ class GenComDb:
         self.collection_id = collection
 
     def show_collections(self):
-        print self.db.collection_names()
+        print (self.db.collection_names())
 
     def my_collection(self):
         pprint (self.collection)
