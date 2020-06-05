@@ -1,16 +1,8 @@
-# CS555W
-CS555 GedCom Checker Program.
+# CS555W GedCom Checker Program.
 
 # Team Choices
 * Programming Language: Python3
-* Dependent Packages: 
-> pymongo
-> nltk 
-> tabulate 
-> punkt 
-> > $ python3
-> > $ "select download option"
-> > $ type in package: punkit
+   * Dependent Packages: pymongo, nltk, tabulate, punkt
 * Database: MongoDB
 
 # Team Logistics
@@ -31,7 +23,6 @@ CS555 GedCom Checker Program.
 * Chengyi Zhang: Write and Execute Unit Tests
 
 # Team Members
-
 * Joseph Allen
 * Debbie Harrington
 * Yikun Han
