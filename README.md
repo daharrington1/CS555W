@@ -3,17 +3,23 @@ CS555 GedCom Checker Program.
 
 # Team Choices
 * Programming Language: Python
-* Database: Python
+* Database: MongoDB
 
 # Team Logistics
 * Zoom Meeting: 7PM, Mondays & Thursdays
 * Other times: Canvas Emails (or something else??)
-* Roles/Responsiblities: we can discuss in Thursday's meeting.   
+
+# Overall Roles/Responsiblities: 
+* Scrum Master: Debbie Harrington
+* Developer: Joseph Allen, Yikun Han, Debbie Harrington, Chengyi Zhang
+* Tester: Joseph Allen, Yikun Han, Debbie Harrington, Chengyi Zhang
+* GitHub Merge Adminstrator: Joseph Allen
+* Customer Advocate: Professor Rowland
 
 # Proj 3 Roles  
 * Joseph Allen: Object for printing information
-* Debbie Harrington: DB design - will provide interface to Joeseph/Yikun by Wed.
 * Yikun Han: Expand current parser for collecting data per individual and family
+* Debbie Harrington: DB design - will provide interface to Joeseph/Yikun by Wed.
 * Chengyi Zhang: Write and Execute Unit Tests
 
 # Team Members
@@ -23,3 +29,5 @@ CS555 GedCom Checker Program.
 * Yikun Han
 * Chengyi Zhang
 
+# Github Repository
+* https://github.com/daharrington1/CS555W.git
