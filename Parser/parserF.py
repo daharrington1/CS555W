@@ -100,7 +100,7 @@ def raw2dic(file):
         elif tokens[0] == '2':
             if tokens[1] == 'DATE':
                 clean_lines.append(line)
-    print(len(clean_lines))
+#    print(len(clean_lines))
     
     #aggregate info of an individual or a family
     individuals = {} #collection id 1
@@ -195,14 +195,14 @@ def add_age(indi_dic):
 # In[14]:
 
 
-individual_dic, family_dic = raw2dic('ModernFamilyO.txt')
-print(individual_dic)
+#individual_dic, family_dic = raw2dic('ModernFamilyO.txt')
+#print(individual_dic)
 
 
 # In[13]:
 
 
-add_age(individual_dic)
+#add_age(individual_dic)
 
 
 # In[ ]:

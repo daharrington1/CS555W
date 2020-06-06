@@ -1,4 +1,5 @@
-from Parser.parser import raw2dic
+from Parser.parserF import raw2dic
+from Parser.parserF import add_age
 from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 
@@ -8,18 +9,19 @@ family_database = GenComDb(GenComDb.MONGO_FAMILIES)
 individual_database.dropCollection()
 family_database.dropCollection()
 
-parsed_data = raw2dic("ModernFamily.ged")
+parsed_individuals, parsed_families = raw2dic("ModernFamily.ged")
 
 # Input all the users
-parsed_individuals = parsed_data[0]
+# Maps the age from all users, based on the current date the program is ran if no death is specified
+add_age(parsed_individuals)
 for parsed_individual_id in parsed_individuals:
     # Grab the individual and insert their id into the dictionary, for the database to use as its primary key
     individual = parsed_individuals[parsed_individual_id]
+
     individual["INDI"] = parsed_individual_id
     individual_database.AddObj(individual)
 
 # These loops can be consolidated after debugging needs are done
-parsed_families = parsed_data[1]
 for family_id in parsed_families:
     family = parsed_families[family_id]
     family["FAM"] = family_id
@@ -27,15 +29,15 @@ for family_id in parsed_families:
     # Error handling to fill in required fields which are not present in one or more families
     # Placeholder logic to Proof-of-concept all the branches working together
     if "MARR" not in family:
-        print("Error: Family missing required tag")
-        family["MARR"] = "ERR"
+        print("Error: Family {}  missing required tag marr".format(family_id))
+        family["MARR"] = TablePrinter.error_output
     if "WIFE" not in family:
-        print("Error: Family missing wife")
-        family["WIFE"] = "ERR"
+        print("Error: Family {} missing wife".format(family_id))
+        family["WIFE"] = TablePrinter.error_output
 
     if "HUSB" not in family:
-        print("Error: Family missing husb")
-        family["HUSB"] = "ERR"
+        print("Error: Family {} missing husb".format(family_id))
+        family["HUSB"] = TablePrinter.error_output
 
     family_database.AddObj(family)
 

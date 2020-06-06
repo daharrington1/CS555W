@@ -6,6 +6,8 @@ import random
 """
 Class which contains the logic to print out individuals or families into a formatted table
 """
+
+
 class TablePrinter:
 
     def __init__(self, individual_database):
@@ -14,6 +16,8 @@ class TablePrinter:
     individual_database = None
 
     # String defines, minus for headers
+    error_output = "-"
+    _not_applicable = "N/A"
     _table_format_type = "pretty"
     _table_label_individual = "Individuals"
     _table_label_family = "Families"
@@ -36,18 +40,18 @@ class TablePrinter:
 
         # Map 1:1, except
         # - Set isAlive based on the logical not of the individual's death date
-        # - Deat, famc, and fams are replaced with "N/a" if not present, or taken literally if they are
-        headers = ["Id", "Name", "Gender", "Birthday", " Age", "Alive", "Death", "Child", "Spouse"]
+        # - Deat, famc, and fams are replaced with self._not_applicable if not present, or taken literally if they are
+        headers = ["Id", "Name", "Gender", "Birthday", " Age", "Alive", "Death", "Child Id", "Spouse Id"]
         mapper = lambda individual: (
             individual["INDI"],
             individual["NAME"],
             individual["SEX"],
-            individual["BIRT"],
-            individual["AGE"] if "AGE" in individual else "-",
+            self._format_date(individual["BIRT"]),
+            individual["AGE"] if "AGE" in individual else self._error_output,
             False if "DEAT" in individual else True,
-            individual["DEAT"] if "DEAT" in individual else "N/a",
-            individual["FAMC"] if "FAMC" in individual else "N/a",
-            individual["FAMS"] if "FAMS" in individual else "N/a")
+            self._format_date(individual["DEAT"]) if "DEAT" in individual else self._not_applicable,
+            individual["FAMC"] if "FAMC" in individual else self._not_applicable,
+            individual["FAMS"] if "FAMS" in individual else self._not_applicable)
 
         self._print_sorted_mapped_table(self._table_label_individual, individuals, headers, mapper)
 
@@ -63,19 +67,20 @@ class TablePrinter:
     :param families: The list/tuple to print. If None or empty, the function no-ops
     :return: None
     """
+
     def print_families(self, families):
 
-        headers = ["Id", "Married", "Divorced", "Husband Id", "Husband Name", "Wife Id", "Wife Name", "Children"]
-        # Map 1:1, except replace divorced with "N/a" if there was no divorce
+        headers = ["Id", "Married", "Divorced", "Husband Id", "Husband Name", "Wife Id", "Wife Name", "Children Ids"]
+        # Map 1:1, except replace divorced with self._not_applicable if there was no divorce
         # If children is None or size 0, map to string "None", otherwise sorted in ascending order
         mapper = lambda fam: (fam["FAM"],
-                              fam["MARR"],
-                              fam["DIV"] if "DIV" in fam else "N/a",
+                              self._format_date(fam["MARR"]),
+                              self._format_date(fam["DIV"]) if "DIV" in fam else self._not_applicable,
                               fam["HUSB"],
                               self._look_up_name_by_id(fam["HUSB"]),
                               fam["WIFE"],
                               self._look_up_name_by_id(fam["WIFE"]),
-                              sorted(fam["CHIL"]) if "Chil" in fam and len(fam["CHIL"]) > 0 else "None")
+                              sorted(fam["CHIL"]) if "CHIL" in fam and len(fam["CHIL"]) > 0 else "None")
 
         self._print_sorted_mapped_table(self._table_label_family, families, headers, mapper)
 
@@ -86,8 +91,9 @@ class TablePrinter:
     :param data: The raw data which to be processed by the data_map_lambda
     :param headers: The headers to display at the top
     :param data_map_lambda: The mapping lambda to process the data. 0th index of resulting map will be the sort key
-    :return:
+    :return: None
     """
+
     def _print_sorted_mapped_table(self, printed_label, data, headers, data_map_lambda):
         if data is None or type(data) is not list and type(data) is not tuple:
             return
@@ -96,11 +102,31 @@ class TablePrinter:
         mapped_data = sorted(list(map(data_map_lambda, data)), key=lambda it: it[0])
         print(tabulate(mapped_data, headers, self._table_format_type))
 
-    def _look_up_name_by_id(self, id,):
-        if id is None or id == "ERR":
-            return "ERR"
-        # Remove the "@" as they are not in the user id
-        return self.individual_database.getName(id[0].replace("@", "").strip())
+    """
+    Looks up all individual ids in the list, separated by ampersands
+    :param individual_ids, the list of all ids to 
+    :return A string in the form "name0 & name1 & name2 ... & nameN" with no trailing " & "
+    """
+    def _look_up_name_by_id(self, individual_ids ):
+        if individual_ids is None or individual_ids == self.error_output:
+            return self.error_output
+        individual_ids = list(individual_ids) if type(individual_ids) is not list else individual_ids
+        all_names = []
+        for individual in individual_ids:
+            all_names.append(self.individual_database.getName(individual.replace("@", "").strip()))
+        return " & ".join(all_names)
+
+    """
+    Converts a list date to a date for output
+    :param A date as a list, with indexes [day, month, year]
+    :return: String of the format in DD/MM/YYYY if valid format, otherwise strips [] from list toString
+    """
+    def _format_date(self, date):
+        if type(date) is not list or len(date) < 3:
+            # Mal formed date, do not attempt to parse
+            return self.error_output
+        # DD MM YYYY.
+        return "{:02d}/{:02d}/{:04d}".format(date[0], date[1], date[2])
 
 
 class TestDataRunner:
