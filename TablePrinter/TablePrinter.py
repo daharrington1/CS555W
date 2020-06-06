@@ -47,11 +47,12 @@ class TablePrinter:
             individual["NAME"],
             individual["SEX"],
             self._format_date(individual["BIRT"]),
-            individual["AGE"] if "AGE" in individual else self._error_output,
+            individual["AGE"] if "AGE" in individual else self.error_output,
             False if "DEAT" in individual else True,
             self._format_date(individual["DEAT"]) if "DEAT" in individual else self._not_applicable,
-            individual["FAMC"] if "FAMC" in individual else self._not_applicable,
-            individual["FAMS"] if "FAMS" in individual else self._not_applicable)
+            # 0 index grab, as FAMC will always be a list of size one if it exist
+            individual["FAMC"][0] if "FAMC" in individual else self._not_applicable,
+            ",".join(individual["FAMS"]) if "FAMS" in individual else self._not_applicable)
 
         self._print_sorted_mapped_table(self._table_label_individual, individuals, headers, mapper)
 
@@ -76,11 +77,11 @@ class TablePrinter:
         mapper = lambda fam: (fam["FAM"],
                               self._format_date(fam["MARR"]),
                               self._format_date(fam["DIV"]) if "DIV" in fam else self._not_applicable,
-                              fam["HUSB"],
+                              ",".join(fam["HUSB"]),
                               self._look_up_name_by_id(fam["HUSB"]),
-                              fam["WIFE"],
+                              ",".join(fam["WIFE"]),
                               self._look_up_name_by_id(fam["WIFE"]),
-                              sorted(fam["CHIL"]) if "CHIL" in fam and len(fam["CHIL"]) > 0 else "None")
+                              ",".join(sorted(fam["CHIL"])) if "CHIL" in fam and len(fam["CHIL"]) > 0 else "None")
 
         self._print_sorted_mapped_table(self._table_label_family, families, headers, mapper)
 
