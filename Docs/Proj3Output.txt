@@ -1,7 +1,6 @@
 Error: Family F4 missing wife
 Error: Family F9  missing required tag marr
 Error: Family F9 missing husb
-Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'gemcon_data'), 'individuals')
 Individuals
 +-----+----------------------------+--------+------------+------+-------+------------+----------+-----------+
 | Id  |            Name            | Gender |  Birthday  |  Age | Alive |   Death    | Child Id | Spouse Id |
