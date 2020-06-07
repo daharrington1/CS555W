@@ -62,7 +62,7 @@ class GenComDb:
         pprint (self.collection)
 
     def addId(self, ID=None):
-        print("[addId] adding ID: {}".format(ID))
+        #print("[addId] adding ID: {}".format(ID))
 
         if (ID =="") or (ID is None):
                 print ("ID MUST BE SPECIFIED and NON BLANK");
@@ -109,7 +109,7 @@ class GenComDb:
 
     def updateId(self, genComId=None, tag=None, val=None):
         # update an individual document
-        print("[updateId] updating ID: {}: tag: {}, val:{}".format(genComId, tag, val))
+        #print("[updateId] updating ID: {}: tag: {}, val:{}".format(genComId, tag, val))
 
         if (genComId=="") or (genComId is None):
                 print ("GenCom ID MUST BE SPECIFIED and NON BLANK");
@@ -184,7 +184,7 @@ class GenComDb:
               #print("Setting tag to INDI");
               genComTag="INDI"
         else:
-              print("Function not supported for families yet")
+              print("Function not supported for families")
               return
 
         try:
@@ -224,7 +224,7 @@ class GenComDb:
     def seed_data(self):
 
         if self.collection_id==self.MONGO_INDIVIDUALS:
-             print("Seeing data in Individual Collection");
+             print("Seeding data in Individual Collection");
              # Add individual one
              indiv = {
                 'INDI' : 'I1',
@@ -259,7 +259,7 @@ class GenComDb:
              }
              self.AddObj(indiv3)
         else:
-             print("Seeing data in Family Collection");
+             print("Seeding data in Family Collection");
              fam = {
                 'FAM' : 'F1',
                 'HUSB' : 'I1',
@@ -353,10 +353,10 @@ class GenComDb:
 
 
     def dropCollection(self):
-        print("+++++++++++++DROPPING COLLECTION: {} ++++++++++++++++++".format(self.collection))
+        #print("+++++++++++++DROPPING COLLECTION: {} ++++++++++++++++++".format(self.collection))
         self.collection.drop();
 
     def dropDatabase(self):
-        print("+++++++++++++DROPPING DATABASE: {} ++++++++++++++++++".format(MONGO_DB))
+        #print("+++++++++++++DROPPING DATABASE: {} ++++++++++++++++++".format(MONGO_DB))
         self.client.drop_database(MONGO_DB);
 
