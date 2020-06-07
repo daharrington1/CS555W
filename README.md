@@ -6,8 +6,9 @@
 * Database: MongoDB
 
 # Team Logistics
-* Zoom Meeting: 7PM, Mondays & Thursdays
-* Other times: Canvas Emails (or something else??)
+* Zoom Meeting: 8PM Eastern Time, Mondays & Thursdays
+* Other times: Stevens Email
+* Group Discussion board 
 
 # Overall Roles/Responsiblities: 
 * Scrum Master: Debbie Harrington
