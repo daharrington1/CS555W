@@ -41,9 +41,6 @@ for family_id in parsed_families:
 
     family_database.AddObj(family)
 
-individual_database.my_collection()
-
-
 # Read the data back out from the DB
 individuals_from_db = []
 all_ids = individual_database.getAllIds()
