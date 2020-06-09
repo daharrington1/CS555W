@@ -54,5 +54,5 @@ for family_id in all_families:
 
 # Output the data
 printer = TablePrinter(individual_database)
-printer.print_individuals(individuals_from_db)
-printer.print_families(families_from_db)
+print(printer.format_individuals(individuals_from_db))
+print(printer.format_families(families_from_db))
