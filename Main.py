@@ -55,4 +55,5 @@ for family_id in all_families:
 # Output the data
 printer = TablePrinter(individual_database)
 print(printer.format_individuals(individuals_from_db))
+print(printer.format_individuals(individual_database.getDeadAsList(), TablePrinter.table_label_dead_individual))
 print(printer.format_families(families_from_db))

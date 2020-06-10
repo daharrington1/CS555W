@@ -16,6 +16,7 @@ class TablePrinter:
     error_output = "-"
     _not_applicable = "N/A"
     _table_format_type = "pretty"
+    table_label_dead_individual = "Dead Individuals"
     _table_label_individual = "Individuals"
     _table_label_family = "Families"
 
@@ -31,20 +32,24 @@ class TablePrinter:
     - FAMC -- The family id of where they are a child, None if they are not a child
     - FAMS -- The family id of where they are a spouse, None if they are unmarried
     :param individuals: A list / tuple of individuals. No-ops on none or empty input
+    :param table_label: The label to put before the table. Empty string to suppress it. None uses default value
     :return: String of the formatted table
     """
-    def format_individuals(self, individuals):
+
+    def format_individuals(self, individuals, table_label=None):
+        table_label = table_label if type(table_label) is str else self._table_label_individual
         # Map 1:1, except
         # - Set isAlive based on the logical not of the individual's death date
         # - Deat, famc, and fams are replaced with self._not_applicable if not present, or taken literally if they are
         headers = ["Id", "Name", "Gender", "Birthday", " Age", "Alive", "Death", "Child Id", "Spouse Id"]
 
-        return self._format_sorted_mapped_table(self._table_label_individual, individuals,
+        return self._format_sorted_mapped_table(table_label, individuals,
                                                 headers, self._individual_mapper)
 
     """
     Internal function to format an individual object from the database to a printable form
     """
+
     def _individual_mapper(self, individual):
         if "BIRT" not in individual:
             raise KeyError
