@@ -221,6 +221,13 @@ class GenComDb:
 
         return docs
 
+    def getDeadAsList(self):
+        if self.collection_id == self.MONGO_FAMILIES:
+            print("Error: Families cannot be \"dead\"")
+            return []
+
+        return list(self.collection.find({"DEAT": {"$exists": True}}, {"_id": 0}))
+
     def seed_data(self):
 
         if self.collection_id==self.MONGO_INDIVIDUALS:
@@ -258,6 +265,16 @@ class GenComDb:
                 'FAMS' : ['F4', 'F5']
              }
              self.AddObj(indiv3)
+
+             indiv4 = {
+                'INDI': 'I3',
+                'NAME': 'DeDe /Pritchett/',
+                'SEX': 'F',
+                'BIRT': '23 JAN 1947',
+                'DEAT': '31 OCT 2018',
+                'FAMS': ['F2']
+             }
+             self.AddObj(indiv4)
         else:
              print("Seeding data in Family Collection");
              fam = {
