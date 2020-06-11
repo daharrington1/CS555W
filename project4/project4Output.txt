@@ -1,0 +1,5 @@
+Error: Individual: US01:  I1  Birthday:  28/12/2021  Occurs in the future.
+Error: Individual: US01:  I3  Death:  1/10/2100  Occurs in the future.
+Error: Family: US01:  F2  Marriage Date :  1/1/2025  Occurs in the future.
+Error: Family: US01:  F2  Divorce Date :  28/6/2020  Occurs in the future.
+Error: Individual: US07:  I3  More than 150 years old. - Birthday:  23/1/1947  Death:  1/10/2100
