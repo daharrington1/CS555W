@@ -2,6 +2,7 @@ from Parser.parserF import raw2dic
 from Parser.parserF import add_age
 from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
+import Utils
 
 # Get a reference to the collection, and clear out previous data, assuming desired behavior is always to read from file
 individual_database = GenComDb(GenComDb.MONGO_INDIVIDUALS)
@@ -57,3 +58,13 @@ printer = TablePrinter(individual_database)
 print(printer.format_individuals(individuals_from_db))
 print(printer.format_individuals(individual_database.getDeadAsList(), TablePrinter.table_label_dead_individual))
 print(printer.format_families(families_from_db))
+
+non_uniques = Utils.filter_non_unique_individuals(individuals_from_db)
+if len(non_uniques) > 0:
+    output = "Individuals with the same name and birth date:\n"
+    for conflict in non_uniques.values():
+        output += "\tFor Name: {} and Date: {} \n".format(conflict[0].name, printer.format_date(conflict[0].birthday))
+        output += "\t\t- {}\n".format(",".join([id.id for id in conflict]))
+    print(output)
+else:
+    print("All individuals are unique in the file, by name and birth date")
