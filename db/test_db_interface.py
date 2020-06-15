@@ -75,6 +75,9 @@ print("\nUpdated Entry for {}".format("F2"))
 ret=famObj.getDoc("F2")
 print(ret)
 
+ret=famObj.updateId("F2", "CHIL", ["I5"])
+ret=famObj.getDoc("F2")
+print(ret)
 
 print("\nGetting name for I1:")
 ret=indObj.getName("I1")

@@ -93,7 +93,7 @@ class GenComDb:
             tag="FAM";
 
         if tag in obj:
-            count=self.collection.find({tag:obj[tag]}).count()
+            count=self.collection.count_documents({tag:obj[tag]})
             if (count>0):
                 print ("FAILURE: {} ALREADY EXISTS".format(tag));
                 return None;
@@ -279,8 +279,8 @@ class GenComDb:
              print("Seeding data in Family Collection");
              fam = {
                 'FAM' : 'F1',
-                'HUSB' : 'I1',
-                'WIFE' : 'I2',
+                'HUSB' : ['I1'],
+                'WIFE' : ['I2'],
                 'CHIL' : ['I10'],
                 'MARR' : '1 JAN 1968',
                 'DIV' : '1 JAN 2003',
@@ -289,8 +289,8 @@ class GenComDb:
              self.AddObj(fam)
              fam1 = {
                 'FAM' : 'F3',
-                'HUSB' : 'I8',
-                'WIFE' : 'I2',
+                'HUSB' : ['I8'],
+                'WIFE' : ['I2'],
                 'CHIL' : ['I9'],
                 'MARR' : '1 JAN 1995',
                 'DIV' : '1 JAN 2006',
@@ -299,8 +299,8 @@ class GenComDb:
              self.AddObj(fam1)
              fam2 = {
                 'FAM' : 'F4',
-                'HUSB' : 'I4',
-                'WIFE' : 'I5',
+                'HUSB' : ['I4'],
+                'WIFE' : ['I5'],
                 'CHIL' : ['I14', 'I15'],
                 'MARR' : '1 JAN 2014',
                 'NOTE' : 'MITCHELL/CAMERON FAMILY'
@@ -308,8 +308,8 @@ class GenComDb:
              self.AddObj(fam2)
              fam3 = {
                 'FAM' : 'F6',
-                'HUSB' : 'I7',
-                'WIFE' : 'I6',
+                'HUSB' : ['I7'],
+                'WIFE' : ['I6'],
                 'CHIL' : ['I20', 'I24'],
                 'MARR' : '1 APR 1993',
                 'NOTE' : 'PHIL/CLAIRE FAMILY'
@@ -377,3 +377,77 @@ class GenComDb:
         #print("+++++++++++++DROPPING DATABASE: {} ++++++++++++++++++".format(MONGO_DB))
         self.client.drop_database(MONGO_DB);
 
+
+    def getMarriagestoChildren(self):
+
+        # return list of families with marriages to children.
+        # look only at husband/wife/children data that are populated (e.g. they are in arrays)
+        # if a spouse is married to a child- then there will be an intersection between the spouse and the children lists
+
+        results=[]
+
+        # only valid for families database
+        if self.collection_id==self.MONGO_INDIVIDUALS:
+            raise Exception(self.MONGO_INDIVIDUALS)
+
+        #query for husband marrying a child - should work for traditional and same sex marriages
+        query=[
+             { "$match": 
+                 { 
+                     "CHIL": { "$exists": "true", "$ne": "-" },
+                     "HUSB": { "$exists":"true", "$ne":"-" }
+                 } 
+             },
+             {"$project":
+                {
+                    "_id":0, "FAM":1, "HUSB":1, "WIFE":1, "CHIL":1, "MarriagetoChildren":1,
+                   "MarriagetoChildren": { "$setIntersection": [ "$HUSB", "$CHIL" ] },
+                }
+             },
+             { "$match": 
+                {
+                   "MarriagetoChildren" : { "$exists":"true", "$not": {"$size": 0} }
+                }
+             }
+        ]
+
+        try:
+             #get the data from the database and throw into a list
+             docs=list(self.collection.aggregate(query))
+             for i in docs:
+                results.append(i)
+        except:
+            print("Problem executing query")
+
+
+        #query for wife marrying a child - should work for traditional and same sex marriages
+        query=[
+             { "$match": 
+                 { 
+                     "CHIL": { "$exists": "true", "$ne": "-" },
+                     "WIFE": { "$exists": "true", "$ne": "-" }
+                 } 
+             },
+             {"$project":
+                {
+                    "_id":0, "FAM":1, "HUSB":1, "WIFE":1, "CHIL":1, "MarriagetoChildren":1,
+                   "MarriagetoChildren": { "$setIntersection": [ "$WIFE", "$CHIL" ] },
+                }
+             },
+             { "$match": 
+                {
+                   "MarriagetoChildren" : { "$exists":"true", "$not": {"$size": 0} }
+                }
+             }
+        ]
+
+        try:
+             #get the data from the database and throw into a list
+             docs=list(self.collection.aggregate(query))
+             for i in docs:
+                results.append(i)
+        except:
+            print("Problem executing query")
+
+
+        return results

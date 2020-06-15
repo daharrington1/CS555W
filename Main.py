@@ -10,6 +10,7 @@ family_database = GenComDb(GenComDb.MONGO_FAMILIES)
 individual_database.dropCollection()
 family_database.dropCollection()
 
+#parsed_individuals, parsed_families = raw2dic("ModernFamilyTest.ged")
 parsed_individuals, parsed_families = raw2dic("ModernFamily.ged")
 
 # Input all the users
@@ -68,3 +69,12 @@ if len(non_uniques) > 0:
     print(output)
 else:
     print("All individuals are unique in the file, by name and birth date")
+
+
+# Check for any parents married to children
+ret=Utils.us17_no_marr2child(family_database)
+if len(ret)==0:
+    print("No spouses in families are married to children")
+else:
+    for fam in ret:
+        print("Family ({}) has marriages to children: husband({}), wife({}), children({})".format(fam["FAM"], fam["HUSB"], fam["WIFE"], fam["CHIL"]))
