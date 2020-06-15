@@ -122,6 +122,14 @@
 1 BIRT
 2 DATE 4 JAN 2013
 1 FAMC @F1@
+0 NOTE Duplicate name and birthday individual
+0 @I89@ INDI
+1 NAME Jay /Pritchett/
+2 GIVN Jay
+2 SURN Pritchett
+1 SEX M
+1 BIRT
+2 DATE 28 DEC 2021
 0 @I11@ INDI
 1 NAME Frank /Dunphy/
 2 GIVN Frank
