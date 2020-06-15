@@ -78,3 +78,12 @@ if len(ret)==0:
 else:
     for fam in ret:
         print("Family ({}) has marriages to children: husband({}), wife({}), children({})".format(fam["FAM"], fam["HUSB"], fam["WIFE"], fam["CHIL"]))
+
+
+ret=Utils.us16_male_last_names(individuals_from_db, families_from_db)
+if len(ret)==0:
+    print("All males in families have the same last name")
+else:
+    for fam in ret:
+        print("Warning......Family ({}) has multiple last names: {})".format(fam["FAM"], fam["LNAMES"]))
+

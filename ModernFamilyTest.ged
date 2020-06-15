@@ -56,15 +56,6 @@
 2 DATE 1 JUN 1975
 1 FAMS @F4@
 1 FAMC @F2@
-0 @I4@ INDI
-1 NAME Mitchell /Pritchett/
-2 GIVN Mitchell
-2 SURN Pritchett
-2 _MARNM Pritchett
-1 SEX F
-1 BIRT
-2 DATE 1 JUN 1975
-1 FAMC @F10086@
 0 @I5@ INDI
 1 NAME Cameron /Tucker/
 2 GIVN Cameron
