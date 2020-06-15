@@ -38,7 +38,7 @@ class MyTest(unittest.TestCase):
         #self.totest = parsed_dic
     
     def setUp(self) -> None:
-        self.totest = parser4("ModernFamilyTest.txt")
+        self.totest = parser4("ModernFamilyTest.ged")
 
     def tearDown(self) -> None:
         self.totest = None
