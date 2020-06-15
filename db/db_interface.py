@@ -132,14 +132,14 @@ class GenComDb:
         else:
               genComIdTag="FAM"
 
-        count=self.collection.find({genComIdTag:genComId}).count()
+        count=self.collection.count_documents({genComIdTag:genComId})
         if (count<1):
              print ("{} DOES NOT EXIST YET".format(genComIdTag));
              return 0;
         
         #update the entry with the tag and value
-        result=self.collection.update({genComIdTag:genComId}, {"$set": {tag:val}})
-        return result["nModified"]   # number modified
+        result=self.collection.update_many({genComIdTag:genComId}, {"$set": {tag:val}})
+        return result   # return the updated value
 
 
     def getDocMatch(self, tag, val):
