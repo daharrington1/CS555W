@@ -1,5 +1,4 @@
-from Parser.parserF import raw2dic
-from Parser.parserF import add_age
+from Parser.parserV4 import parser4
 from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 import Utils
@@ -11,11 +10,17 @@ individual_database.dropCollection()
 family_database.dropCollection()
 
 #parsed_individuals, parsed_families = raw2dic("ModernFamilyTest.ged")
-parsed_individuals, parsed_families = raw2dic("ModernFamilyTest.ged")
+new_parser = parser4("ModernFamilyTest.txt")
+parsed_individuals = new_parser.indi_dic
+parsed_families = new_parser.fam_dic
 
 # Input all the users
 # Maps the age from all users, based on the current date the program is ran if no death is specified
-add_age(parsed_individuals)
+# US07: validate the age, less than 150, at the same time. Errors should be print out
+new_parser.add_valid_age()
+# US01: check dates are not before current date
+new_parser.dateCheck()
+
 for parsed_individual_id in parsed_individuals:
     # Grab the individual and insert their id into the dictionary, for the database to use as its primary key
     individual = parsed_individuals[parsed_individual_id]
