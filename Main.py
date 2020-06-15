@@ -11,7 +11,7 @@ individual_database.dropCollection()
 family_database.dropCollection()
 
 #parsed_individuals, parsed_families = raw2dic("ModernFamilyTest.ged")
-parsed_individuals, parsed_families = raw2dic("ModernFamily.ged")
+parsed_individuals, parsed_families = raw2dic("ModernFamilyTest.ged")
 
 # Input all the users
 # Maps the age from all users, based on the current date the program is ran if no death is specified
