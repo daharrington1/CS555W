@@ -32,3 +32,15 @@ def filter_non_unique_individuals(individuals):
 
     # Return only the collisions as they are therefore not unique
     return {key: value for key, value in birthday_name_mapping.items() if len(value) > 1}
+
+
+
+    """
+     Checks for Families where a spouse is married to a child
+
+    :param Families collection in the database
+    :returns List of Familes that have a spouse married to a child
+    """
+def us17_no_marr2child(famObj):
+        #Call database to get all families with marriages to children
+            return famObj.getMarriagestoChildren()
