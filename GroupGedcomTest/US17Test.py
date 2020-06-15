@@ -61,6 +61,27 @@ class US17Test(unittest.TestCase):
         ret=us17_no_marr2child(self.coll_fam)
         self.assertEqual(len(ret), 0, "Did not get the expected results")
 
+    def test_US17_nocollection(self):
+        # drop the collection
+        self.coll_fam.dropCollection()
+
+        # expect 2 get 2 matches
+        ret=us17_no_marr2child(self.coll_fam)
+        self.assertEqual(len(ret), 0, "Did not get the expected results")
+
+    def test_US17_1family(self):
+        #should to get 1 match
+        self.coll_fam.updateId("F4", "CHIL", ['I14', 'I15', 'I5'])
+        ret=us17_no_marr2child(self.coll_fam)
+        self.assertEqual(len(ret), 1, "Did not get the expected results")
+
+    def test_US17_1family_text(self):
+        #should find 1 match and the following expected result
+        expected_ret=[{'HUSB': ['I4', 'I5'], 'CHIL': ['I14', 'I15', 'I5'], 'FAM': 'F4', 'WIFE': '-', 'MarriagetoChildren': ['I5']}]
+        self.coll_fam.updateId("F4", "CHIL", ['I14', 'I15', 'I5'])
+        ret=us17_no_marr2child(self.coll_fam)
+        self.assertListEqual(expected_ret, ret, "Expected Return does not match")
+
 
     def test_US17_2families(self):
         #should to get 2 matches- one with same sex marraige, one without
@@ -73,10 +94,8 @@ class US17Test(unittest.TestCase):
     def test_US17_2families_text(self):
         #should find 2 matches and the following expected result- one with same sex marraige, one without
         expected_ret=[{'HUSB': ['I4', 'I5'], 'CHIL': ['I14', 'I15', 'I5'], 'FAM': 'F4', 'WIFE': '-', 'MarriagetoChildren': ['I5']},{'HUSB': ['I16'], 'WIFE': ['I17'], 'CHIL': ['I5', 'I18', 'I17'], 'FAM': 'F5', 'MarriagetoChildren': ['I17']}]
-
         self.coll_fam.updateId("F4", "CHIL", ['I14', 'I15', 'I5'])
         self.coll_fam.updateId("F5", "CHIL", ['I5', 'I18', 'I17'])
-
         ret=us17_no_marr2child(self.coll_fam)
         self.assertListEqual(expected_ret, ret, "Expected Return does not match")
 
