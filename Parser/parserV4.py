@@ -11,7 +11,7 @@ import datetime
 class parser4:
     
     def __init__(self, filepath):
-        temp1, temp2 = self.raw2dic(filepath)
+        temp1, temp2 = self.__raw2dic(filepath)
         self.indi_dic = temp1
         self.fam_dic = temp2
         
@@ -45,7 +45,7 @@ class parser4:
             return 12
     
     
-    def raw2dic(self, file):
+    def __raw2dic(self, file):
         """
         to use this function, nltk package is required, please install by
         >>> conda install -c anaconda nltk (if you're using Conda)
