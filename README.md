@@ -34,3 +34,8 @@
 
 # Github Repository
 * https://github.com/daharrington1/CS555W.git
+
+# Packages Used
+* nltk
+* pymongo
+* tabulate
