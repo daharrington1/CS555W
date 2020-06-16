@@ -51,15 +51,6 @@
 2 GIVN Mitchell
 2 SURN Pritchett
 2 _MARNM Pritchett
-1 SEX F
-1 BIRT
-2 DATE 1 JUN 1975
-1 FAMC @F10086@
-0 @I4@ INDI
-1 NAME Mitchell /Pritchett/
-2 GIVN Mitchell
-2 SURN Pritchett
-2 _MARNM Pritchett
 1 SEX M
 1 BIRT
 2 DATE 1 JUN 1975
@@ -293,6 +284,16 @@
 2 DATE 28 NOV 1970
 1 FAMS @F11@
 0 NOTE MarryToChild FAMILY
+0 @I28@ INDI
+1 NAME Mitchell /Pritchett/
+2 GIVN Mitchell
+2 SURN Pritchett
+2 _MARNM Pritchett
+1 SEX F
+1 BIRT
+2 DATE 1 JUN 1975
+1 FAMC @F10086@
+0 NOTE duplicateNameBirt
 0 @F1@ FAM
 1 HUSB @I1@
 1 WIFE @I2@
