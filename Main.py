@@ -1,7 +1,7 @@
 from Parser.parserV4 import parser4
 from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
-from Utilities import Utils
+from Utils import Utils
 
 # Get a reference to the collection, and clear out previous data, assuming desired behavior is always to read from file
 individual_database = GenComDb(GenComDb.MONGO_INDIVIDUALS)
