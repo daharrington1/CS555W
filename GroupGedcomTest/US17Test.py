@@ -3,6 +3,12 @@ from db.db_interface  import GenComDb
 from Utils.Utils import us17_no_marr2childa
 import json, sys, pprint
 
+#
+# Test Scripts for User Story 17: No marriages to children
+# Author: Debbie Harrington
+#
+# Test Scripts for verifying US17 user story
+#
 
 class US17Test(unittest.TestCase):
     families = None
