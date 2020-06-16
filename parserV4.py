@@ -258,13 +258,18 @@ class parser4:
     
     #US02 BIRT before MARR
     def birth_marr_check(self):
-        for indi_id, indi in self.indi_dic:
+        for indi_id, indi in self.indi_dic.items():
             if 'FAMS' in indi:
-                marrDate = self.fam_dic[indi['FAMS']]['MARR']
-                if marrDate[2] > indi['BIRT'][2]:
+                if 'MARR' not in self.fam_dic[indi['FAMS'][0]]:
+                    continue
+                marrDate = self.fam_dic[indi['FAMS'][0]]['MARR']
+                birtDate = indi['BIRT']
+                if marrDate[2] < birtDate[2] and marrDate[1] < birtDate[1] and marrDate[0] < birtDate[0]:
                     print("Error: birthday before marr ", indi_id)
-                elif marrDate[1] > indi['BIRT'][1]:
-                    print("Error: birthday before marr ", indi_id)
-                elif marrDate[0] > indi['BIRT'][0]:
-                    print("Error: birthday before marr ", indi_id)
+
                 
+
+
+
+parser = parser4("ModernFamily.ged")
+parser.birth_marr_check()
