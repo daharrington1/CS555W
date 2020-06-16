@@ -1,6 +1,6 @@
 import unittest
-from db.db_interface import GenComDb
-from Utils import us17_no_marr2child
+from db.db_interface  import GenComDb
+from Utils.Utils import us17_no_marr2child
 import json, sys, pprint
 
 
