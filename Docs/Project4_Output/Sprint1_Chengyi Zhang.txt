@@ -1,0 +1,60 @@
+"C:\Users\Chengyi Zhang\AppData\Local\Programs\Python\Python37\python.exe" "C:/Users/Chengyi Zhang/Desktop/Study/Stevens/SE 555/Proj 3/Main.py"
++++++++++++++DROPPING COLLECTION: Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'gemcon_data'), 'individuals') ++++++++++++++++++
++++++++++++++DROPPING COLLECTION: Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'gemcon_data'), 'families') ++++++++++++++++++
+Error: Family F4 missing wife
+Error: Family F9  missing required tag marr
+Error: Family F9 missing husb
+Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'gemcon_data'), 'individuals')
+Individuals
++-----+----------------------------+--------+------------+------+-------+------------+----------+-----------+
+| Id  |            Name            | Gender |  Birthday  |  Age | Alive |   Death    | Child Id | Spouse Id |
++-----+----------------------------+--------+------------+------+-------+------------+----------+-----------+
+| I1  |      Jay /Pritchett/       |   M    | 23/05/1947 |  73  | True  |    N/A     |   N/A    |   F1,F2   |
+| I10 |      Joe /Pritchett/       |   M    | 04/01/2013 |  7   | True  |    N/A     |    F1    |    N/A    |
+| I11 |       Frank /Dunphy/       |   M    | 01/01/1945 |  75  | False | 15/01/2020 |   N/A    |   F7,F8   |
+| I12 |     Lorraine /Dunphy/      |   F    | 01/01/1965 |  55  | True  |    N/A     |   N/A    |    F8     |
+| I13 |       Grace /Dunphy/       |   F    | 01/01/1945 |  64  | False | 01/01/2009 |   N/A    |    F7     |
+| I14 |  Lily /Tucker-Pritchett/   |   F    | 19/02/2008 |  12  | True  |    N/A     |    F4    |    N/A    |
+| I15 | Rexford /Tucker-Pritchett/ |   M    | 01/04/2020 |  0   | True  |    N/A     |    F4    |    N/A    |
+| I16 |       Merle /Tucker/       |   M    | 01/01/1943 |  77  | True  |    N/A     |   N/A    |    F5     |
+| I17 |       Barb /Tucker/        |   F    | 01/01/1943 |  77  | True  |    N/A     |   N/A    |    F5     |
+| I18 |      Pameron /Tucker/      |   F    | 01/01/1970 |  50  | True  |    N/A     |    F5    |    F9     |
+| I19 |      Calhoun /Tucker/      |   M    | 05/04/2017 |  3   | True  |    N/A     |    F9    |    N/A    |
+| I2  |      Gloria /Unknown/      |   F    | 10/05/1971 |  49  | True  |    N/A     |   N/A    |   F1,F3   |
+| I20 |       Haley /Dunphy/       |   F    | 10/12/1993 |  27  | True  |    N/A     |    F6    |    F10    |
+| I21 |      Dylan /Marshall/      |   M    | 03/04/1991 |  29  | True  |    N/A     |   N/A    |    F10    |
+| I22 |      Poppy /Marshall/      |   F    | 08/05/2019 |  1   | True  |    N/A     |   F10    |    N/A    |
+| I23 |     George /Marshall/      |   M    | 08/05/2019 |  1   | True  |    N/A     |   F10    |    N/A    |
+| I24 |       Alex /Dunphy/        |   F    | 14/01/1997 |  23  | True  |    N/A     |    F6    |    N/A    |
+| I25 |       Luke /Dunphy/        |   M    | 28/11/1998 |  22  | True  |    N/A     |    F6    |    N/A    |
+| I3  |      DeDe /Pritchett/      |   F    | 23/01/1947 |  71  | False | 31/10/2018 |   N/A    |    F2     |
+| I4  |    Mitchell /Pritchett/    |   M    | 01/06/1975 |  45  | True  |    N/A     |    F2    |    F4     |
+| I5  |      Cameron /Tucker/      |   M    | 29/02/1972 |  48  | True  |    N/A     |    F5    |    F4     |
+| I6  |     Claire /Pritchett/     |   F    | 03/03/1970 |  50  | True  |    N/A     |    F2    |    F6     |
+| I7  |       Phil /Dunphy/        |   M    | 03/04/1967 |  53  | True  |    N/A     |    F7    |    F6     |
+| I8  |      Javier /Delgado/      |   M    | 01/01/1969 |  51  | True  |    N/A     |   N/A    |    F3     |
+| I9  |      Manny /Delgado/       |   M    | 04/01/1999 |  21  | True  |    N/A     |    F3    |    N/A    |
++-----+----------------------------+--------+------------+------+-------+------------+----------+-----------+
+Families
++-----+------------+------------+------------+-----------------------------------------+---------+--------------------+--------------+
+| Id  |  Married   |  Divorced  | Husband Id |              Husband Name               | Wife Id |     Wife Name      | Children Ids |
++-----+------------+------------+------------+-----------------------------------------+---------+--------------------+--------------+
+| F1  | 01/01/2009 |    N/A     |     I1     |             Jay /Pritchett/             |   I2    |  Gloria /Unknown/  |     I10      |
+| F10 | 08/03/2019 |    N/A     |    I21     |            Dylan /Marshall/             |   I20   |   Haley /Dunphy/   |   I22,I23    |
+| F2  | 01/01/1968 | 01/01/2003 |     I1     |             Jay /Pritchett/             |   I3    |  DeDe /Pritchett/  |    I4,I6     |
+| F3  | 01/01/1995 | 01/01/2006 |     I8     |            Javier /Delgado/             |   I2    |  Gloria /Unknown/  |      I9      |
+| F4  | 01/01/2014 |    N/A     |   I4,I5    | Mitchell /Pritchett/ & Cameron /Tucker/ |    -    |         -          |   I14,I15    |
+| F5  | 01/01/1963 |    N/A     |    I16     |             Merle /Tucker/              |   I17   |   Barb /Tucker/    |    I18,I5    |
+| F6  | 01/04/1993 |    N/A     |     I7     |              Phil /Dunphy/              |   I6    | Claire /Pritchett/ | I20,I24,I25  |
+| F7  | 01/01/1965 |    N/A     |    I11     |             Frank /Dunphy/              |   I13   |   Grace /Dunphy/   |      I7      |
+| F8  | 05/04/2017 |    N/A     |    I11     |             Frank /Dunphy/              |   I12   | Lorraine /Dunphy/  |     None     |
+| F9  |     -      |    N/A     |     -      |                    -                    |   I18   |  Pameron /Tucker/  |     I19      |
++-----+------------+------------+------------+-----------------------------------------+---------+--------------------+--------------+
+ANOMALY: INDIVIDUAL: Child Mitchell /Pritchett/ has divorced parents
+ANOMALY: INDIVIDUAL: Child Claire /Pritchett/ has divorced parents
+ANOMALY: INDIVIDUAL: Child Manny /Delgado/ has divorced parents
+ANOMALY: INDIVIDUAL: Frank /Dunphy/, and Grace /Dunphy/ have the same birthday 1/1/1945
+ANOMALY: INDIVIDUAL: Merle /Tucker/, and Barb /Tucker/ have the same birthday 1/1/1943
+ANOMALY: INDIVIDUAL: Poppy /Marshall/, and George /Marshall/ have the same birthday 8/5/2019
+
+Process finished with exit code 0
