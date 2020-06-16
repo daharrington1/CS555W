@@ -77,12 +77,13 @@ else:
 
 
 # Check for any parents married to children
-ret=Utils.us17_no_marr2child(family_database)
+#ret=Utils.us17_no_marr2child(family_database)
+ret=Utils.us17_no_marr2childa(individuals_from_db, families_from_db)
 if len(ret)==0:
     print("No spouses in families are married to children")
 else:
-    for fam in ret:
-        print("Family ({}) has marriages to children: husband({}), wife({}), children({})".format(fam["FAM"], fam["HUSB"], fam["WIFE"], fam["CHIL"]))
+    for item in ret:
+        print("ERROR: FAMILY: US17: {}: My spouse ({}) is one of my children: Parent ({}), Children ({})".format(item["FAM"], item["MySpouse"], item["Spouse"], item["MyChildren"]))
 
 
 ret=Utils.us16_male_last_names(individuals_from_db, families_from_db)
@@ -90,5 +91,5 @@ if len(ret)==0:
     print("All males in families have the same last name")
 else:
     for fam in ret:
-        print("Warning......Family ({}) has multiple last names: {})".format(fam["FAM"], fam["LNAMES"]))
+        print("WARNING: FAMILY: US16: {} has multiple last names: {})".format(fam["FAM"], fam["LNAMES"]))
 
