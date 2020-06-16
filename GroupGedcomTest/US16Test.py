@@ -3,6 +3,12 @@ from db.db_interface  import GenComDb
 from Utils.Utils import us16_male_last_names
 import json, sys, pprint
 
+#
+#Test Scripts for User Story 16: Males Last Names
+# Author: Debbie Harrington
+#
+# Test Scripts for verifying US16 user story
+#
 
 class US16Test(unittest.TestCase):
     families = None
@@ -73,10 +79,6 @@ class US16Test(unittest.TestCase):
         with self.assertRaises(Exception) as context:
             ret=us16_male_last_names(self.individuals)
 
-    #def test_US16_listsswitched(self):
-        #should to get 1 match
-        #ret=us16_male_last_names(self.families, self.individuals)
-        #self.assertEqual(len(ret), 0, "Did not get the expected results")
 
     def test_US16_1family(self):
         #should to get 1 match
@@ -106,20 +108,28 @@ class US16Test(unittest.TestCase):
         self.assertListEqual(expected_ret, ret, "Expected Return does not match")
 
 
-    #def test_US16_nomatches(self):
+    def test_US16_nomatches(self):
         # Remove the family where parent is married to a child
-    #    self.families[10]={"HUSB":["I26"],"WIFE":["I27"],"CHIL":["I3"],"MARR":[16,1,2018],"NOTE":"MarryToChildFAMILY","FAM":"F11"}
+        self.families[9]={"HUSB":["I21"],"WIFE":["I20"],"CHIL":["I22","I21"],"MARR":[8,3,2019],"FAM":"F10", "NOTE":"MARSHALL/DUNPHY FAMILY"}
+        self.individuals[4]={"NAME":"Cameron/Pritchett/","SEX":"M","BIRT":[29,2,1972],"FAMS":["F4"],"FAMC":["F5"],"AGE":48,"INDI":"I5"}
+        self.individuals[14]={"NAME":"Lily/Pritchett/","SEX":"F","BIRT":[19,2,2008],"FAMC":["F4"],"AGE":12,"INDI":"I14"}
+        self.individuals[15]={"NAME":"Rexford/Pritchett/","SEX":"M","BIRT":[1,4,2020],"FAMC":["F4"],"AGE":0,"INDI":"I15"}
+        self.individuals[16]={"NAME":"Merle/Pritchett/","SEX":"M","BIRT":[1,1,1943],"FAMS":["F5"],"AGE":77,"INDI":"I16"}
 
-    #    ret=us16_male_last_names(self.individuals, self.families)
-    #    self.assertEqual(len(ret), 0, "Did not get the expected results")
+        ret=us16_male_last_names(self.individuals, self.families)
+        self.assertEqual(len(ret), 0, "Did not get the expected results")
 
-    #def test_US16_nomatches_text(self):
+    def test_US16_nomatches_text(self):
         # Remove the family where parent is married to a child
-    #    self.families[10]={"HUSB":["I26"],"WIFE":["I27"],"CHIL":["I3"],"MARR":[16,1,2018],"NOTE":"MarryToChildFAMILY","FAM":"F11"}
+        self.families[9]={"HUSB":["I21"],"WIFE":["I20"],"CHIL":["I22","I21"],"MARR":[8,3,2019],"FAM":"F10", "NOTE":"MARSHALL/DUNPHY FAMILY"}
+        self.individuals[4]={"NAME":"Cameron/Pritchett/","SEX":"M","BIRT":[29,2,1972],"FAMS":["F4"],"FAMC":["F5"],"AGE":48,"INDI":"I5"}
+        self.individuals[14]={"NAME":"Lily/Pritchett/","SEX":"F","BIRT":[19,2,2008],"FAMC":["F4"],"AGE":12,"INDI":"I14"}
+        self.individuals[15]={"NAME":"Rexford/Pritchett/","SEX":"M","BIRT":[1,4,2020],"FAMC":["F4"],"AGE":0,"INDI":"I15"}
+        self.individuals[16]={"NAME":"Merle/Pritchett/","SEX":"M","BIRT":[1,1,1943],"FAMS":["F5"],"AGE":77,"INDI":"I16"}
 
-    #    expected_ret= []
-    #    ret=us16_male_last_names(self.individuals, self.families)
-    #    self.assertListEqual(expected_ret, ret, "Expected Return does not match")
+        expected_ret=[]
+        ret=us16_male_last_names(self.individuals, self.families)
+        self.assertListEqual(expected_ret, ret, "Expected Return does not match")
 
 
 
