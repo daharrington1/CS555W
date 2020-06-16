@@ -4,8 +4,9 @@ Created on Mon Jun  8 20:54:16 2020
 
 @author: 韩逸堃
 """
-from parserV4 import parser4
+from Parser.parserV4 import parser4
 import unittest
+from Utils.Logger import Logger
 
 class MyTest(unittest.TestCase):
     #any kind of ahead should be detected
@@ -33,12 +34,9 @@ class MyTest(unittest.TestCase):
     def test_age(self):
         invalid = self.totest.add_valid_age()
         self.assertListEqual(invalid, ['I3'])
-        
-    #def __init__(self, parsed_dic):
-        #self.totest = parsed_dic
-    
+
     def setUp(self) -> None:
-        self.totest = parser4("ModernFamilyTest.ged")
+        self.totest = parser4("../ModernFamilyTest.ged", Logger())
 
     def tearDown(self) -> None:
         self.totest = None

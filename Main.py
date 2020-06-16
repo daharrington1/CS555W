@@ -2,6 +2,9 @@ from Parser.parserV4 import parser4
 from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
+from Utils.Logger import Logger
+
+logger = Logger()
 
 # Get a reference to the collection, and clear out previous data, assuming desired behavior is always to read from file
 individual_database = GenComDb(GenComDb.MONGO_INDIVIDUALS)
@@ -9,8 +12,8 @@ family_database = GenComDb(GenComDb.MONGO_FAMILIES)
 individual_database.dropCollection()
 family_database.dropCollection()
 
-#parsed_individuals, parsed_families = raw2dic("ModernFamilyTest.ged")
-new_parser = parser4("ModernFamilyTest.txt")
+# parsed_individuals, parsed_families = raw2dic("ModernFamilyTest.ged")
+new_parser = parser4("ModernFamilyTest.txt", logger)
 parsed_individuals = new_parser.indi_dic
 parsed_families = new_parser.fam_dic
 
@@ -36,14 +39,14 @@ for family_id in parsed_families:
     # Error handling to fill in required fields which are not present in one or more families
     # Placeholder logic to Proof-of-concept all the branches working together
     if "MARR" not in family:
-        print("Error: Family {}  missing required tag marr".format(family_id))
+        logger.log_family_error(0, "Family {}  missing required tag MARR".format(family_id))
         family["MARR"] = TablePrinter.error_output
     if "WIFE" not in family:
-        print("Error: Family {} missing wife".format(family_id))
+        logger.log_family_error(0, "Family {} missing wife".format(family_id).format(family_id))
         family["WIFE"] = TablePrinter.error_output
 
     if "HUSB" not in family:
-        print("Error: Family {} missing husb".format(family_id))
+        logger.log_family_error(0, "Family {} missing HUSB".format(family_id))
         family["HUSB"] = TablePrinter.error_output
 
     family_database.AddObj(family)
@@ -67,28 +70,32 @@ print(printer.format_families(families_from_db))
 
 non_uniques = Utils.filter_non_unique_individuals(individuals_from_db)
 if len(non_uniques) > 0:
-    output = "Individuals with the same name and birth date:\n"
     for conflict in non_uniques.values():
-        output += "\tFor Name: {} and Date: {} \n".format(conflict[0].name, printer.format_date(conflict[0].birthday))
-        output += "\t\t- {}\n".format(",".join([id.id for id in conflict]))
-    print(output)
+        formatted = "Same Name & birthday For Name: {} and Date: {} for ids {}" \
+            .format(conflict[0].name,
+                    printer.format_date(conflict[0].birthday),
+                    ",".join([id.id for id in conflict]))
+        logger.log_individual_error(23, formatted)
 else:
     print("All individuals are unique in the file, by name and birth date")
 
-
 # Check for any parents married to children
-ret=Utils.us17_no_marr2child(family_database)
-if len(ret)==0:
+ret = Utils.us17_no_marr2child(family_database)
+if len(ret) == 0:
     print("No spouses in families are married to children")
 else:
     for fam in ret:
-        print("Family ({}) has marriages to children: husband({}), wife({}), children({})".format(fam["FAM"], fam["HUSB"], fam["WIFE"], fam["CHIL"]))
+        logger.log_family_error(17,
+                                "Family ({}) has marriages to children: husband({}), wife({}), children({})"
+                                .format(fam["FAM"], fam["HUSB"], fam["WIFE"], fam["CHIL"]))
 
-
-ret=Utils.us16_male_last_names(individuals_from_db, families_from_db)
-if len(ret)==0:
+ret = Utils.us16_male_last_names(individuals_from_db, families_from_db)
+if len(ret) == 0:
     print("All males in families have the same last name")
 else:
     for fam in ret:
-        print("Warning......Family ({}) has multiple last names: {})".format(fam["FAM"], fam["LNAMES"]))
+        logger.log_family_warning(16,
+                                  "Family ({}) has multiple last names: {})"
+                                  .format(fam["FAM"], fam["LNAMES"]))
 
+logger.print_log()

@@ -10,7 +10,8 @@ import datetime
 #parser and checker
 class parser4:
     
-    def __init__(self, filepath):
+    def __init__(self, filepath, logger):
+        self.logger = logger
         temp1, temp2 = self.__raw2dic(filepath)
         self.indi_dic = temp1
         self.fam_dic = temp2
@@ -195,15 +196,20 @@ class parser4:
             if 'DEAT' in self.indi_dic[id]:
                 agetemp = self.indi_dic[id]['DEAT'][2] - self.indi_dic[id]['BIRT'][2]
                 if agetemp >= 150:
-                    print("Error: Individual: US07: ", id, " More than 150 years old. - Birthday: ", "/".join(str(x) for x in self.indi_dic[id]['BIRT']),
-                          " Death: ", "/".join(str(x) for x in self.indi_dic[id]['DEAT']))
+                    self.logger.log_individual_error(7, "{} is More than 150 years old. - Birthday: {} Death: {}"
+                                                     .format(id,
+                                                             "/".join(str(x) for x in self.indi_dic[id]['BIRT']),
+                                                             "/".join(str(x) for x in self.indi_dic[id]['DEAT']))
+                                                     )
                     invalid_list.append(id)
                 self.indi_dic[id]['AGE'] = agetemp
             else:
                 current_time = datetime.datetime.now()
                 agetemp = current_time.year - self.indi_dic[id]['BIRT'][2]
                 if agetemp >= 150:
-                    print("Error: Individual: US07: ", id, " More than 150 years old. - Birthday: ", "/".join(str(x) for x in self.indi_dic[id]['BIRT']))
+                    self.logger.log_individual_error(7, "{} is More than 150 years old. - Birthday: {} "
+                                                     .format(id,
+                                                             "/".join(str(x) for x in self.indi_dic[id]['BIRT'])))
                     invalid_list.append(id)
                 self.indi_dic[id]['AGE'] = agetemp
         return invalid_list
@@ -231,26 +237,37 @@ class parser4:
         for indi_id, person in self.indi_dic.items():
             if 'BIRT' in person:
                 if not self.compCurrentDate(person['BIRT']):
-                    print("Error: Individual: US01: ", indi_id, " Birthday: ", "/".join(str(x) for x in person['BIRT']), " Occurs in the future.")
+                    self.logger.log_individual_error(1,
+                                                     "{} Birthday: {} Occurs in the future"
+                                                     .format(indi_id,
+                                                             "/".join(str(x) for x in person['BIRT'])))
                     if indi_id not in result:
                         result[indi_id] = []
                     result[indi_id].append('BIRT')
             if 'DEAT' in person:
                 if not self.compCurrentDate(person['DEAT']):
-                    print("Error: Individual: US01: ", indi_id, " Death: ", "/".join(str(x) for x in person['DEAT']), " Occurs in the future.")
+                    self.logger.log_individual_error(1,
+                                                     "{} Death: {} Occurs in the future"
+                                                     .format(indi_id,
+                                                             "/".join(str(x) for x in person['DEAT'])))
+
                     if indi_id not in result:
                         result[indi_id] = []
                     result[indi_id].append('DEAT')
         for fam_id, family in self.fam_dic.items():
             if 'MARR' in family:
                 if not self.compCurrentDate(family['MARR']):
-                    print("Error: Family: US01: ", fam_id, " Marriage Date : ", "/".join(str(x) for x in family['MARR']), " Occurs in the future.")
+                    self.logger.log_family_error(1, "{} Marriage Date: {} Occurs in the future"
+                                                 .format(fam_id,
+                                                         "/".join(str(x) for x in family['MARR'])))
                     if fam_id not in result:
                         result[fam_id] = []
                     result[fam_id].append('MARR')
             if 'DIV' in family:
                 if not self.compCurrentDate(family['DIV']):
-                    print("Error: Family: US01: ", fam_id, " Divorce Date : ", "/".join(str(x) for x in family['DIV']), " Occurs in the future.")
+                    self.logger.log_family_error(1, "{} Divorce Date: {} Occurs in the future"
+                                                 .format(fam_id,
+                                                         "/".join(str(x) for x in family['DIV'])))
                     if fam_id not in result:
                         result[fam_id] = []
                     result[fam_id].append('DIV')
