@@ -1,4 +1,5 @@
 from collections import namedtuple
+from pprint import pprint
 
 BirthDateKeyedIndividual = namedtuple('BirthdayKeyedIndividual', 'birthday name id')
 
@@ -35,17 +36,123 @@ def filter_non_unique_individuals(individuals):
 
 
 
+def getParent2ChildrenMap(families):
     """
+     Build a map of parent to children - crosses families if married more than once
+    :param List of Individuals and Families 
+    :returns Map of all Parent IDs to Children
+    """
+    parentId2Children={}
+
+    for fam in families:
+        #don't need to do anything if there's no children
+        if ("CHIL" in fam) and type(fam["CHIL"]) is list:
+
+            #add child to parent id mapping
+            for child in fam["CHIL"]:
+                # build husband parent to child mapping
+                if ("HUSB" in fam) and type(fam["HUSB"]) is list:
+                    for husb in fam["HUSB"]:
+                        if husb in parentId2Children:
+                            if child not in parentId2Children[husb]:
+                                parentId2Children[husb].append(child)
+                        else:
+                            parentId2Children[husb]=[]
+                            parentId2Children[husb].append(child)
+
+                # build husband parent to child mapping
+                if ("WIFE" in fam) and type(fam["WIFE"]) is list:
+                    for wife in fam["WIFE"]:
+                        if wife in parentId2Children:
+                            if child not in parentId2Children[wife]:
+                                parentId2Children[wife].append(child)
+                        else:
+                            parentId2Children[wife]=[child]
+
+    return parentId2Children;
+
+
+def getMySpouse(id, fam):
+    """
+     Figure out My Spouse in the current family
+    :param a single family
+    :returns my spouse in the given family
+    """
+    #check if there is a wife field
+
+    Spouses=[]
+
+    if ("WIFE" in fam) and type(fam["WIFE"]) is list:
+        #if not same sex marriage - your spouse is in the husband field - or there is no spouse
+        if id in fam["WIFE"] and len(fam["WIFE"])==1:
+            if "HUSB" in fam and type(fam["HUSB"]) is list:
+                Spouses=fam["HUSB"]
+        else:
+            #get all spouses in the wife list that aren't input id
+            for wid in fam["WIFE"]:
+                if id != wid:
+                    Spouses.append(wid)
+    else:
+         #there is no wife - so both spouses are in the HUSB list or there is no spouse
+         #if I'm the first WIFE, my spouse is the second
+         for wid in fam["HUSB"]:
+             if id != wid:
+                Spouses.append(wid)
+
+    return Spouses
+
+
+def getSpousesInFamily(fam):
+    """
+     Return spouses in a single family in one array
+
+    :param a single family
+    :returns array of the spouses 
+    """
+
+    Spouses=[]
+
+    if ("WIFE" in fam) and type(fam["WIFE"]) is list:
+        #if not same sex marriage - your spouse is in the husband field - or there is no spouse
+        for wife in fam["WIFE"]:
+            if wife not in Spouses:
+                Spouses.append(wife)
+
+    if ("HUSB" in fam) and type(fam["HUSB"]) is list:
+        #if not same sex marriage - your spouse is in the husband field - or there is no spouse
+        for husb in fam["HUSB"]:
+            if husb not in Spouses:
+                Spouses.append(husb)
+
+    return Spouses
+
+
+def us17_no_marr2childa(individuals, families):
+     """
      Checks for Families where a spouse is married to a child
 
-    :param Families collection in the database
-    :returns List of Familes that have a spouse married to a child
-    """
-def us17_no_marr2child(famObj):
-        #Call database to get all families with marriages to children
-            return famObj.getMarriagestoChildren()
+     :param Families collection in the database
+     :returns List of Familes that have a spouse married to a child
+     """
 
+     ret= []  # list of suspect families
+     parentId2Children=getParent2ChildrenMap(families)  #create a map of all parents to children
 
+     for fam in families:
+         # get all husband/wives in the family and check to see if their spouse is their child
+         spouses=getSpousesInFamily(fam)
+         for spouse in spouses:
+             mySpouses=getMySpouse(spouse, fam) # just in case you have more than one spouse
+             for myspouse in mySpouses:
+                 #get all my children and check if spouse is in them
+                 if spouse in parentId2Children:
+                     children=parentId2Children[spouse]
+                     if myspouse in children:
+                         #my spouse is married to my child
+                         tmp={"Spouse":spouse, "MySpouse":myspouse, "FAM":fam["FAM"], "MyChildren":children}
+                         ret.append(tmp)
+     #return all matches
+     return ret
 
 
 def us16_male_last_names(individuals, families):
@@ -88,3 +195,4 @@ def us16_male_last_names(individuals, families):
 
     return male_lastnames;
     
+
