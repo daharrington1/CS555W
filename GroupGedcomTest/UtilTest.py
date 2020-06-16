@@ -1,5 +1,5 @@
 import unittest
-from Utils import filter_non_unique_individuals, BirthDateKeyedIndividual
+from Utils.Utils import filter_non_unique_individuals, BirthDateKeyedIndividual
 
 
 class UtilTest(unittest.TestCase):
