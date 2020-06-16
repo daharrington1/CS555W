@@ -1,5 +1,4 @@
 from collections import namedtuple
-from pprint import pprint
 
 BirthDateKeyedIndividual = namedtuple('BirthdayKeyedIndividual', 'birthday name id')
 
