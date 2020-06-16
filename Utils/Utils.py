@@ -127,13 +127,17 @@ def getSpousesInFamily(fam):
     return Spouses
 
 
-def us17_no_marr2childa(individuals, families):
+def us17_no_marr2childa(individuals=None, families=None):
      """
      Checks for Families where a spouse is married to a child
 
      :param Families collection in the database
      :returns List of Familes that have a spouse married to a child
      """
+     if (individuals == None) or (families == None):
+        print("Inputs are missing")
+        raise Exception(ValueError, "Missing Inputs")
+
 
      ret= []  # list of suspect families
      parentId2Children=getParent2ChildrenMap(families)  #create a map of all parents to children
@@ -158,6 +162,10 @@ def us17_no_marr2childa(individuals, families):
 def us16_male_last_names(individuals, families):
     male_lastnames = []  # list of suspect families
     id2Name={}           # mapping of male ids to last name
+
+    if (individuals == None) or (families == None):
+        print("Inputs are missing")
+        raise Exception(ValueError, "Missing Inputs")
 
     # build map of id to mail last names
     for ind in individuals:

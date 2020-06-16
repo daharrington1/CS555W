@@ -1,10 +1,10 @@
 import unittest
 from db.db_interface  import GenComDb
-from Utils.Utils import us17_no_marr2childa
+from Utils.Utils import us16_male_last_names
 import json, sys, pprint
 
 
-class US17Test(unittest.TestCase):
+class US16Test(unittest.TestCase):
     families = None
     individuals = None
 
@@ -62,79 +62,64 @@ class US17Test(unittest.TestCase):
         self.individuals.append({"NAME":"Mary/Hastings/","SEX":"F","BIRT":[28,11,1970],"FAMS":["F11"],"NOTE":"MarryToChildFAMILY","AGE":50,"INDI":"I27"})
 
 
-    def test_US17_noinputs(self):
+    def test_US16_noinputs(self):
         # bad inputs
         with self.assertRaises(Exception) as context:
-            ret=us17_no_marr2childa(None, None)
+            ret=us16_male_last_names(None, None)
 
         with self.assertRaises(Exception) as context:
-            ret=us17_no_marr2childa(self.families)
+            ret=us16_male_last_names(self.families)
 
         with self.assertRaises(Exception) as context:
-            ret=us17_no_marr2childa(self.individuals)
+            ret=us16_male_last_names(self.individuals)
 
-    def test_US17_listsswitched(self):
+    #def test_US16_listsswitched(self):
         #should to get 1 match
-        ret=us17_no_marr2childa(self.families, self.individuals)
-        self.assertEqual(len(ret), 0, "Did not get the expected results")
+        #ret=us16_male_last_names(self.families, self.individuals)
+        #self.assertEqual(len(ret), 0, "Did not get the expected results")
 
-    def test_US17_1family(self):
+    def test_US16_1family(self):
         #should to get 1 match
-        ret=us17_no_marr2childa(self.individuals, self.families)
+        self.families[9]={"HUSB":["I21"],"WIFE":["I20"],"CHIL":["I22","I21"],"MARR":[8,3,2019],"FAM":"F10", "NOTE":"MARSHALL/DUNPHY FAMILY"}
+        ret=us16_male_last_names(self.individuals, self.families)
         self.assertEqual(len(ret), 1, "Did not get the expected results")
 
-    def test_US17_1family_text(self):
+    def test_US16_1family_text(self):
         #should find 1 match and the following expected result
-        ret=us17_no_marr2childa(self.individuals, self.families)
-        expected_ret= [{'Spouse': 'I27', 'MySpouse': 'I26', 'FAM': 'F11', 'MyChildren': ['I26']}]
-        ret=us17_no_marr2childa(self.individuals, self.families)
+        self.families[9]={"HUSB":["I21"],"WIFE":["I20"],"CHIL":["I22","I21"],"MARR":[8,3,2019],"FAM":"F10", "NOTE":"MARSHALL/DUNPHY FAMILY"}
+        expected_ret= [{'FAM': 'F4', 'LNAMES': ['Pritchett', 'Tucker', 'Tucker-Pritchett']}]
+        ret=us16_male_last_names(self.individuals, self.families)
         self.assertListEqual(expected_ret, ret, "Expected Return does not match")
 
-    def test_US17_2family(self):
-        #should get 2 matches
-        # Adding Lorraine as a child of Frank's first marriage
-        self.individuals[12]={"NAME":"Lorraine/Dunphy/","SEX":"F","BIRT":[1,1,1965],"FAMS":["F8", "F7"],"AGE":55,"INDI":"I12"}
-        self.families[6]={"HUSB":["I11"],"WIFE":["I13"],"CHIL":["I7", "I12"],"MARR":[1,1,1965],"NOTE":"FRANK/GRACE FAMILY","FAM":"F7"}
-
-        ret=us17_no_marr2childa(self.individuals, self.families)
+    def test_US16_2family(self):
+        #should get 1 match
+        ret=us16_male_last_names(self.individuals, self.families)
         self.assertEqual(len(ret), 2, "Did not get the expected results")
 
-    def test_US17_2family_text(self):
-        #should find 2 matches and the following expected result
-        # Adding Lorraine as a child of Frank's first marriage
-        self.individuals[12]={"NAME":"Lorraine/Dunphy/","SEX":"F","BIRT":[1,1,1965],"FAMS":["F8", "F7"],"AGE":55,"INDI":"I12"}
-        self.families[6]={"HUSB":["I11"],"WIFE":["I13"],"CHIL":["I7", "I12"],"MARR":[1,1,1965],"NOTE":"FRANK/GRACE FAMILY","FAM":"F7"}
+    def test_US16_2family_text(self):
+        #should find 1 match and the following expected result
 
-        ret=us17_no_marr2childa(self.individuals, self.families)
-        expected_ret= [{'Spouse': 'I11', 'MySpouse': 'I12', 'FAM': 'F8', 'MyChildren': ['I7', 'I12']}, {'Spouse': 'I27', 'MySpouse': 'I26', 'FAM': 'F11', 'MyChildren': ['I26']}]
-        ret=us17_no_marr2childa(self.individuals, self.families)
+        ret=us16_male_last_names(self.individuals, self.families)
+        expected_ret=[{'FAM': 'F4', 'LNAMES': ['Pritchett', 'Tucker', 'Tucker-Pritchett']}, {'FAM': 'F10', 'LNAMES': ['Marshall', 'Hastings']}]
+        ret=us16_male_last_names(self.individuals, self.families)
+
         self.assertListEqual(expected_ret, ret, "Expected Return does not match")
 
-    def test_US17_3family_text(self):
-        #should find 2 matches and the following expected result
-        # Adding Lorraine as a child of Frank's first marriage
-        self.individuals[12]={"NAME":"Lorraine/Dunphy/","SEX":"F","BIRT":[1,1,1965],"FAMS":["F8", "F7"],"AGE":55,"INDI":"I12"}
-        self.families[6]={"HUSB":["I11"],"WIFE":["I13"],"CHIL":["I7", "I12"],"MARR":[1,1,1965],"NOTE":"FRANK/GRACE FAMILY","FAM":"F7"}
-        self.families[3]={"HUSB":["I4","I5"],"CHIL":["I14","I15","I5"],"MARR":[1,1,2014],"NOTE":"PRITCHETT/TUCKER FAMILY","FAM":"F4","WIFE":"-"}
 
-        expected_ret= [{'Spouse': 'I4', 'MySpouse': 'I5', 'FAM': 'F4', 'MyChildren': ['I14', 'I15', 'I5']}, {'Spouse': 'I11', 'MySpouse': 'I12', 'FAM': 'F8', 'MyChildren': ['I7', 'I12']}, {'Spouse': 'I27', 'MySpouse': 'I26', 'FAM': 'F11', 'MyChildren': ['I26']}]
-        ret=us17_no_marr2childa(self.individuals, self.families)
-        self.assertListEqual(expected_ret, ret, "Expected Return does not match")
-
-    def test_US17_nomatches(self):
+    #def test_US16_nomatches(self):
         # Remove the family where parent is married to a child
-        self.families[10]={"HUSB":["I26"],"WIFE":["I27"],"CHIL":["I3"],"MARR":[16,1,2018],"NOTE":"MarryToChildFAMILY","FAM":"F11"}
+    #    self.families[10]={"HUSB":["I26"],"WIFE":["I27"],"CHIL":["I3"],"MARR":[16,1,2018],"NOTE":"MarryToChildFAMILY","FAM":"F11"}
 
-        ret=us17_no_marr2childa(self.individuals, self.families)
-        self.assertEqual(len(ret), 0, "Did not get the expected results")
+    #    ret=us16_male_last_names(self.individuals, self.families)
+    #    self.assertEqual(len(ret), 0, "Did not get the expected results")
 
-    def test_US17_nomatches_text(self):
+    #def test_US16_nomatches_text(self):
         # Remove the family where parent is married to a child
-        self.families[10]={"HUSB":["I26"],"WIFE":["I27"],"CHIL":["I3"],"MARR":[16,1,2018],"NOTE":"MarryToChildFAMILY","FAM":"F11"}
+    #    self.families[10]={"HUSB":["I26"],"WIFE":["I27"],"CHIL":["I3"],"MARR":[16,1,2018],"NOTE":"MarryToChildFAMILY","FAM":"F11"}
 
-        expected_ret= []
-        ret=us17_no_marr2childa(self.individuals, self.families)
-        self.assertListEqual(expected_ret, ret, "Expected Return does not match")
+    #    expected_ret= []
+    #    ret=us16_male_last_names(self.individuals, self.families)
+    #    self.assertListEqual(expected_ret, ret, "Expected Return does not match")
 
 
 
