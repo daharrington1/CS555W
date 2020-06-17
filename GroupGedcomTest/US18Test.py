@@ -1,14 +1,14 @@
 import unittest
-from Utils.Utils import us17_no_marr2child
+from Utils.Utils import us18_no_siblingmarriages
 
 #
 # Test Scripts for User Story 17: No marriages to children
 # Author: Debbie Harrington
 #
-# Test Scripts for verifying US17 user story
+# Test Scripts for verifying US18 user story
 #
 
-class US17Test(unittest.TestCase):
+class US18Test(unittest.TestCase):
     families = None
     individuals = None
 
@@ -26,7 +26,7 @@ class US17Test(unittest.TestCase):
         self.families.append({"HUSB":["I1"],"WIFE":["I2"],"CHIL":["I10"],"MARR":[1,1,2009],"NOTE":"JAY/GLORIA FAMILY","FAM":"F1"})
         self.families.append({"HUSB":["I1"],"WIFE":["I3"],"CHIL":["I4","I6"],"MARR":[1,1,2025],"DIV":[28,6,2020],"NOTE":"JAY/DEEDEE","FAM":"F2"})
         self.families.append({"HUSB":["I8"],"WIFE":["I2"],"CHIL":["I9"],"MARR":[1,1,1995],"DIV":[1,1,2006],"NOTE":"JAVIER/GLORIA","FAM":"F3"})
-        self.families.append({"HUSB":["I4","I5"],"CHIL":["I14","I15"],"MARR":[1,1,2014],"NOTE":"PRITCHETT/TUCKER FAMILY","FAM":"F4","WIFE":"-"})
+        self.families.append({"HUSB":["I4","I5"],"CHIL":["I14","I15", "I4", "I5"],"MARR":[1,1,2014],"NOTE":"PRITCHETT/TUCKER FAMILY","FAM":"F4","WIFE":"-"})
         self.families.append({"HUSB":["I16"],"WIFE":["I17"],"CHIL":["I5","I18"],"MARR":[1,1,1963],"NOTE":"MERLE/BARB FAMILY","FAM":"F5"})
         self.families.append({"HUSB":["I7"],"WIFE":["I6"],"CHIL":["I20","I24","I25"],"MARR":[1,4,1993],"NOTE":"PHIL/CLAIRE FAMILY","FAM":"F6"})
         self.families.append({"HUSB":["I11"],"WIFE":["I13"],"CHIL":["I7"],"MARR":[1,1,1965],"NOTE":"FRANK/GRACE FAMILY","FAM":"F7"})
@@ -66,76 +66,63 @@ class US17Test(unittest.TestCase):
         self.individuals.append({"NAME":"Mary/Hastings/","SEX":"F","BIRT":[28,11,1970],"FAMS":["F11"],"NOTE":"MarryToChildFAMILY","AGE":50,"INDI":"I27"})
 
 
-    def test_US17_noinputs(self):
+    def test_US18_noinputs(self):
         # bad inputs
         with self.assertRaises(Exception) as context:
-            ret=us17_no_marr2child(None, None)
+            ret=us18_no_siblingmarriages(None, None)
 
         with self.assertRaises(Exception) as context:
-            ret=us17_no_marr2child(self.families)
+            ret=us18_no_siblingmarriages(self.families)
 
         with self.assertRaises(Exception) as context:
-            ret=us17_no_marr2child(self.individuals)
+            ret=us18_no_siblingmarriages(self.individuals)
 
-    def test_US17_listsswitched(self):
+    def test_US18_listsswitched(self):
         #should to get 1 match
-        ret=us17_no_marr2child(self.families, self.individuals)
+        ret=us18_no_siblingmarriages(self.families, self.individuals)
         self.assertEqual(len(ret), 0, "Did not get the expected results")
 
-    def test_US17_1family(self):
+    def test_US18_1family(self):
         #should to get 1 match
-        ret=us17_no_marr2child(self.individuals, self.families)
+        ret=us18_no_siblingmarriages(self.individuals, self.families)
         self.assertEqual(len(ret), 1, "Did not get the expected results")
 
-    def test_US17_1family_text(self):
+    def test_US18_1family_text(self):
         #should find 1 match and the following expected result
-        expected_ret= [{'Spouse': 'I27', 'MySpouse': 'I26', 'FAM': 'F11', 'MyChildren': ['I26']}]
-        ret=us17_no_marr2child(self.individuals, self.families)
+        expected_ret= [{'Parents': {'I5', 'I4'}, 'FAM': 'F4'}]
+        ret=us18_no_siblingmarriages(self.individuals, self.families)
         self.assertListEqual(expected_ret, ret, "Expected Return does not match")
 
-    def test_US17_2family(self):
+    def test_US18_half_sibling(self):
         #should get 2 matches
-        # Adding Lorraine as a child of Frank's first marriage
-        self.individuals[12]={"NAME":"Lorraine/Dunphy/","SEX":"F","BIRT":[1,1,1965],"FAMS":["F8", "F7"],"AGE":55,"INDI":"I12"}
-        self.families[6]={"HUSB":["I11"],"WIFE":["I13"],"CHIL":["I7", "I12"],"MARR":[1,1,1965],"NOTE":"FRANK/GRACE FAMILY","FAM":"F7"}
-
-        ret=us17_no_marr2child(self.individuals, self.families)
+        # testing half sibling
+        self.families[0]={"HUSB":["I1"],"WIFE":["I2"],"CHIL":["I10", "I1"],"MARR":[1,1,2009],"NOTE":"JAY/GLORIA FAMILY","FAM":"F1"}
+        self.families[2]={"HUSB":["I8"],"WIFE":["I2"],"CHIL":["I9", "I2"],"MARR":[1,1,1995],"DIV":[1,1,2006],"NOTE":"JAVIER/GLORIA","FAM":"F3"}
+        ret=us18_no_siblingmarriages(self.individuals, self.families)
         self.assertEqual(len(ret), 2, "Did not get the expected results")
 
-    def test_US17_2family_text(self):
-        #should find 2 matches and the following expected result
-        # Adding Lorraine as a child of Frank's first marriage
-        self.individuals[12]={"NAME":"Lorraine/Dunphy/","SEX":"F","BIRT":[1,1,1965],"FAMS":["F8", "F7"],"AGE":55,"INDI":"I12"}
-        self.families[6]={"HUSB":["I11"],"WIFE":["I13"],"CHIL":["I7", "I12"],"MARR":[1,1,1965],"NOTE":"FRANK/GRACE FAMILY","FAM":"F7"}
+    def test_US18_half_sibling_text(self):
+        # testing half sibling
+        self.families[0]={"HUSB":["I1"],"WIFE":["I2"],"CHIL":["I10", "I1"],"MARR":[1,1,2009],"NOTE":"JAY/GLORIA FAMILY","FAM":"F1"}
+        self.families[2]={"HUSB":["I8"],"WIFE":["I2"],"CHIL":["I9", "I2"],"MARR":[1,1,1995],"DIV":[1,1,2006],"NOTE":"JAVIER/GLORIA","FAM":"F3"}
 
-        expected_ret= [{'Spouse': 'I11', 'MySpouse': 'I12', 'FAM': 'F8', 'MyChildren': ['I7', 'I12']}, {'Spouse': 'I27', 'MySpouse': 'I26', 'FAM': 'F11', 'MyChildren': ['I26']}]
-        ret=us17_no_marr2child(self.individuals, self.families)
+        expected_ret= [{'FAM': 'F1', 'Parents': {'I2', 'I1'}}, {'FAM': 'F4', 'Parents': {'I5', 'I4'}}]
+        ret=us18_no_siblingmarriages(self.individuals, self.families)
         self.assertListEqual(expected_ret, ret, "Expected Return does not match")
-
-    def test_US17_3family_text(self):
-        #should find 2 matches and the following expected result
-        # Adding Lorraine as a child of Frank's first marriage
-        self.individuals[12]={"NAME":"Lorraine/Dunphy/","SEX":"F","BIRT":[1,1,1965],"FAMS":["F8", "F7"],"AGE":55,"INDI":"I12"}
-        self.families[6]={"HUSB":["I11"],"WIFE":["I13"],"CHIL":["I7", "I12"],"MARR":[1,1,1965],"NOTE":"FRANK/GRACE FAMILY","FAM":"F7"}
-        self.families[3]={"HUSB":["I4","I5"],"CHIL":["I14","I15","I5"],"MARR":[1,1,2014],"NOTE":"PRITCHETT/TUCKER FAMILY","FAM":"F4","WIFE":"-"}
-
-        expected_ret= [{'Spouse': 'I4', 'MySpouse': 'I5', 'FAM': 'F4', 'MyChildren': ['I14', 'I15', 'I5']}, {'Spouse': 'I11', 'MySpouse': 'I12', 'FAM': 'F8', 'MyChildren': ['I7', 'I12']}, {'Spouse': 'I27', 'MySpouse': 'I26', 'FAM': 'F11', 'MyChildren': ['I26']}]
-        ret=us17_no_marr2child(self.individuals, self.families)
-        self.assertListEqual(expected_ret, ret, "Expected Return does not match")
-
-    def test_US17_nomatches(self):
+#
+    def test_US18_nomatches(self):
+        self.families[3]={"HUSB":["I4","I5"],"CHIL":["I14","I15"],"MARR":[1,1,2014],"NOTE":"PRITCHETT/TUCKER FAMILY","FAM":"F4","WIFE":"-"}
         # Remove the family where parent is married to a child
-        self.families[10]={"HUSB":["I26"],"WIFE":["I27"],"CHIL":["I3"],"MARR":[16,1,2018],"NOTE":"MarryToChildFAMILY","FAM":"F11"}
 
-        ret=us17_no_marr2child(self.individuals, self.families)
+        ret=us18_no_siblingmarriages(self.individuals, self.families)
         self.assertEqual(len(ret), 0, "Did not get the expected results")
 
-    def test_US17_nomatches_text(self):
+    def test_US18_nomatches_text(self):
         # Remove the family where parent is married to a child
-        self.families[10]={"HUSB":["I26"],"WIFE":["I27"],"CHIL":["I3"],"MARR":[16,1,2018],"NOTE":"MarryToChildFAMILY","FAM":"F11"}
+        self.families[3]={"HUSB":["I4","I5"],"CHIL":["I14","I15"],"MARR":[1,1,2014],"NOTE":"PRITCHETT/TUCKER FAMILY","FAM":"F4","WIFE":"-"}
 
         expected_ret= []
-        ret=us17_no_marr2child(self.individuals, self.families)
+        ret=us18_no_siblingmarriages(self.individuals, self.families)
         self.assertListEqual(expected_ret, ret, "Expected Return does not match")
 
 
