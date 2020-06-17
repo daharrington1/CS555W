@@ -35,7 +35,6 @@ def filter_non_unique_individuals(individuals):
     return {key: value for key, value in birthday_name_mapping.items() if len(value) > 1}
 
 
-
 def getParent2ChildrenMap(families):
     """
      Build a map of parent to children - crosses families if married more than once
@@ -45,6 +44,7 @@ def getParent2ChildrenMap(families):
     parentId2Children={}
 
     for fam in families:
+          
         #don't need to do anything if there's no children
         if ("CHIL" in fam) and type(fam["CHIL"]) is list:
 
@@ -127,16 +127,51 @@ def getSpousesInFamily(fam):
     return Spouses
 
 
-def us17_no_marr2childa(individuals=None, families=None):
+def us18_no_siblingmarriages(individuals=None, families=None):
+     """
+     User Story 18: Checks for Families where spouses are siblings
+                    Siblings include half siblings also
+
+     :param Familie and Individual lists 
+     :returns List of Familees that have sblings as spouses
+     """
+
+     if (individuals == None) or (families == None):
+        raise Exception(ValueError, "Missing Inputs")
+
+     #declare empty list
+     ret= []  # list of mappings of parent to siblings 
+
+     parentId2Children=getParent2ChildrenMap(families)  #create a map of all parents to children
+
+     for fam in families:
+         # get all husband/wives in the family and check to see if their spouse is their child
+         spouses=getSpousesInFamily(fam)
+         #print("spouses: {}".format(spouses))
+
+         # loop thru parentId2Children and see if there is an intersection of spouses and children
+         for item in parentId2Children:
+             #print("children: {}".format(parentId2Children[item]))
+             if len(set(parentId2Children[item]).intersection(set(spouses))) > 1:
+                 #print("intersection: fam: {}".format(fam))
+                 tmp={"Parents":set(parentId2Children[item]).intersection(set(spouses)), "FAM":fam["FAM"]}
+                 ret.append(tmp)
+                 break;
+     
+     #return all matches
+     return ret;
+     
+
+
+def us17_no_marr2child(individuals=None, families=None):
      """
      User Story 17: Checks for Families where a spouse is married to a child
 
-     :param Families collection in the database
+     :param Families and Individual lists
      :returns List of Familes that have a spouse married to a child
      """
 
      if (individuals == None) or (families == None):
-        print("Inputs are missing")
         raise Exception(ValueError, "Missing Inputs")
 
 
@@ -171,7 +206,6 @@ def us16_male_last_names(individuals, families):
     id2Name={}           # mapping of male ids to last name
 
     if (individuals == None) or (families == None):
-        print("Inputs are missing")
         raise Exception(ValueError, "Missing Inputs")
 
     # build map of id to mail last names

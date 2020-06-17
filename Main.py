@@ -82,7 +82,7 @@ else:
 
 
 # Check for any parents married to children
-ret=Utils.us17_no_marr2childa(individuals_from_db, families_from_db)
+ret=Utils.us17_no_marr2child(individuals_from_db, families_from_db)
 if len(ret)==0:
     print("No spouses in families are married to children")
 else:
@@ -95,7 +95,15 @@ if len(ret)==0:
     print("All males in families have the same last name")
 else:
     for fam in ret:
-        logger.log_family_warning(16, "{} has multiple last names: {})".format(fam["FAM"], fam["LNAMES"]))
+        logger.log_family_warning(16, "{} has multiple last names: {}".format(fam["FAM"], fam["LNAMES"]))
+
+
+ret=Utils.us18_no_siblingmarriages(individuals_from_db, families_from_db)
+if len(ret)==0:
+    print("There are no marriages with siblings")
+else:
+    for fam in ret:
+        logger.log_family_warning(18, "{} has siblings as parents: {}".format(fam["FAM"], fam["Parents"]))
 
 
 logger.print_log()

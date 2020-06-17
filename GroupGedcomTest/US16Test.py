@@ -1,7 +1,5 @@
 import unittest
-from db.db_interface  import GenComDb
 from Utils.Utils import us16_male_last_names
-import json, sys, pprint
 
 #
 #Test Scripts for User Story 16: Males Last Names
@@ -101,7 +99,6 @@ class US16Test(unittest.TestCase):
     def test_US16_2family_text(self):
         #should find 1 match and the following expected result
 
-        ret=us16_male_last_names(self.individuals, self.families)
         expected_ret=[{'FAM': 'F4', 'LNAMES': ['Pritchett', 'Tucker', 'Tucker-Pritchett']}, {'FAM': 'F10', 'LNAMES': ['Marshall', 'Hastings']}]
         ret=us16_male_last_names(self.individuals, self.families)
 
