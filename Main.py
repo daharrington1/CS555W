@@ -109,6 +109,7 @@ else:
 logger.print_log()
 
 
-# Chengyi Zhang Sprint 1 -- call usrun
-usrun.children_parents_divorced(families_from_db,individuals_from_db)
-usrun.people_same_birthday(individuals_from_db)
+# Chengyi Zhang Sprint 1
+usrun.us24(families_from_db, individuals_from_db)
+usrun.us32(families_from_db, individuals_from_db)
+usrun.logger.print_log()
