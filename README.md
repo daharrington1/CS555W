@@ -36,7 +36,7 @@
 * https://github.com/daharrington1/CS555W.git
 
 # Test Cases
-* US01I1 birthday; I3 death day; F2 marry date and divorce date
+* US01I1 birthday; I3 death day; F2 marry date and divorce date F12 marriage date
 * US07 I3 
 * US18 I10 I6 in F12
 * US17 I26 I27 in F11
