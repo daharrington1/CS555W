@@ -1,5 +1,5 @@
 import unittest
-from Utils.Utils import us16_male_last_names
+from Utils.UserStory16 import us16_male_last_names
 
 #
 #Test Scripts for User Story 16: Males Last Names

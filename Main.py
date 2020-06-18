@@ -3,6 +3,7 @@ from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
 from Utils.Logger import Logger
+from Utils import UserStory17, UserStory18, UserStory16
 import usrun
 
 logger = Logger()
@@ -82,7 +83,7 @@ else:
 
 
 # Check for any parents married to children
-ret=Utils.us17_no_marr2child(individuals_from_db, families_from_db)
+ret=UserStory17.us17_no_marr2child(individuals_from_db, families_from_db)
 if len(ret)==0:
     print("No spouses in families are married to children")
 else:
@@ -91,7 +92,7 @@ else:
 
 
 # User Story to be delivered in future sprint
-#ret=Utils.us16_male_last_names(individuals_from_db, families_from_db)
+#ret=UserStory16.us16_male_last_names(individuals_from_db, families_from_db)
 #if len(ret)==0:
 #    print("All males in families have the same last name")
 #else:
@@ -99,7 +100,7 @@ else:
 #        logger.log_family_warning(16, "{} has multiple last names: {}".format(fam["FAM"], fam["LNAMES"]))
 
 
-ret=Utils.us18_no_siblingmarriages(individuals_from_db, families_from_db)
+ret=UserStory18.us18_no_siblingmarriages(individuals_from_db, families_from_db)
 if len(ret)==0:
     print("There are no marriages with siblings")
 else:
