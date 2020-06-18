@@ -35,11 +35,6 @@
 # Github Repository
 * https://github.com/daharrington1/CS555W.git
 
-# Packages Used
-* nltk
-* pymongo
-* tabulate
-
 # Test Cases
 * US01I1 birthday; I3 death day; F2 marry date and divorce date
 * US07 I3 
