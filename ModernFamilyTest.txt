@@ -76,7 +76,7 @@
 2 DATE 3 MAR 1970
 1 FAMS @F6@
 1 FAMC @F2@
-1 FAMC @F12@
+1 FAMS @F12@
 0 @I7@ INDI
 1 NAME Phil /Dunphy/
 2 GIVN Phil
@@ -114,7 +114,7 @@
 1 BIRT
 2 DATE 4 JAN 2013
 1 FAMC @F1@
-1 FAMC @F12@
+1 FAMS @F12@
 0 NOTE Duplicate name and birthday individual
 0 @I89@ INDI
 1 NAME Jay /Pritchett/
