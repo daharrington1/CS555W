@@ -239,7 +239,7 @@
 2 DATE 8 MAY 2019
 1 FAMC @F10@
 0 @I23@ INDI
-1 NAME George /Hastings/
+1 NAME George /Marshall/
 2 GIVN George
 2 SURN Marshall
 2 _MARNM Marshall
