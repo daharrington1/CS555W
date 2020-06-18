@@ -39,3 +39,13 @@
 * nltk
 * pymongo
 * tabulate
+
+# Test Cases
+* US01I1 birthday; I3 death day; F2 marry date and divorce date
+* US07 I3 
+* US18 I10 I6 in F12
+* US17 I26 I27 in F11
+* US29 
+* US23 I4 I28
+* US24
+* US32 I11 I13
