@@ -1,5 +1,5 @@
 import unittest
-from Utils.Utils import us17_no_marr2child
+from Utils.UserStory17 import us17_no_marr2child
 
 #
 # Test Scripts for User Story 17: No marriages to children
