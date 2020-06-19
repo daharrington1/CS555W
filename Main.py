@@ -108,9 +108,6 @@ else:
         logger.log_family_error(18, "{} has siblings as parents: {}".format(fam["FAM"], fam["Parents"]))
 
 
-logger.print_log()
-
-
 # Chengyi Zhang Sprint 1
 usrun.us24(families_from_db, individuals_from_db)
 usrun.us32(families_from_db, individuals_from_db)
