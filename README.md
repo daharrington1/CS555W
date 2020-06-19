@@ -6,7 +6,7 @@
 * Database: MongoDB
 * To execute the current program:
    * python3 Main.py 
-      * must have the ModernFamily.ged file in the current directory
+      * must have the ModernFamilyTest.ged file in the current directory
 
 # Team Logistics
 * Zoom Meeting: 8PM Eastern Time, Mondays & Thursdays
