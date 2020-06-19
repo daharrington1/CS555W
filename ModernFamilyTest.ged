@@ -25,6 +25,7 @@
 2 DATE 28 DEC 2021
 1 FAMS @F1@
 1 FAMS @F2@
+1 FAMS @F13@
 0 @I2@ INDI
 1 NAME Gloria /Unknown/
 2 GIVN Gloria
@@ -46,6 +47,7 @@
 1 DEAT Y
 2 DATE 1 OCT 2100
 1 FAMS @F2@
+1 
 0 @I4@ INDI
 1 NAME Mitchell /Pritchett/
 2 GIVN Mitchell
