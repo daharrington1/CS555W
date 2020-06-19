@@ -1,20 +1,25 @@
-echo "UserStory23/29 Tests:"
+
+echo ""
+echo ""
+echo "Running DBInterfaceTests Tests:"
 python3 -m unittest GroupGedcomTest/DBInterfaceTest.py  
 echo ""
+echo ""
+echo "Running TablePrinterTests Tests:"
 python3 -m unittest GroupGedcomTest/TablePrinterTest.py  
 echo ""
+echo ""
+echo "Running US18Test Tests:"
 python3 -m unittest GroupGedcomTest/US18Test.py  
-
-
-echo "UserStory17 Tests:"
+echo ""
+echo ""
+echo "Running US17Test Tests:"
 python3 -m unittest GroupGedcomTest/US17Test.py  
 echo ""
-
-echo "UserStory18 Tests:"
-python3 -m unittest GroupGedcomTest/US18Test.py  
-
-echo "UserStory 24/32 Tests:"
-python3 -m unittest GroupGedcomTest/US18Test.py  
-
-echo "UserStory 01/07 Tests:"
+echo ""
+echo "Running Project4Test Tests:"
 python3 -m unittest GroupGedcomTest/project4Test.py
+echo ""
+echo ""
+echo "Running usrun Tests:"
+python3 -m unittest GroupGedcomTest/usrun_test.py
