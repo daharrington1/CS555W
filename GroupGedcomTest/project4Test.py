@@ -28,7 +28,7 @@ class MyTest(unittest.TestCase):
         #test the error numbers
         length = len(toComp.keys())
         #print(length, type(length))
-        self.assertEqual(length, 5)
+        self.assertEqual(length, 6)
     
     #age is less than 150
     def test_age(self):
