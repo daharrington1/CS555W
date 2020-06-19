@@ -57,7 +57,7 @@ def unique_families(families_from_db, individuals_from_db):
 def us32(families_from_db,individuals_from_db):
     ret = multiple_births(families_from_db, individuals_from_db)
     for birth, famid, indiid in ret:
-        logger.log_family_anomaly(32, "Family {} has children {} with the same birthday {}"
+        logger.log_family_warning(32, "Family {} has children {} with the same birthday {}"
                                 .format(famid, ', '.join(indiid[:-1]) + ' and ' + indiid[-1], birth))
 
 def multiple_births(families_from_db, individuals_from_db):
