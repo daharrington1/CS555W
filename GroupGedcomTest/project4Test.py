@@ -28,7 +28,7 @@ class MyTest(unittest.TestCase):
         #test the error numbers
         length = len(toComp.keys())
         #print(length, type(length))
-        self.assertEqual(length, 3)
+        self.assertEqual(length, 5)
     
     #age is less than 150
     def test_age(self):
@@ -36,7 +36,7 @@ class MyTest(unittest.TestCase):
         self.assertListEqual(invalid, ['I3'])
 
     def setUp(self) -> None:
-        self.totest = parser4("../ModernFamilyTest.ged", Logger())
+        self.totest = parser4("ModernFamilyTest.ged", Logger())
 
     def tearDown(self) -> None:
         self.totest = None
