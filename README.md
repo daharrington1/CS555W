@@ -20,12 +20,6 @@
 * GitHub Merge Adminstrator: Joseph Allen
 * Customer Advocate: Professor Rowland
 
-# Proj 3 Roles  
-* Joseph Allen: Object for printing information
-* Yikun Han: Expand current parser for collecting data per individual and family
-* Debbie Harrington: DB design - will provide interface to Joeseph/Yikun by Wed.
-* Chengyi Zhang: Write and Execute Unit Tests
-
 # Team Members
 * Joseph Allen
 * Debbie Harrington
@@ -35,7 +29,7 @@
 # Github Repository
 * https://github.com/daharrington1/CS555W.git
 
-# Test Cases
+# Sprint 1 Test Cases
 * US01I1 birthday; I3 death day; F2 marry date and divorce date F12 marriage date
 * US07 I3 
 * US18 I10 I6 in F12
