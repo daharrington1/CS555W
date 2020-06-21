@@ -22,14 +22,13 @@ Individuals
 | I25 |       Luke /Dunphy/        |   M    | 28/11/1998 |  22  | True  |    N/A     |    F6    |    N/A    |
 | I26 |      Luke /Hastings/       |   M    | 28/11/1998 |  22  | True  |    N/A     |   F11    |    F11    |
 | I27 |      Mary /Hastings/       |   F    | 28/11/1970 |  50  | True  |    N/A     |   N/A    |    F11    |
-| I28 |    Mitchell /Pritchett/    |   M    | 01/06/1975 |  45  | True  |    N/A     |  F10086  |    F13    |
+| I28 |    Mitchell /Pritchett/    |   M    | 01/06/1975 |  45  | True  |    N/A     |   F13    |    N/A    |
 | I3  |      DeDe /Pritchett/      |   F    | 23/01/1947 | 153  | False | 01/10/2100 |   N/A    |  F2,F13   |
 | I4  |    Mitchell /Pritchett/    |   M    | 01/06/1975 |  45  | True  |    N/A     |    F2    |    F4     |
 | I5  |      Cameron /Tucker/      |   M    | 29/02/1972 |  48  | True  |    N/A     |    F5    |    F4     |
 | I6  |     Claire /Pritchett/     |   F    | 03/03/1970 |  50  | True  |    N/A     |    F2    |  F6,F12   |
 | I7  |       Phil /Dunphy/        |   M    | 03/04/1967 |  53  | True  |    N/A     |    F7    |    F6     |
 | I8  |      Javier /Delgado/      |   M    | 01/01/1969 |  51  | True  |    N/A     |   N/A    |    F3     |
-| I89 |      Jay /Pritchett/       |   M    | 28/12/2021 |  -1  | True  |    N/A     |   N/A    |    N/A    |
 | I9  |      Manny /Delgado/       |   M    | 04/01/1999 |  21  | True  |    N/A     |    F3    |    N/A    |
 +-----+----------------------------+--------+------------+------+-------+------------+----------+-----------+
 Dead Individuals
@@ -48,7 +47,7 @@ Families
 | F10 | 08/03/2019 |    N/A     |    I21     |            Dylan /Marshall/             |   I20   |   Haley /Dunphy/   |    I22,I23    |
 | F11 | 16/01/2018 |    N/A     |    I26     |             Luke /Hastings/             |   I27   |  Mary /Hastings/   |      I26      |
 | F12 | 25/12/2050 |    N/A     |    I10     |             Joe /Pritchett/             |   I6    | Claire /Pritchett/ |     None      |
-| F13 | 01/01/2025 |    N/A     |     I1     |             Jay /Pritchett/             |   I3    |  DeDe /Pritchett/  |     None      |
+| F13 | 01/01/2025 |    N/A     |     I1     |             Jay /Pritchett/             |   I3    |  DeDe /Pritchett/  |      I28      |
 | F2  | 01/01/2025 | 28/06/2020 |     I1     |             Jay /Pritchett/             |   I3    |  DeDe /Pritchett/  |     I4,I6     |
 | F3  | 01/01/1995 | 01/01/2006 |     I8     |            Javier /Delgado/             |   I2    |  Gloria /Unknown/  |      I9       |
 | F4  | 01/01/2014 |    N/A     |   I4,I5    | Mitchell /Pritchett/ & Cameron /Tucker/ |    -    |         -          | I14,I15,I4,I5 |
@@ -61,8 +60,6 @@ Families
 Error: Individual: US07: I3 is More than 150 years old. - Birthday: 23/1/1947 Death: 1/10/2100
 Error: Individual: US01: I1 Birthday: 28/12/2021 Occurs in the future
 Error: Individual: US01: I3 Death: 1/10/2100 Occurs in the future
-Error: Individual: US01: I89 Birthday: 28/12/2021 Occurs in the future
-Error: Individual: US23: Same Name & birthday For Name: Jay /Pritchett/ and Date: 28/12/2021 for ids I1,I89
 Error: Individual: US23: Same Name & birthday For Name: Mitchell /Pritchett/ and Date: 01/06/1975 for ids I4,I28
 Error: Family: US01: F2 Marriage Date: 1/1/2025 Occurs in the future
 Error: Family: US01: F2 Divorce Date: 28/6/2020 Occurs in the future
