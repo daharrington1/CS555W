@@ -30,11 +30,20 @@
 * https://github.com/daharrington1/CS555W.git
 
 # Sprint 1 Test Cases
-* US01I1 birthday; I3 death day; F2 marry date and divorce date F12 marriage date
-* US07 I3 
-* US18 I10 I6 in F12
-* US17 I26 I27 in F11
-* US29 
-* US23 I4 I28
-* US24 I1 I3 in F13 and F2
-* US32 I11 I13
+* US01 date before current date: I10086 DONE
+* US07 age more than 150 years: I10086 DONE
+* US18 I10 I6 in F128 half siblings married DONE
+* US17 I26 I27 in F129 marry to child: F129 DONE
+* US29 list deceased: I11 I3 I13 DONE
+* US23 I1 I128 unique name and birt DONE
+* US24 I1 I2 in F1 and F128 unique familys by spouse DONE
+* US32 I11 I13 multiple birt DONE
+# Sprint 2 Test Cases
+* US02 birt before marr: F129 I19 DONE
+* US03 birt before deat: I128 DONE
+* US30 living married DONE
+* US31 living single DONE
+* US42 invalid date: I10086 DONE
+* US33 list orphan: I7 DONE
+* US38 list upcoming birt: I23 DONE
+* US11 bigamy F128 F6 DONE
