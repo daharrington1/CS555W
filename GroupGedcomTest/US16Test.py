@@ -1,7 +1,5 @@
 import unittest
-import sys
-sys.path.append('../Utils')
-from UserStory16 import us16_male_last_names
+from Utils.UserStory16 import us16_male_last_names
 
 #
 #Test Scripts for User Story 16: Males Last Names
