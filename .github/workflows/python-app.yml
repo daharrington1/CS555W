@@ -32,7 +32,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with shell script
       run: |
-        ./run_utests.sh
+        sh ./run_utests.sh
     - name: Test with python unit tests with unittest
       run: |
         python -m unittest GroupGedcomTest/*.py
