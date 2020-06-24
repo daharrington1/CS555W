@@ -4,9 +4,15 @@ Created on Mon Jun  8 20:54:16 2020
 
 @author: 韩逸堃
 """
-from Parser.parserV4 import parser4
 import unittest
-from Utils.Logger import Logger
+import sys
+sys.path.append('../Utils')
+from Logger import Logger
+sys.path.append('../Parser')
+from parserV4 import parser4
+sys.path.append('../')
+
+
 
 class MyTest(unittest.TestCase):
     #any kind of ahead should be detected
@@ -36,7 +42,7 @@ class MyTest(unittest.TestCase):
         self.assertListEqual(invalid, ['I3'])
 
     def setUp(self) -> None:
-        self.totest = parser4("ModernFamilyTest.ged", Logger())
+        self.totest = parser4("../ModernFamilyTest.ged", Logger())
 
     def tearDown(self) -> None:
         self.totest = None
