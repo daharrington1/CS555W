@@ -1,5 +1,7 @@
 import unittest
-from Utils.UserStory17 import us17_no_marr2child
+import sys
+sys.path.append('../Utils')
+from UserStory17 import us17_no_marr2child
 
 #
 # Test Scripts for User Story 17: No marriages to children
