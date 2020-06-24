@@ -30,20 +30,22 @@
 * https://github.com/daharrington1/CS555W.git
 
 # Sprint 1 Test Cases
-* US01 date before current date: I10086 DONE
-* US07 age more than 150 years: I10086 DONE
-* US18 I10 I6 in F128 half siblings married DONE
-* US17 I26 I27 in F129 marry to child: F129 DONE
-* US29 list deceased: I11 I3 I13 DONE
-* US23 I1 I128 unique name and birt DONE
-* US24 I1 I2 in F1 and F128 unique familys by spouse DONE
-* US32 I11 I13 multiple birt DONE
+* US01 date before current date: I10086 BIRT DEAT
+* US07 age more than 150 years: I10086
+* US18 I10 I6 in F128 half siblings married
+* US17 marry to child: F9
+* US29 list deceased: I11 I3 I13
+* US23 I1 I128 unique name and birt
+* US24 I1 I2 in F1 and F128 unique familys by spouse
+* US32 I11 I13 multiple birt
 # Sprint 2 Test Cases
-* US02 birt before marr: F129 I19 DONE
-* US03 birt before deat: I128 DONE
-* US30 living married DONE
-* US31 living single DONE
-* US42 invalid date: I10086 DONE
-* US33 list orphan: I7 DONE
-* US38 list upcoming birt: I23 DONE
-* US11 bigamy F128 F6 DONE
+* US02 birt before marr: I19 F9
+* US03 birt before deat: I128
+* US30 living married
+* US31 living single
+* US42 invalid date: I10086 DEAT
+* US33 list orphan: I7
+* US38 list upcoming birt: I23
+* US11 bigamy F128 F6
+# Test File Note
+* I10086 and I128 should not appear in any family, they're listed only as erroneous examples
