@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest pymongo nltk tabulate
+        pip install flake8 pytest pymongo nltk tabulate mockito
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: print python version
       run: |
