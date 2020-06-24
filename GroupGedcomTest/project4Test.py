@@ -4,12 +4,9 @@ Created on Mon Jun  8 20:54:16 2020
 
 @author: 韩逸堃
 """
-import unittest
-import sys
-from Utils.Logger import Logger
 from Parser.parserV4 import parser4
-
-
+import unittest
+from Utils.Logger import Logger
 
 
 class MyTest(unittest.TestCase):
