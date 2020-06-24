@@ -1,9 +1,7 @@
 import unittest
 
 from mockito import mock, when
-import sys
-sys.path.append('../TablePrinter')
-from TablePrinter import TablePrinter
+from TablePrinter.TablePrinter import TablePrinter
 
 
 class TablePrinterTest(unittest.TestCase):
