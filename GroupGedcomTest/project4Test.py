@@ -8,6 +8,7 @@ from Parser.parserV4 import parser4
 import unittest
 from Utils.Logger import Logger
 
+
 class MyTest(unittest.TestCase):
     #any kind of ahead should be detected
     def test_compCurrentDate(self):

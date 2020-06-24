@@ -1,0 +1,55 @@
+# This workflow will install Python dependencies, run python unit tests tests and lint for
+# the ModernFamily Gedcom Parser Project.
+#
+# Author: Debbie Harrington/ default Github Action script
+#
+# This script started with the default Github Actions script and grew from there.
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python application
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        # need the punkt package also for parsing.
+        python -c "import nltk; nltk.download('punkt')"
+        
+    # some of the unit test scripts require a mongodb instance to be there.
+    - name: start mongodb 
+      run: sudo systemctl start mongod
+      
+    - name: print python version
+      run: |
+        python -c "import sys; print(sys.version)"
+        
+    - name: Lint with flake8
+      run: |
+        # Run flake8 as for lint - treat everything as warnings for now.
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        
+    - name:  Run all unit tests as a group
+      run : |
+        python -m unittest GroupGedcomTest/*.py
+        
+    - name: Run each individual individual test separately with shell script
+      run: |
+        chmod +x ./run_utests.sh
+        ./run_utests.sh
+        
+ 

@@ -1,7 +1,6 @@
 import unittest
 
 from mockito import mock, when
-
 from TablePrinter.TablePrinter import TablePrinter
 
 
