@@ -16,7 +16,7 @@ class TablePrinter:
     error_output = "-"
     _not_applicable = "N/A"
     _table_format_type = "pretty"
-    table_label_dead_individual = "Dead Individuals"
+    table_label_dead_individual = "US29: Dead Individuals"
     _table_label_individual = "Individuals"
     _table_label_family = "Families"
 
