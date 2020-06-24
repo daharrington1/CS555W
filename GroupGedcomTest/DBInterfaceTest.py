@@ -1,6 +1,7 @@
 import unittest
-from db.db_interface import GenComDb
-
+import sys
+sys.path.append('../db')
+from db_interface import GenComDb
 
 # Ideally the backing db would be mocked with an in-memory document store, however correctly mocking MongoDB is a
 # decently heavy weight process, which per the requirements does not seem needed.
