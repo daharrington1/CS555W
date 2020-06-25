@@ -1,5 +1,6 @@
 from collections import namedtuple
 from pprint import pprint
+import datetime 
 
 BirthDateKeyedIndividual = namedtuple('BirthdayKeyedIndividual', 'birthday name id')
 
@@ -33,6 +34,34 @@ def filter_non_unique_individuals(individuals):
 
     # Return only the collisions as they are therefore not unique
     return {key: value for key, value in birthday_name_mapping.items() if len(value) > 1}
+
+
+def getIdMap(records):
+    """
+     Build a map of id to their record
+    :param List of either Individuals and Families from the database
+    :returns Map of all IDs to record
+    """
+    idMap = dict()
+    for record in records:
+        if "INDI" in record:
+            idMap.setdefault(record['INDI'], record)
+        if "FAM" in record:
+            idMap.setdefault(record['FAM'], record)
+
+    return idMap;
+
+
+def getDateTimestamp(date):
+    """
+     Convert the array date value to a date timestamp
+    :param Single Date in an array
+    :returns Timestamp of the date
+    """
+
+    # convert to timestamp - inputs: year/month/date
+    date_timestamp =  datetime.datetime(date[2], date[1], date[0]).timestamp()
+    return date_timestamp
 
 
 def getParent2ChildrenMap(families):
@@ -127,7 +156,7 @@ def getSpousesInFamily(fam):
     return Spouses
 
 
-def get_latest_date(dates):
+def getLatestDate(dates):
     """
      Return the latest data in an array of dates
     :param List of dates
@@ -136,60 +165,24 @@ def get_latest_date(dates):
     #for date in dates:
         #print("Latest Dates: date: {}".format(date))
 
-    latest_date=dates[0]
+    latest_date=getDateTimestamp(dates[0])
+    latest_date_val=dates[0]
+
     if len(dates) > 1:
         i=1
         dlen=len(dates)
         while i < dlen:
-             #print("Index i: {}".format(i))
-             # if the year is greater - than greater date
-             val1=dates[i][2]
-             val2=latest_date[2]
-             #print("val1: {}, val2:{}".format(val1, val2))
-             if val1>val2:
-                 latest_date=dates[i]
-                 i=i+1;
-                 continue
+             date=getDateTimestamp(dates[i])
+             if date <= latest_date:
+                 i=i+1
+                 continue;
+             else:
+                 latest_date=date
+                 latest_date_val=dates[i]
 
-             # if the year is less - break
-             if val1<val2:
-                 i=i+1;
-                 continue
+             i=i+1
 
-             # the year is the same - look at the month
-             # if the month is greater - than greater date
-             val1=dates[i][1]
-             val2=latest_date[1]
-             #print("val1: {}, val2:{}".format(val1, val2))
-             if val1>val2:
-                 latest_date=dates[i]
-                 i=i+1;
-                 continue
-
-             # if the month is less - break
-             if val1<val2:
-                 i=i+1;
-                 continue
-
-             # the year and month are the same - look at the day
-             # if the day is greater - than continue
-             val1=dates[i][0]
-             val2=latest_date[0]
-             #print("val1: {}, val2:{}".format(val1, val2))
-             if val1>val2:
-                 latest_date=dates[i]
-                 i=i+1;
-                 continue
-
-             # if the day is less - break
-             if val1<val2:
-                 i=i+1;
-                 continue
-
-             i=i+1;
-
-
-    return latest_date
+    return latest_date_val
 
 
 def getMaritalStatus(individuals, families):
@@ -199,55 +192,18 @@ def getMaritalStatus(individuals, families):
     :returns Map of all IDs to Marriage/Divorces
     """
     Id2MarrStatus={}
-
+    # build a map of marriages and divorces for each spouse in a family
     for fam in families:
-          
-        # look at marriage field
-        if ("MARR" in fam) and type(fam["MARR"]) is list:
-
-            # build husband to child mapping
-            if ("HUSB" in fam) and type(fam["HUSB"]) is list:
-               for husb in fam["HUSB"]:
-                   if husb in Id2MarrStatus:
-                       Id2MarrStatus[husb]["MARR"].append(fam["MARR"])
-                   else:
-                       tmp={"MARR":[], "DIV":[]}
-                       Id2MarrStatus[husb]=tmp;
-                       Id2MarrStatus[husb]["MARR"].append(fam["MARR"])
-
-            # build wife to child mapping
-            if ("WIFE" in fam) and type(fam["WIFE"]) is list:
-               for wife in fam["WIFE"]:
-                   if wife in Id2MarrStatus:
-                       Id2MarrStatus[wife]["MARR"].append(fam["MARR"])
-                   else:
-                       tmp={"MARR":[], "DIV":[]}
-                       Id2MarrStatus[wife]=tmp
-                       Id2MarrStatus[wife]["MARR"].append(fam["MARR"])
-
-        #look at DIV field
-        if ("DIV" in fam) and type(fam["DIV"]) is list:
-
-            # build husband to child mapping
-            if ("HUSB" in fam) and type(fam["HUSB"]) is list:
-               for husb in fam["HUSB"]:
-                   if husb in Id2MarrStatus:
-                       Id2MarrStatus[husb]["DIV"].append(fam["DIV"])
-                   else:
-                       tmp={"DIV":[], "DIV":[]}
-                       Id2MarrStatus[husb]=tmp
-                       Id2MarrStatus[husb]["DIV"].append(fam["DIV"])
-
-            # build wife to child mapping
-            if ("WIFE" in fam) and type(fam["WIFE"]) is list:
-               for wife in fam["WIFE"]:
-                   if wife in Id2MarrStatus:
-                       Id2MarrStatus[wife]["DIV"].append(fam["DIV"])
-                   else:
-                       tmp={"MARR":[], "DIV":[]}
-                       Id2MarrStatus[wife]=tmp
-                       Id2MarrStatus[wife]["DIV"].append(fam["DIV"])
-
+        for status in ["MARR", "DIV"]:
+            if (status in fam) and type(fam[status]) is list:  # if the category exists
+                for spouse in ["HUSB", "WIFE"]:  # loop through the spouses
+                    if (spouse in fam) and type(fam[spouse]) is list:
+                        for person in fam[spouse]:
+                           if person in Id2MarrStatus:
+                               Id2MarrStatus[person][status].append(fam[status])
+                           else:
+                               Id2MarrStatus[person]={"MARR":[], "DIV":[]}
+                               Id2MarrStatus[person][status].append(fam[status])
 
     for ind in individuals:
         if ind["INDI"] in Id2MarrStatus:
@@ -257,35 +213,19 @@ def getMaritalStatus(individuals, families):
             if len(divorces)==0:
                 Id2MarrStatus[ind["INDI"]]["Status"]="Married"
             else:
-                latest_marriage=get_latest_date(marriages)
-                latest_divorce=get_latest_date(divorces)
-                if latest_marriage[2]>latest_divorce[2]:
-                    Id2MarrStatus[ind["INDI"]]["Status"]="Married"
-                    continue
+                latest_marriage=getLatestDate(marriages)
+                latest_divorce=getLatestDate(divorces)
 
-                if latest_marriage[2]<latest_divorce[2]:
+                marriageDate=getDateTimestamp(latest_marriage)
+                divorceDate=getDateTimestamp(latest_divorce)
+
+                if divorceDate>=marriageDate:
                     Id2MarrStatus[ind["INDI"]]["Status"]="Divorced"
-                    continue
-
-                # the year is the same - look at the month
-                if latest_marriage[1]>latest_divorce[1]:
+                else:
                     Id2MarrStatus[ind["INDI"]]["Status"]="Married"
-                    continue;
-
-                if latest_marriage[1]<latest_divorce[1]:
-                    Id2MarrStatus[ind["INDI"]]["Status"]="Divorced"
-                    continue;
-
-                # the year and day are the same - look at the day
-                if latest_marriage[0]>latest_divorce[0]:
-                    Id2MarrStatus[ind["INDI"]]["Status"]="Married"
-                    continue;
-
-                Id2MarrStatus[ind["INDI"]]["Status"]="Divorced"
 
         else: # else the person was never married
-            tmp={"MARR":[], "DIV":[], "Status":"Single"}
-            Id2MarrStatus[ind["INDI"]]=tmp
+            Id2MarrStatus[ind["INDI"]]={"MARR":[], "DIV":[], "Status":"Single"}
 
 
     return Id2MarrStatus
