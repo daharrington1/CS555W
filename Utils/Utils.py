@@ -126,40 +126,6 @@ def getSpousesInFamily(fam):
 
     return Spouses
 
-    latest_marriage=get_latest_date(marriages)
-    marriages[0];
-    if len(marriages) > 1:
-        i=1
-        while (i <= len(marriages)):
-             # if the year is greater - than greater marriage
-             if marriages[i][2]>latest_marriage[2]:
-                 latest_marriage=marriages[i]
-                 continue
-
-             # if the year is less - break
-             if marriages[i][2]<latest_marriage[2]:
-                 continue
-
-             # if the month is greater - than greater marriage
-             if marriages[i][1]>latest_marriage[1]:
-                 latest_marriage=marriages[i]
-                 continue
-
-             # if the month is less - break
-             if marriages[i][1]<latest_marriage[1]:
-                 continue
-
-             # if the day is greater - than continue
-             if marriages[i][0]>latest_marriage[0]:
-                 latest_marriage=marriages[i]
-                 continue
-
-             # if the day is less - break
-             if marriages[i][0]<latest_marriage[0]:
-                 continue
-
-    latest_marriage=marriages[0];
-    return latest_date;
 
 def get_latest_date(dates):
     """
