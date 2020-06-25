@@ -126,3 +126,201 @@ def getSpousesInFamily(fam):
 
     return Spouses
 
+    latest_marriage=get_latest_date(marriages)
+    marriages[0];
+    if len(marriages) > 1:
+        i=1
+        while (i <= len(marriages)):
+             # if the year is greater - than greater marriage
+             if marriages[i][2]>latest_marriage[2]:
+                 latest_marriage=marriages[i]
+                 continue
+
+             # if the year is less - break
+             if marriages[i][2]<latest_marriage[2]:
+                 continue
+
+             # if the month is greater - than greater marriage
+             if marriages[i][1]>latest_marriage[1]:
+                 latest_marriage=marriages[i]
+                 continue
+
+             # if the month is less - break
+             if marriages[i][1]<latest_marriage[1]:
+                 continue
+
+             # if the day is greater - than continue
+             if marriages[i][0]>latest_marriage[0]:
+                 latest_marriage=marriages[i]
+                 continue
+
+             # if the day is less - break
+             if marriages[i][0]<latest_marriage[0]:
+                 continue
+
+    latest_marriage=marriages[0];
+    return latest_date;
+
+def get_latest_date(dates):
+    """
+     Return the latest data in an array of dates
+    :param List of dates
+    :returns the latest date
+    """
+    #for date in dates:
+        #print("Latest Dates: date: {}".format(date))
+
+    latest_date=dates[0]
+    if len(dates) > 1:
+        i=1
+        dlen=len(dates)
+        while i < dlen:
+             #print("Index i: {}".format(i))
+             # if the year is greater - than greater date
+             val1=dates[i][2]
+             val2=latest_date[2]
+             #print("val1: {}, val2:{}".format(val1, val2))
+             if val1>val2:
+                 latest_date=dates[i]
+                 i=i+1;
+                 continue
+
+             # if the year is less - break
+             if val1<val2:
+                 i=i+1;
+                 continue
+
+             # the year is the same - look at the month
+             # if the month is greater - than greater date
+             val1=dates[i][1]
+             val2=latest_date[1]
+             #print("val1: {}, val2:{}".format(val1, val2))
+             if val1>val2:
+                 latest_date=dates[i]
+                 i=i+1;
+                 continue
+
+             # if the month is less - break
+             if val1<val2:
+                 i=i+1;
+                 continue
+
+             # the year and month are the same - look at the day
+             # if the day is greater - than continue
+             val1=dates[i][0]
+             val2=latest_date[0]
+             #print("val1: {}, val2:{}".format(val1, val2))
+             if val1>val2:
+                 latest_date=dates[i]
+                 i=i+1;
+                 continue
+
+             # if the day is less - break
+             if val1<val2:
+                 i=i+1;
+                 continue
+
+             i=i+1;
+
+
+    return latest_date
+
+
+def getMaritalStatus(individuals, families):
+    """
+     Build a map of person to marriage/divorces
+    :param List of Families 
+    :returns Map of all IDs to Marriage/Divorces
+    """
+    Id2MarrStatus={}
+
+    for fam in families:
+          
+        # look at marriage field
+        if ("MARR" in fam) and type(fam["MARR"]) is list:
+
+            # build husband to child mapping
+            if ("HUSB" in fam) and type(fam["HUSB"]) is list:
+               for husb in fam["HUSB"]:
+                   if husb in Id2MarrStatus:
+                       Id2MarrStatus[husb]["MARR"].append(fam["MARR"])
+                   else:
+                       tmp={"MARR":[], "DIV":[]}
+                       Id2MarrStatus[husb]=tmp;
+                       Id2MarrStatus[husb]["MARR"].append(fam["MARR"])
+
+            # build wife to child mapping
+            if ("WIFE" in fam) and type(fam["WIFE"]) is list:
+               for wife in fam["WIFE"]:
+                   if wife in Id2MarrStatus:
+                       Id2MarrStatus[wife]["MARR"].append(fam["MARR"])
+                   else:
+                       tmp={"MARR":[], "DIV":[]}
+                       Id2MarrStatus[wife]=tmp
+                       Id2MarrStatus[wife]["MARR"].append(fam["MARR"])
+
+        #look at DIV field
+        if ("DIV" in fam) and type(fam["DIV"]) is list:
+
+            # build husband to child mapping
+            if ("HUSB" in fam) and type(fam["HUSB"]) is list:
+               for husb in fam["HUSB"]:
+                   if husb in Id2MarrStatus:
+                       Id2MarrStatus[husb]["DIV"].append(fam["DIV"])
+                   else:
+                       tmp={"DIV":[], "DIV":[]}
+                       Id2MarrStatus[husb]=tmp
+                       Id2MarrStatus[husb]["DIV"].append(fam["DIV"])
+
+            # build wife to child mapping
+            if ("WIFE" in fam) and type(fam["WIFE"]) is list:
+               for wife in fam["WIFE"]:
+                   if wife in Id2MarrStatus:
+                       Id2MarrStatus[wife]["DIV"].append(fam["DIV"])
+                   else:
+                       tmp={"MARR":[], "DIV":[]}
+                       Id2MarrStatus[wife]=tmp
+                       Id2MarrStatus[wife]["DIV"].append(fam["DIV"])
+
+
+    for ind in individuals:
+        if ind["INDI"] in Id2MarrStatus:
+            # then  this person has been either married or divorced
+            marriages=Id2MarrStatus[ind["INDI"]]["MARR"]
+            divorces=Id2MarrStatus[ind["INDI"]]["DIV"]
+            if len(divorces)==0:
+                Id2MarrStatus[ind["INDI"]]["Status"]="Married"
+            else:
+                latest_marriage=get_latest_date(marriages)
+                latest_divorce=get_latest_date(divorces)
+                if latest_marriage[2]>latest_divorce[2]:
+                    Id2MarrStatus[ind["INDI"]]["Status"]="Married"
+                    continue
+
+                if latest_marriage[2]<latest_divorce[2]:
+                    Id2MarrStatus[ind["INDI"]]["Status"]="Divorced"
+                    continue
+
+                # the year is the same - look at the month
+                if latest_marriage[1]>latest_divorce[1]:
+                    Id2MarrStatus[ind["INDI"]]["Status"]="Married"
+                    continue;
+
+                if latest_marriage[1]<latest_divorce[1]:
+                    Id2MarrStatus[ind["INDI"]]["Status"]="Divorced"
+                    continue;
+
+                # the year and day are the same - look at the day
+                if latest_marriage[0]>latest_divorce[0]:
+                    Id2MarrStatus[ind["INDI"]]["Status"]="Married"
+                    continue;
+
+                Id2MarrStatus[ind["INDI"]]["Status"]="Divorced"
+
+        else: # else the person was never married
+            tmp={"MARR":[], "DIV":[], "Status":"Single"}
+            Id2MarrStatus[ind["INDI"]]=tmp
+
+
+    return Id2MarrStatus
+

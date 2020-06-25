@@ -3,7 +3,7 @@ from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
 from Utils.Logger import Logger
-from Utils import UserStory17, UserStory18, UserStory16
+from Utils import UserStory17, UserStory18, UserStory16, UserStory30, UserStory31
 import usrun
 
 logger = Logger()
@@ -106,6 +106,20 @@ if len(ret)==0:
 else:
     for fam in ret:
         logger.log_family_error(18, "{} has siblings as parents: {}".format(fam["FAM"], fam["Parents"]))
+
+ret=UserStory31.us31_get_single_individuals(individuals_from_db, families_from_db)
+if len(ret)==0:
+    print("There are no single (i.e. non-divorced, non-married individuals")
+else:
+    ret.sort()
+    logger.log_family_error(31, "Individuals who are single (never married or divorced):{}".format(",".join(ret)))
+
+ret=UserStory30.us30_get_married_individuals(individuals_from_db, families_from_db)
+if len(ret)==0:
+    print("There are no Marriaged Individuals")
+else:
+    ret.sort()
+    logger.log_family_error(30, "Married Individuals:{}".format(",".join(ret)))
 
 
 # Chengyi Zhang Sprint 1
