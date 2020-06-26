@@ -79,6 +79,10 @@ class Logger:
     def log_family_warning(self, use_case, error_message):
         self._log(self._warning_label, self._family_collection, use_case, error_message)
 
+    def log_error(self, use_case, is_individual, error_message):
+        self._log(self._error_label, self._individual_collection if is_individual else self._family_collection,
+                  use_case, error_message)
+
     def print_log(self):
         self._outputMessages.sort(reverse=True)
         for log_entry in self._outputMessages:

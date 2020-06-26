@@ -6,8 +6,10 @@ from Utils.Logger import Logger
 from Utils import UserStory17, UserStory18, UserStory16, UserStory30, UserStory31
 import usrun
 from Utils.UserStory33 import find_all_orphans
+from Utils.DateValidator import DateValidator
 
 logger = Logger()
+dateValidator = DateValidator(logger)
 
 # Get a reference to the collection, and clear out previous data, assuming desired behavior is always to read from file
 individual_database = GenComDb(GenComDb.MONGO_INDIVIDUALS)
@@ -34,6 +36,9 @@ for parsed_individual_id in parsed_individuals:
     individual["INDI"] = parsed_individual_id
     individual_database.AddObj(individual)
 
+    for key in [key for key in ["BIRT", "DEAT"] if key in individual]:
+        dateValidator.validate_date(individual[key], True)
+
 # These loops can be consolidated after debugging needs are done
 for family_id in parsed_families:
     family = parsed_families[family_id]
@@ -53,6 +58,9 @@ for family_id in parsed_families:
         family["HUSB"] = TablePrinter.error_output
 
     family_database.AddObj(family)
+
+    for key in [key for key in ["MARR", "DIV"] if key in family]:
+        dateValidator.validate_date(family[key], False)
 
 # Read the data back out from the DB
 individuals_from_db = []
