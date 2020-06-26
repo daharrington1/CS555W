@@ -5,6 +5,7 @@ from Utils import Utils
 from Utils.Logger import Logger
 from Utils import UserStory17, UserStory18, UserStory16, UserStory30, UserStory31
 import usrun
+from Utils.UserStory33 import find_all_orphans
 
 logger = Logger()
 
@@ -121,6 +122,12 @@ else:
     ret.sort()
     logger.log_family_error(31, "Individuals who are single (never married or divorced):{}".format(",".join(ret)))
 
+orphans = find_all_orphans(individuals_from_db, families_from_db)
+if len(orphans) > 0:
+    for orphan in orphans:
+        logger.log_individual_anomaly(33, "{} is an orphan".format(orphan))
+else:
+    logger.log_individual_anomaly(33, "No orphans in file")
 
 # Chengyi Zhang Sprint 1
 usrun.us24(families_from_db, individuals_from_db)

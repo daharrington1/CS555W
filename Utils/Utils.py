@@ -1,6 +1,6 @@
 from collections import namedtuple
 from pprint import pprint
-import datetime 
+import datetime
 
 BirthDateKeyedIndividual = namedtuple('BirthdayKeyedIndividual', 'birthday name id')
 
@@ -73,7 +73,7 @@ def getParent2ChildrenMap(families):
     parentId2Children={}
 
     for fam in families:
-          
+
         #don't need to do anything if there's no children
         if ("CHIL" in fam) and type(fam["CHIL"]) is list:
 
@@ -230,3 +230,16 @@ def getMaritalStatus(individuals, families):
 
     return Id2MarrStatus
 
+
+def normalize_spouse_ids(family):
+    """
+    Normalizes the spouse ids of a family into a flat list
+    :param family: The family object to get the spouse ids from
+    :return: A flat list of ids, or the empty list if no ids exist
+    """
+    ids = []
+    for key in ["HUSB", "WIFE"]:
+        if key not in family:
+            continue
+        ids += family[key] if type(family[key]) is list else [family[key]]
+    return ids
