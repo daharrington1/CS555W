@@ -22,6 +22,15 @@ def us31_get_single_individuals(individuals=None, families=None):
      for ind in results:
          if results[ind]["Status"]=="Single":
              ret.append(ind)
-     
+
+         #if results[ind]["Status"]=="Dead":
+             #print("Dead Person: {}".format(ind))
+          
+         #if results[ind]["Status"]=="Divorced":
+             #print("Divorced Person: {}".format(ind))
+
+         #if results[ind]["Status"]=="Widower":
+             #print("Widowed Person: {}".format(ind))
+
      #return all matches
      return ret;
