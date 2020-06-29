@@ -1,4 +1,4 @@
-from Parser.parserV4 import parser4
+from Parser.parser_checker import parser4
 from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
@@ -18,7 +18,7 @@ individual_database.dropCollection()
 family_database.dropCollection()
 
 # parsed_individuals, parsed_families = raw2dic("ModernFamilyTest.ged")
-new_parser = parser4("ModernFamilyTest.ged", logger)
+new_parser = parser4("ModernFamilyTest2.ged", logger)
 parsed_individuals = new_parser.indi_dic
 parsed_families = new_parser.fam_dic
 
