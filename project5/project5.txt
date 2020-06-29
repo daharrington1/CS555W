@@ -1,0 +1,6 @@
+Error: Individual: US07: I10086 is More than 150 years old. - Birthday: 23/5/2025 Death: 32/11/2200
+Error: Individual: US01: I10086 Birthday: 23/5/2025 Occurs in the future
+Error: Individual: US01: I10086 Death: 32/11/2200 Occurs in the future
+Error: Individual: US03: I128: 20/5/1947 Death is before 23/5/1947 birthday.
+Error: Family: US02: F9: 25/12/2008 Marriage Date is before husband ['I19'] 's 5/4/2017 birthday.
+Error: Family: US02: F128: 25/12/2007 Marriage Date is before husband ['I10'] 's 4/1/2013 birthday.
