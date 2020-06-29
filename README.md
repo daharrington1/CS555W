@@ -39,7 +39,7 @@
 * US24 I1 I2 in F1 and F129 unique familys by spouse
 * US32 I11 I13 multiple birt
 # Sprint 2 Test Cases
-* US02 birt before marr: I19 F9
+* US02 birt before marr: I19 F9; I10 F128
 * US03 birt before deat: I128
 * US30 living married
 * US31 living single
