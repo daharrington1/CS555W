@@ -12,7 +12,7 @@ from Utils.Logger import Logger
 class MyTest(unittest.TestCase):
     #any kind of ahead should be detected
     def test_compCurrentDate(self):
-        self.assertFalse(self.totest.compCurrentDate([28,6,2020]))
+        #retrieve current date: same month but with a day before
         self.assertFalse(self.totest.compCurrentDate([12,9,2020]))
         self.assertFalse(self.totest.compCurrentDate([1,6,2021]))
         self.assertFalse(self.totest.compCurrentDate([28,9,2021]))
