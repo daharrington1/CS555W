@@ -1,5 +1,3 @@
-from collections import namedtuple
-from pprint import pprint
 from Utils.Utils import getParent2ChildrenMap, getSpousesInFamily
 
 
@@ -12,7 +10,7 @@ def us18_no_siblingmarriages(individuals=None, families=None):
     :returns List of Familees that have sblings as spouses
     """
 
-    if (individuals == None) or (families == None):
+    if (individuals is None) or (families is None):
         raise Exception(ValueError, "Missing Inputs")
 
     # declare empty list
@@ -32,7 +30,7 @@ def us18_no_siblingmarriages(individuals=None, families=None):
                 # print("intersection: fam: {}".format(fam))
                 tmp = {"Parents": set(parentId2Children[item]).intersection(set(spouses)), "FAM": fam["FAM"]}
                 ret.append(tmp)
-                break;
+                break
 
     # return all matches
-    return ret;
+    return ret
