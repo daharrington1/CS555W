@@ -50,10 +50,10 @@ class parser4:
         >>> conda install -c anaconda nltk (if you're using Conda)
         OR
         >>> pip install --user -U nltk (normal pip install)
-        
+
         in the same directory, import function by
         >>> from project3F import raw2dic
-        
+
         input: GEDCOM file path, string type e.g 'ModernFamily.txt'
         output: individuals, familys two dic of dic, the inner dic may not have the same number of keys
                 individuals{
@@ -64,7 +64,7 @@ class parser4:
                         DEAT: [...] #list of day, month, year in int
                         FAMS: [...] #list of familys' id in string
                         FAMC: [...] #list of familys' id in string
-                        NOTE: [...] 
+                        NOTE: [...]
                     }
                 }
                 familys{
@@ -182,7 +182,7 @@ class parser4:
                     DEAT: [...] #list of day, month, year in int
                     FAMS: [...] #list of familys' id in string
                     FAMC: [...] #list of familys' id in string
-                    NOTE: [...] 
+                    NOTE: [...]
                 }
         }
         list of ids of individuals have invalid age

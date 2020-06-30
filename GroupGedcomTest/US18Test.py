@@ -131,13 +131,13 @@ class US18Test(unittest.TestCase):
     def test_US18_noinputs(self):
         # bad inputs
         with self.assertRaises(Exception) as context:
-            ret = us18_no_siblingmarriages(None, None)
+            us18_no_siblingmarriages(None, None)
 
         with self.assertRaises(Exception) as context:
-            ret = us18_no_siblingmarriages(self.families)
+            us18_no_siblingmarriages(self.families)
 
         with self.assertRaises(Exception) as context:
-            ret = us18_no_siblingmarriages(self.individuals)
+            us18_no_siblingmarriages(self.individuals)
 
     def test_US18_listsswitched(self):
         # should to get 1 match

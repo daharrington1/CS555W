@@ -29,7 +29,7 @@ output: individuals, familys two dic of dic, the inner dic may not have the same
                 DEAT: [...] #list of day, month, year in int
                 FAMS: [...] #list of familys' id in string
                 FAMC: [...] #list of familys' id in string
-                NOTE: [...] 
+                NOTE: [...]
             }
         }
         familys{
@@ -42,7 +42,7 @@ output: individuals, familys two dic of dic, the inner dic may not have the same
                 NOTE: [...]
             }
         }
-call function by 
+call function by
 >> raw2dic('ModernFamily.txt')
 """
 

@@ -119,7 +119,7 @@ class TablePrinter:
 
     """
     Looks up all individual ids in the list, separated by ampersands
-    :param individual_ids, the list of all ids to 
+    :param individual_ids, the list of all ids to
     :return A string in the form "name0 & name1 & name2 ... & nameN" with no trailing " & "
     """
 
