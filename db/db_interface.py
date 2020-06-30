@@ -6,12 +6,7 @@
 # Thisp oroject is using mongodb.   There is one database defined by MONGO_URI.
 # There are 2 collections in the database: MONGO_INDIVIDUALS & MONGO_FAMILYS
 #############################################################################
-#import pprint
-
 import pymongo
-from pymongo import MongoClient
-#from bson import ObjectId
-#import pymongo.errors
 from pprint import pprint
 
 
@@ -204,7 +199,7 @@ class GenComDb:
             genComTag = "FAM"
 
         try:
-            #count = self.collection.find().count()
+            # count = self.collection.find().count()
             # print("Number of records: {}\n".format(count))
             docs = list(self.collection.find({}, {genComTag: 1, "_id": 0}))
             # for doc in docs:
@@ -316,7 +311,7 @@ class GenComDb:
             print("Function not supported for Individuals")
             return
         #else:
-            #genComTag = "FAM"
+            # genComTag = "FAM"
 
         try:
             ret = self.getDocMatch("HUSB", ID)
@@ -342,8 +337,6 @@ class GenComDb:
         if self.collection_id == self.MONGO_INDIVIDUALS:
             print("Function not supported for Individuals")
             return
-        #else:
-            #genComTag = "FAM"
 
         try:
             # print("Matching on CHIL for ID {}".format(ID))

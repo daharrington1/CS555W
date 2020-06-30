@@ -3,7 +3,6 @@ from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
 from Utils.Logger import Logger
-#from Utils import UserStory17, UserStory18, UserStory16, UserStory30, UserStory31
 from Utils import UserStory17, UserStory18, UserStory30, UserStory31
 import usrun
 from Utils.UserStory33 import find_all_orphans
