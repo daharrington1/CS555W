@@ -90,41 +90,40 @@ if len(non_uniques) > 0:
 else:
     print("All individuals are unique in the file, by name and birth date")
 
-
 # Check for any parents married to children
-ret=UserStory17.us17_no_marr2child(individuals_from_db, families_from_db)
-if len(ret)==0:
+ret = UserStory17.us17_no_marr2child(individuals_from_db, families_from_db)
+if len(ret) == 0:
     print("No spouses in families are married to children")
 else:
     for item in ret:
-        logger.log_family_error(17, "{}: My spouse ({}) is one of my children: Parent ({}), Children ({})".format(item["FAM"], item["MySpouse"], item["Spouse"], item["MyChildren"]))
-
+        logger.log_family_error(17, "{}: My spouse ({}) is one of my children: Parent ({}), Children ({})".format(
+            item["FAM"], item["MySpouse"], item["Spouse"], item["MyChildren"]))
 
 # User Story to be delivered in future sprint
-#ret=UserStory16.us16_male_last_names(individuals_from_db, families_from_db)
-#if len(ret)==0:
+# ret=UserStory16.us16_male_last_names(individuals_from_db, families_from_db)
+# if len(ret)==0:
 #    print("All males in families have the same last name")
-#else:
+# else:
 #    for fam in ret:
 #        logger.log_family_warning(16, "{} has multiple last names: {}".format(fam["FAM"], fam["LNAMES"]))
 
 
-ret=UserStory18.us18_no_siblingmarriages(individuals_from_db, families_from_db)
-if len(ret)==0:
+ret = UserStory18.us18_no_siblingmarriages(individuals_from_db, families_from_db)
+if len(ret) == 0:
     print("There are no marriages with siblings")
 else:
     for fam in ret:
         logger.log_family_error(18, "{} has siblings as parents: {}".format(fam["FAM"], fam["Parents"]))
 
-ret=UserStory30.us30_get_married_individuals(individuals_from_db, families_from_db)
-if len(ret)==0:
+ret = UserStory30.us30_get_married_individuals(individuals_from_db, families_from_db)
+if len(ret) == 0:
     print("There are no Marriaged Individuals")
 else:
     ret.sort()
     logger.log_family_error(30, "Married Individuals:{}".format(",".join(ret)))
 
-ret=UserStory31.us31_get_single_individuals(individuals_from_db, families_from_db)
-if len(ret)==0:
+ret = UserStory31.us31_get_single_individuals(individuals_from_db, families_from_db)
+if len(ret) == 0:
     print("There are no single (i.e. non-divorced, non-married individuals")
 else:
     ret.sort()
