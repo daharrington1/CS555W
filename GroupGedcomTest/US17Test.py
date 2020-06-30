@@ -130,13 +130,13 @@ class US17Test(unittest.TestCase):
     def test_US17_noinputs(self):
         # bad inputs
         with self.assertRaises(Exception) as context:
-            ret = us17_no_marr2child(None, None)
+            us17_no_marr2child(None, None)
 
         with self.assertRaises(Exception) as context:
-            ret = us17_no_marr2child(self.families)
+            us17_no_marr2child(self.families)
 
         with self.assertRaises(Exception) as context:
-            ret = us17_no_marr2child(self.individuals)
+            us17_no_marr2child(self.individuals)
 
     def test_US17_listsswitched(self):
         # should to get 1 match

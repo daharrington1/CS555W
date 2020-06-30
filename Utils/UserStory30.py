@@ -1,5 +1,3 @@
-from collections import namedtuple
-from pprint import pprint
 from Utils.Utils import getMaritalStatus
 
 
@@ -11,7 +9,7 @@ def us30_get_married_individuals(individuals=None, families=None):
     :returns List of Married Individuals
     """
 
-    if (individuals == None) or (families == None):
+    if (individuals is None) or (families is None):
         raise Exception(ValueError, "Missing Inputs")
 
     # declare empty list
@@ -24,4 +22,4 @@ def us30_get_married_individuals(individuals=None, families=None):
             ret.append(ind)
 
     # return all matches
-    return ret;
+    return ret
