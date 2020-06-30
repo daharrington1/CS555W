@@ -1,7 +1,3 @@
-from collections import namedtuple
-from pprint import pprint
-
-
 def us16_male_last_names(individuals, families):
     """
     User Story 16: Checks for Male Last Names
@@ -12,7 +8,7 @@ def us16_male_last_names(individuals, families):
     male_lastnames = []  # list of suspect families
     id2Name = {}  # mapping of male ids to last name
 
-    if (individuals == None) or (families == None):
+    if (individuals is None) or (families is None):
         raise Exception(ValueError, "Missing Inputs")
 
     # build map of id to mail last names
@@ -48,4 +44,4 @@ def us16_male_last_names(individuals, families):
             badFam["LNAMES"] = lastNames
             male_lastnames.append(badFam)
 
-    return male_lastnames;
+    return male_lastnames

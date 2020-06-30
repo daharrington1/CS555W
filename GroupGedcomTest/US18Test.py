@@ -14,11 +14,13 @@ class US18Test(unittest.TestCase):
     individuals = None
 
     def setUp(self):
+        self.families = None
+        self.individuals = None
         self.seed_data()
 
     def tearDown(self):
-        families = None
-        individuals = None
+        self.families = None
+        self.individuals = None
 
     def seed_data(self):
         # seed family data - don't need individual data for this test suite
@@ -129,13 +131,13 @@ class US18Test(unittest.TestCase):
     def test_US18_noinputs(self):
         # bad inputs
         with self.assertRaises(Exception) as context:
-            ret = us18_no_siblingmarriages(None, None)
+            us18_no_siblingmarriages(None, None)
 
         with self.assertRaises(Exception) as context:
-            ret = us18_no_siblingmarriages(self.families)
+            us18_no_siblingmarriages(self.families)
 
         with self.assertRaises(Exception) as context:
-            ret = us18_no_siblingmarriages(self.individuals)
+            us18_no_siblingmarriages(self.individuals)
 
     def test_US18_listsswitched(self):
         # should to get 1 match

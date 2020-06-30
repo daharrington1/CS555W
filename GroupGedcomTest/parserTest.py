@@ -10,29 +10,29 @@ from Utils.Logger import Logger
 
 
 class MyTest(unittest.TestCase):
-    #any kind of ahead should be detected
+    # any kind of ahead should be detected
     def test_TwoDate(self):
-        self.assertFalse(self.totest.compTwoDate([12,9,2020], [1,9,2020]))
-        self.assertFalse(self.totest.compTwoDate([12,9,2020], [25,8,2020]))
-        self.assertFalse(self.totest.compTwoDate([12,9,2020], [28,11,1999]))
-        self.assertTrue(self.totest.compTwoDate([12,9,2020], [28,9,2020]))
-        self.assertTrue(self.totest.compTwoDate([12,9,2020], [1,11,2020]))
-        self.assertTrue(self.totest.compTwoDate([12,9,2020], [1,9,2080]))
-        self.assertTrue(self.totest.compTwoDate([12,9,2020], [25,11,2028]))
-    
-    #all date need to be checked, dependent on the validation of 'compCurrentDate' func
+        self.assertFalse(self.totest.compTwoDate([12, 9, 2020], [1, 9, 2020]))
+        self.assertFalse(self.totest.compTwoDate([12, 9, 2020], [25, 8, 2020]))
+        self.assertFalse(self.totest.compTwoDate([12, 9, 2020], [28, 11, 1999]))
+        self.assertTrue(self.totest.compTwoDate([12, 9, 2020], [28, 9, 2020]))
+        self.assertTrue(self.totest.compTwoDate([12, 9, 2020], [1, 11, 2020]))
+        self.assertTrue(self.totest.compTwoDate([12, 9, 2020], [1, 9, 2080]))
+        self.assertTrue(self.totest.compTwoDate([12, 9, 2020], [25, 11, 2028]))
+
+    # all date need to be checked, dependent on the validation of 'compCurrentDate' func
     def test_dataTrav(self):
         currentComp, bmComp, bdComp = self.totest.dateCheck()
-        #test error numbers
+        # test error numbers
         self.assertEqual(len(currentComp.keys()), 1)
         self.assertEqual(len(bmComp), 2)
         self.assertEqual(len(bdComp), 1)
-        #test error types
+        # test error types
         self.assertListEqual(currentComp['I10086'], ['BIRT', 'DEAT'])
         self.assertListEqual(bmComp, [('F9', 'I19'), ('F128', 'I10')])
         self.assertListEqual(bdComp, ['I128'])
-    
-    #age is less than 150
+
+    # age is less than 150
     def test_age(self):
         invalid = self.totest.add_valid_age()
         self.assertListEqual(invalid, ['I10086'])
@@ -46,5 +46,3 @@ class MyTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-

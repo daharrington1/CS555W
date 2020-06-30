@@ -6,18 +6,13 @@
 # Thisp oroject is using mongodb.   There is one database defined by MONGO_URI.
 # There are 2 collections in the database: MONGO_INDIVIDUALS & MONGO_FAMILYS
 #############################################################################
-import json, sys, pprint
-
-import pymongo
 from pymongo import MongoClient
-from bson import ObjectId
-import pymongo.errors
 from pprint import pprint
 
 
 # COllection Layouts
 # Individual Document:
-#    INDI: ID read in  
+#    INDI: ID read in
 #    NAME: entire name - string
 #    SEX: string
 #    BIRTH: string
@@ -65,64 +60,64 @@ class GenComDb:
         # print("[addId] adding ID: {}".format(ID))
 
         if (ID == "") or (ID is None):
-            print("ID MUST BE SPECIFIED and NON BLANK");
-            return None;
+            print("ID MUST BE SPECIFIED and NON BLANK")
+            return None
 
         if self.collection_id == self.MONGO_INDIVIDUALS:
-            tag = "INDI";
+            tag = "INDI"
         else:
-            tag = "FAM";
+            tag = "FAM"
 
         count = self.collection.find({tag: ID}).count()
         if (count > 0):
-            print("FAILURE: {} with ID of {} ALREADY EXISTS".format(tag, ID));
-            return None;
+            print("FAILURE: {} with ID of {} ALREADY EXISTS".format(tag, ID))
+            return None
         else:
             result = self.collection.insert_one({tag: ID})
             # print("Created record - id {}\n".format(result.inserted_id))
-            return result.inserted_id;
+            return result.inserted_id
 
     def AddObj(self, obj):
-        # print("[addObj] Adding object.....");
-        # pprint(obj);
+        # print("[addObj] Adding object.....")
+        # pprint(obj)
 
         if self.collection_id == self.MONGO_INDIVIDUALS:
-            tag = "INDI";
+            tag = "INDI"
         else:
-            tag = "FAM";
+            tag = "FAM"
 
         if tag in obj:
             count = self.collection.count_documents({tag: obj[tag]})
             if (count > 0):
-                print("FAILURE: {} ALREADY EXISTS".format(tag));
-                return None;
+                print("FAILURE: {} ALREADY EXISTS".format(tag))
+                return None
             else:
                 result = self.collection.insert_one(obj)
                 # print("Created record - id {}\n".format(result.inserted_id))
-                return result.inserted_id;
+                return result.inserted_id
         else:
-            print("FAILURE: {} MUST BE SPECIFIED".format(tag));
-            return None;
+            print("FAILURE: {} MUST BE SPECIFIED".format(tag))
+            return None
 
     def updateId(self, genComId=None, tag=None, val=None):
         # update an individual document
         # print("[updateId] updating ID: {}: tag: {}, val:{}".format(genComId, tag, val))
 
         if (genComId == "") or (genComId is None):
-            print("GenCom ID MUST BE SPECIFIED and NON BLANK");
-            return 0;
+            print("GenCom ID MUST BE SPECIFIED and NON BLANK")
+            return 0
 
         if (tag == "") or (tag is None):
-            print("TAG MUST BE SPECIFIED and NON BLANK");
-            return 0;
+            print("TAG MUST BE SPECIFIED and NON BLANK")
+            return 0
 
         if self.collection_id == self.MONGO_INDIVIDUALS and (tag not in self.VALID_IND_FLDS):
-            print("TAG {} IS NOT A VALID INDIVIDUAL TAG".format(tag));
-            return 0;
+            print("TAG {} IS NOT A VALID INDIVIDUAL TAG".format(tag))
+            return 0
 
         if self.collection_id == self.MONGO_FAMILIES and (tag not in self.VALID_FAM_FLDS):
-            print("TAG {} IS NOT A VALID FAMILY TAG".format(tag));
-            return 0;
+            print("TAG {} IS NOT A VALID FAMILY TAG".format(tag))
+            return 0
 
         if self.collection_id == self.MONGO_INDIVIDUALS:
             genComIdTag = "INDI"
@@ -131,8 +126,8 @@ class GenComDb:
 
         count = self.collection.count_documents({genComIdTag: genComId})
         if (count < 1):
-            print("{} DOES NOT EXIST YET".format(genComIdTag));
-            return 0;
+            print("{} DOES NOT EXIST YET".format(genComIdTag))
+            return 0
 
         # update the entry with the tag and value
         result = self.collection.update_many({genComIdTag: genComId}, {"$set": {tag: val}})
@@ -153,8 +148,8 @@ class GenComDb:
             # get the data from the database and throw into a list
             docs = list(self.collection.find(ind))
             # pprint(docs)
-        except:
-            print("Exception finding index {}".format(ind));
+        except Exception as e:
+            print("Exception finding index {}, error({})".format(ind, str(e)))
 
         return docs
 
@@ -168,14 +163,14 @@ class GenComDb:
         try:
             # get the data from the database
             doc = self.collection.find_one({genComId: ID})
-        except:
-            print("Exception finding index {}".format(ID));
+        except Exception as e:
+            print("Exception finding index {}, error({})".format(ID, str(e)))
 
         return doc
 
     def getName(self, ID):
         if self.collection_id == self.MONGO_INDIVIDUALS:
-            # print("Setting tag to INDI");
+            # print("Setting tag to INDI")
             genComTag = "INDI"
         else:
             print("Function not supported for families")
@@ -183,15 +178,15 @@ class GenComDb:
 
         try:
             # get the data from the database
-            count = self.collection.find({genComTag: ID}).count();
+            count = self.collection.find({genComTag: ID}).count()
             if count < 1:
                 print("Tag {} with ID {} not found".format(genComTag, ID))
                 return None
 
             doc = self.collection.find_one({genComTag: ID})
             return doc["NAME"]
-        except:
-            print("Exception retieving NAME for index {}".format(ID));
+        except Exception as e:
+            print("Exception retieving NAME for index {}, error({})".format(ID, str(e)))
             return None
 
     def getAllIds(self):
@@ -204,13 +199,13 @@ class GenComDb:
             genComTag = "FAM"
 
         try:
-            count = self.collection.find().count()
+            # count = self.collection.find().count()
             # print("Number of records: {}\n".format(count))
             docs = list(self.collection.find({}, {genComTag: 1, "_id": 0}))
             # for doc in docs:
             #        pprint(doc[genComTag])
-        except:
-            print("Error in getting all {} ids\n".format(genComTag))
+        except Exception as e:
+            print("Error in getting all {} ids, error({})\n".format(genComTag, str(e)))
 
         return docs
 
@@ -224,7 +219,7 @@ class GenComDb:
     def seed_data(self):
 
         if self.collection_id == self.MONGO_INDIVIDUALS:
-            print("Seeding data in Individual Collection");
+            print("Seeding data in Individual Collection")
             # Add individual one
             indiv = {
                 'INDI': 'I1',
@@ -269,7 +264,7 @@ class GenComDb:
             }
             self.AddObj(indiv4)
         else:
-            print("Seeding data in Family Collection");
+            print("Seeding data in Family Collection")
             fam = {
                 'FAM': 'F1',
                 'HUSB': ['I1'],
@@ -315,8 +310,6 @@ class GenComDb:
         if self.collection_id == self.MONGO_INDIVIDUALS:
             print("Function not supported for Individuals")
             return
-        else:
-            genComTag = "FAM"
 
         try:
             ret = self.getDocMatch("HUSB", ID)
@@ -332,8 +325,8 @@ class GenComDb:
 
             # pprint(docs)
             return docs
-        except:
-            print("Exception matching spouse index {}".format(ID));
+        except Exception as e:
+            print("Exception matching spouse index {}, error({})".format(ID, str(e)))
             return None
 
     # gives list of families where you are a child-addInd(Id)
@@ -342,8 +335,6 @@ class GenComDb:
         if self.collection_id == self.MONGO_INDIVIDUALS:
             print("Function not supported for Individuals")
             return
-        else:
-            genComTag = "FAM"
 
         try:
             # print("Matching on CHIL for ID {}".format(ID))
@@ -355,86 +346,14 @@ class GenComDb:
             # print("Found as Child in Family IDs:")
             # pprint(docs)
             return docs
-        except:
-            print("Exception matching child index {}".format(ID));
+        except Exception as e:
+            print("Exception matching child index {}, error({})".format(ID, str(e)))
             return None
 
     def dropCollection(self):
         # print("+++++++++++++DROPPING COLLECTION: {} ++++++++++++++++++".format(self.collection))
-        self.collection.drop();
+        self.collection.drop()
 
     def dropDatabase(self):
         # print("+++++++++++++DROPPING DATABASE: {} ++++++++++++++++++".format(MONGO_DB))
-        self.client.drop_database(MONGO_DB);
-
-    def getMarriagestoChildren(self):
-
-        # return list of families with marriages to children.
-        # look only at husband/wife/children data that are populated (e.g. they are in arrays)
-        # if a spouse is married to a child- then there will be an intersection between the spouse and the children lists
-
-        results = []
-
-        # only valid for families database
-        if self.collection_id == self.MONGO_INDIVIDUALS:
-            raise Exception(self.MONGO_INDIVIDUALS)
-
-        # query for husband marrying a child - should work for traditional and same sex marriages
-        query = [
-            {"$match":
-                {
-                    "CHIL": {"$exists": "true", "$ne": "-"},
-                    "HUSB": {"$exists": "true", "$ne": "-"}
-                }
-            },
-            {"$project":
-                {
-                    "_id": 0, "FAM": 1, "HUSB": 1, "WIFE": 1, "CHIL": 1, "MarriagetoChildren": 1,
-                    "MarriagetoChildren": {"$setIntersection": ["$HUSB", "$CHIL"]},
-                }
-            },
-            {"$match":
-                {
-                    "MarriagetoChildren": {"$exists": "true", "$not": {"$size": 0}}
-                }
-            }
-        ]
-
-        try:
-            # get the data from the database and throw into a list
-            docs = list(self.collection.aggregate(query))
-            for i in docs:
-                results.append(i)
-        except:
-            print("Problem executing query")
-
-        # query for wife marrying a child - should work for traditional and same sex marriages
-        query = [
-            {"$match":
-                {
-                    "CHIL": {"$exists": "true", "$ne": "-"},
-                    "WIFE": {"$exists": "true", "$ne": "-"}
-                }
-            },
-            {"$project":
-                {
-                    "_id": 0, "FAM": 1, "HUSB": 1, "WIFE": 1, "CHIL": 1, "MarriagetoChildren": 1,
-                    "MarriagetoChildren": {"$setIntersection": ["$WIFE", "$CHIL"]},
-                }
-            },
-            {"$match":
-                {
-                    "MarriagetoChildren": {"$exists": "true", "$not": {"$size": 0}}
-                }
-            }
-        ]
-
-        try:
-            # get the data from the database and throw into a list
-            docs = list(self.collection.aggregate(query))
-            for i in docs:
-                results.append(i)
-        except:
-            print("Problem executing query")
-
-        return results
+        self.client.drop_database(self.MONGO_DB)

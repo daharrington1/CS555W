@@ -7,7 +7,6 @@
 from nltk import word_tokenize
 import datetime
 
-
 # In[11]:
 
 
@@ -30,7 +29,7 @@ output: individuals, familys two dic of dic, the inner dic may not have the same
                 DEAT: [...] #list of day, month, year in int
                 FAMS: [...] #list of familys' id in string
                 FAMC: [...] #list of familys' id in string
-                NOTE: [...] 
+                NOTE: [...]
             }
         }
         familys{
@@ -43,10 +42,12 @@ output: individuals, familys two dic of dic, the inner dic may not have the same
                 NOTE: [...]
             }
         }
-call function by 
+call function by
 >> raw2dic('ModernFamily.txt')
 """
-#convert month abbreviate to number representation
+
+
+# convert month abbreviate to number representation
 def month_str2num(mstring):
     if mstring == 'JAN':
         return 1
@@ -73,6 +74,7 @@ def month_str2num(mstring):
     elif mstring == 'DEC':
         return 12
 
+
 def raw2dic(file):
     filepath = file
     lines = []
@@ -84,8 +86,8 @@ def raw2dic(file):
                   'HUSB', 'WIFE', 'CHIL', 'DIV', 'DATE', 'HEAD', 'TRLR', 'NOTE']
     valid_tags_level1 = ['NAME', 'SEX', 'BIRT', 'DEAT', 'FAMC', 'FAMS', 'MARR',
                          'HUSB', 'WIFE', 'CHIL', 'DIV']
-    #derived from project 2
-    #remove all lines with invalid tags
+    # derived from project 2
+    # remove all lines with invalid tags
     clean_lines = []
     for line in lines:
         tokens = word_tokenize(line)
@@ -100,11 +102,11 @@ def raw2dic(file):
         elif tokens[0] == '2':
             if tokens[1] == 'DATE':
                 clean_lines.append(line)
-#    print(len(clean_lines))
-    
-    #aggregate info of an individual or a family
-    individuals = {} #collection id 1
-    familys = {} #collection id 2
+    #    print(len(clean_lines))
+
+    # aggregate info of an individual or a family
+    individuals = {}  # collection id 1
+    familys = {}  # collection id 2
     collection = -1
     index = ''
     i = 0
@@ -121,18 +123,18 @@ def raw2dic(file):
             famid = tokens[2]
             familys[famid] = {}
             collection = 2
-            index =  famid
+            index = famid
             i += 1
         else:
             if collection == 1:
-                #premise: one DATE must follow below tags
+                # premise: one DATE must follow below tags
                 if tokens[1] in ['BIRT', 'DEAT', 'MARR', 'DIV']:
                     indi_feature = tokens[1]
                     i += 1
                     tempdate = word_tokenize(clean_lines[i])
                     tempdate[3] = month_str2num(tempdate[3])
                     individuals[index][indi_feature] = []
-                    for di in range(2,5):
+                    for di in range(2, 5):
                         individuals[index][indi_feature].append(int(tempdate[di]))
                 elif tokens[1] in ['FAMS', 'FAMC']:
                     indi_feature = tokens[1]
@@ -143,14 +145,14 @@ def raw2dic(file):
                     indi_feature = tokens[1]
                     individuals[index][indi_feature] = " ".join(tokens[2:])
             elif collection == 2:
-                #premise: one DATE must follow below tags
+                # premise: one DATE must follow below tags
                 if tokens[1] in ['BIRT', 'DEAT', 'MARR', 'DIV']:
                     fam_feature = tokens[1]
                     i += 1
                     tempdate = word_tokenize(clean_lines[i])
                     tempdate[3] = month_str2num(tempdate[3])
                     familys[index][fam_feature] = []
-                    for di in range(2,5):
+                    for di in range(2, 5):
                         familys[index][fam_feature].append(int(tempdate[di]))
                 elif tokens[1] in ['CHIL', 'HUSB', 'WIFE']:
                     fam_feature = tokens[1]
@@ -162,8 +164,6 @@ def raw2dic(file):
                     familys[index][fam_feature] = " ".join(tokens[2:])
             i += 1
     return individuals, familys
-
-
 
 
 """
@@ -178,10 +178,12 @@ individuals{
             DEAT: [...] #list of day, month, year in int
             FAMS: [...] #list of familys' id in string
             FAMC: [...] #list of familys' id in string
-            NOTE: [...] 
+            NOTE: [...]
         }
 }
 """
+
+
 def add_age(indi_dic):
     for id in indi_dic.keys():
         if 'DEAT' in indi_dic[id]:
@@ -191,22 +193,17 @@ def add_age(indi_dic):
             indi_dic[id]['AGE'] = current_time.year - indi_dic[id]['BIRT'][2]
     return indi_dic
 
-
 # In[14]:
 
 
-#individual_dic, family_dic = raw2dic('ModernFamilyO.txt')
-#print(individual_dic)
+# individual_dic, family_dic = raw2dic('ModernFamilyO.txt')
+# print(individual_dic)
 
 
 # In[13]:
 
 
-#add_age(individual_dic)
+# add_age(individual_dic)
 
 
 # In[ ]:
-
-
-
-

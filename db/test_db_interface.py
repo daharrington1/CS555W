@@ -1,13 +1,12 @@
 from db_interface import GenComDb
-import json, sys, pprint
 
 # declare a test object
 indObj = GenComDb(GenComDb.MONGO_INDIVIDUALS)
-indObj.dropCollection();
+indObj.dropCollection()
 indObj.seed_data()
 
 famObj = GenComDb(GenComDb.MONGO_FAMILIES)
-famObj.dropCollection();
+famObj.dropCollection()
 famObj.seed_data()
 
 # print all the Individual Ids
@@ -25,9 +24,9 @@ for i in ret:
     print(doc)
 
 # Test adding just the ID of an individual
-print("\n\nInserting Individual Record Field by Field");
+print("\n\nInserting Individual Record Field by Field")
 ret = indObj.addId("I6")
-if ret == None:
+if ret is None:
     print("FAILED ADDING OBJECT\n")
 else:
     print("Created Individual record - id {}\n".format(ret))
@@ -47,9 +46,9 @@ ret = indObj.getDoc("I6")
 print(ret)
 
 # Test adding just the ID of an individual
-print("\n\nInserting Family Record Field by Field");
+print("\n\nInserting Family Record Field by Field")
 ret = famObj.addId("F2")
-if ret == None:
+if ret is None:
     print("FAILED ADDING OBJECT\n")
 else:
     print("Created Family record - id {}\n".format(ret))
@@ -78,21 +77,21 @@ print(ret)
 
 print("\nGetting name for I1:")
 ret = indObj.getName("I1")
-if ret == None:
+if ret is None:
     print("ID NOT FOUND")
 else:
     print("NAME is {}".format(ret))
 
 # get matches as spouse
 ret = famObj.getFamSpouse("I2")
-if ret == None:
+if ret is None:
     print("ID NOT FOUND")
 else:
     print("Found match as spouse for ID({}) in family records:{}".format("I2", ret))
 
-# get matches as child 
+# get matches as child
 ret = famObj.getFamChild("I4")
-if ret == None:
+if ret is None:
     print("ID NOT FOUND")
 else:
     print("Found match as child for ID({}) in family records:{}".format("I4", ret))
