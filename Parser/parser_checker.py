@@ -7,18 +7,17 @@ Created on Thu Jun 11 16:09:11 2020
 from nltk import word_tokenize
 import datetime
 
-#parser and checker
+
+# parser and checker
 class parser4:
-    
+
     def __init__(self, filepath, logger):
         self.logger = logger
         temp1, temp2 = self.__raw2dic(filepath)
         self.indi_dic = temp1
         self.fam_dic = temp2
-        
-        
-        
-    #convert month abbreviate to number representation
+
+    # convert month abbreviate to number representation
     def month_str2num(self, mstring):
         if mstring == 'JAN':
             return 1
@@ -44,8 +43,7 @@ class parser4:
             return 11
         elif mstring == 'DEC':
             return 12
-    
-    
+
     def __raw2dic(self, file):
         """
         to use this function, nltk package is required, please install by
@@ -80,18 +78,18 @@ class parser4:
                     }
                 }
         """
-        
+
         filepath = file
         lines = []
         with open(filepath) as fp:
             for line in fp:
                 lines.append(line.rstrip())
-    #    valid_tags = ['INID', 'NAME', 'SEX', 'BIRT', 'DEAT', 'FAMC', 'FAMS', 'FAM', 'MARR',
-    #                 'HUSB', 'WIFE', 'CHIL', 'DIV', 'DATE', 'HEAD', 'TRLR', 'NOTE']
+        #    valid_tags = ['INID', 'NAME', 'SEX', 'BIRT', 'DEAT', 'FAMC', 'FAMS', 'FAM', 'MARR',
+        #                 'HUSB', 'WIFE', 'CHIL', 'DIV', 'DATE', 'HEAD', 'TRLR', 'NOTE']
         valid_tags_level1 = ['NAME', 'SEX', 'BIRT', 'DEAT', 'FAMC', 'FAMS', 'MARR',
                              'HUSB', 'WIFE', 'CHIL', 'DIV']
-        #derived from project 2
-        #remove all lines with invalid tags
+        # derived from project 2
+        # remove all lines with invalid tags
         clean_lines = []
         for line in lines:
             tokens = word_tokenize(line)
@@ -106,11 +104,11 @@ class parser4:
             elif tokens[0] == '2':
                 if tokens[1] == 'DATE':
                     clean_lines.append(line)
-        #print(len(clean_lines))
-        
-        #aggregate info of an individual or a family
-        individuals = {} #collection id 1
-        familys = {} #collection id 2
+        # print(len(clean_lines))
+
+        # aggregate info of an individual or a family
+        individuals = {}  # collection id 1
+        familys = {}  # collection id 2
         collection = -1
         index = ''
         i = 0
@@ -127,18 +125,18 @@ class parser4:
                 famid = tokens[2]
                 familys[famid] = {}
                 collection = 2
-                index =  famid
+                index = famid
                 i += 1
             else:
                 if collection == 1:
-                    #premise: one DATE must follow below tags
+                    # premise: one DATE must follow below tags
                     if tokens[1] in ['BIRT', 'DEAT', 'MARR', 'DIV']:
                         indi_feature = tokens[1]
                         i += 1
                         tempdate = word_tokenize(clean_lines[i])
                         tempdate[3] = self.month_str2num(tempdate[3])
                         individuals[index][indi_feature] = []
-                        for di in range(2,5):
+                        for di in range(2, 5):
                             individuals[index][indi_feature].append(int(tempdate[di]))
                     elif tokens[1] in ['FAMS', 'FAMC']:
                         indi_feature = tokens[1]
@@ -149,14 +147,14 @@ class parser4:
                         indi_feature = tokens[1]
                         individuals[index][indi_feature] = " ".join(tokens[2:])
                 elif collection == 2:
-                    #premise: one DATE must follow below tags
+                    # premise: one DATE must follow below tags
                     if tokens[1] in ['BIRT', 'DEAT', 'MARR', 'DIV']:
                         fam_feature = tokens[1]
                         i += 1
                         tempdate = word_tokenize(clean_lines[i])
                         tempdate[3] = self.month_str2num(tempdate[3])
                         familys[index][fam_feature] = []
-                        for di in range(2,5):
+                        for di in range(2, 5):
                             familys[index][fam_feature].append(int(tempdate[di]))
                     elif tokens[1] in ['CHIL', 'HUSB', 'WIFE']:
                         fam_feature = tokens[1]
@@ -169,10 +167,8 @@ class parser4:
                 i += 1
         return individuals, familys
 
-        
-        
-    #compute, add age to dic and valid it's less than 150
-    #US07
+    # compute, add age to dic and valid it's less than 150
+    # US07
     def add_valid_age(self):
         """
         input: dic of individuals
@@ -213,9 +209,9 @@ class parser4:
                     invalid_list.append(id)
                 self.indi_dic[id]['AGE'] = agetemp
         return invalid_list
-        
-    #input two dates date1, date2 in [mm, dd, yyyy]
-    #output whether date2 is after or equal to date1
+
+    # input two dates date1, date2 in [mm, dd, yyyy]
+    # output whether date2 is after or equal to date1
     def compTwoDate(self, date1, date2):
         if date2[2] > date1[2]:
             return True
@@ -224,17 +220,16 @@ class parser4:
         elif date2[2] == date1[2] and date2[1] == date1[1] and date2[0] >= date1[0]:
             return True
         else:
-            #date2 is before date1
+            # date2 is before date1
             return False
-    
-    #return False when error detected else True
+
+    # return False when error detected else True
     def us01_currentDate(self, date):
         current_time = datetime.datetime.now()
         return self.compTwoDate(date, [current_time.day, current_time.month, current_time.year])
-        
-    
-    #date check traversal function
-    #output: dic of individuals' id and familys' id,  whose date is invalid and what date is invalid
+
+    # date check traversal function
+    # output: dic of individuals' id and familys' id,  whose date is invalid and what date is invalid
     #        list of (fam_id, indi_id) tuples: whose marriage date is before their birthday
     #        list of id: whose death day is before their birthday
     def dateCheck(self):
@@ -264,10 +259,10 @@ class parser4:
                 if 'BIRT' in person:
                     if not self.compTwoDate(person['BIRT'], person['DEAT']):
                         self.logger.log_individual_error(3,
-                                                     "{}: {} Death is before {} birthday."
-                                                     .format(indi_id,
-                                                             "/".join(str(x) for x in person['DEAT']),
-                                                             "/".join(str(x) for x in person['BIRT'])))
+                                                         "{}: {} Death is before {} birthday."
+                                                         .format(indi_id,
+                                                                 "/".join(str(x) for x in person['DEAT']),
+                                                                 "/".join(str(x) for x in person['BIRT'])))
                         birthDeat_result.append(indi_id)
         for fam_id, family in self.fam_dic.items():
             if 'MARR' in family:
@@ -303,7 +298,7 @@ class parser4:
                                                                  "/".join(str(x) for x in family['MARR']),
                                                                  family['WIFE'],
                                                                  "/".join(str(x) for x in b)))
-                            birthMarr_result.append((fam_id, wid))        
+                            birthMarr_result.append((fam_id, wid))
             if 'DIV' in family:
                 if not self.us01_currentDate(family['DIV']):
                     self.logger.log_family_error(1, "{} Divorce Date: {} Occurs in the future"
