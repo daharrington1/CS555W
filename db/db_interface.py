@@ -148,8 +148,8 @@ class GenComDb:
             # get the data from the database and throw into a list
             docs = list(self.collection.find(ind))
             # pprint(docs)
-        except:
-            print("Exception finding index {}".format(ind))
+        except Exception as e:
+            print("Exception finding index {}, error({})".format(ind, str(e)))
 
         return docs
 
@@ -163,8 +163,8 @@ class GenComDb:
         try:
             # get the data from the database
             doc = self.collection.find_one({genComId: ID})
-        except:
-            print("Exception finding index {}".format(ID))
+        except Exception as e:
+            print("Exception finding index {}, error({})".format(ID, str(e)))
 
         return doc
 
@@ -185,8 +185,8 @@ class GenComDb:
 
             doc = self.collection.find_one({genComTag: ID})
             return doc["NAME"]
-        except:
-            print("Exception retieving NAME for index {}".format(ID))
+        except Exception as e:
+            print("Exception retieving NAME for index {}, error({})".format(ID, str(e)))
             return None
 
     def getAllIds(self):
@@ -204,8 +204,8 @@ class GenComDb:
             docs = list(self.collection.find({}, {genComTag: 1, "_id": 0}))
             # for doc in docs:
             #        pprint(doc[genComTag])
-        except:
-            print("Error in getting all {} ids\n".format(genComTag))
+        except Exception as e:
+            print("Error in getting all {} ids, error({})\n".format(genComTag, str(e)))
 
         return docs
 
@@ -325,8 +325,8 @@ class GenComDb:
 
             # pprint(docs)
             return docs
-        except:
-            print("Exception matching spouse index {}".format(ID))
+        except Exception as e:
+            print("Exception matching spouse index {}, error({})".format(ID, str(e)))
             return None
 
     # gives list of families where you are a child-addInd(Id)
@@ -346,8 +346,8 @@ class GenComDb:
             # print("Found as Child in Family IDs:")
             # pprint(docs)
             return docs
-        except:
-            print("Exception matching child index {}".format(ID))
+        except Exception as e:
+            print("Exception matching child index {}, error({})".format(ID, str(e)))
             return None
 
     def dropCollection(self):
@@ -396,8 +396,8 @@ class GenComDb:
             docs = list(self.collection.aggregate(query))
             for i in docs:
                 results.append(i)
-        except:
-            print("Problem executing query")
+        except Exception as e:
+            print("Problem executing query, erro({})".format(str(e)))
 
         # query for wife marrying a child - should work for traditional and same sex marriages
         query = [
@@ -425,7 +425,7 @@ class GenComDb:
             docs = list(self.collection.aggregate(query))
             for i in docs:
                 results.append(i)
-        except:
-            print("Problem executing query")
+        except Exception as e:
+            print("Problem executing query, error({})".format(str(e)))
 
         return results
