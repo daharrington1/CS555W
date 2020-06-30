@@ -357,4 +357,3 @@ class GenComDb:
     def dropDatabase(self):
         # print("+++++++++++++DROPPING DATABASE: {} ++++++++++++++++++".format(MONGO_DB))
         self.client.drop_database(self.MONGO_DB)
-
