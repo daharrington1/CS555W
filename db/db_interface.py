@@ -6,7 +6,7 @@
 # Thisp oroject is using mongodb.   There is one database defined by MONGO_URI.
 # There are 2 collections in the database: MONGO_INDIVIDUALS & MONGO_FAMILYS
 #############################################################################
-import pymongo
+from pymongo import MongoClient
 from pprint import pprint
 
 
@@ -310,8 +310,6 @@ class GenComDb:
         if self.collection_id == self.MONGO_INDIVIDUALS:
             print("Function not supported for Individuals")
             return
-        #else:
-            # genComTag = "FAM"
 
         try:
             ret = self.getDocMatch("HUSB", ID)
