@@ -178,7 +178,7 @@ individuals{
             DEAT: [...] #list of day, month, year in int
             FAMS: [...] #list of familys' id in string
             FAMC: [...] #list of familys' id in string
-            NOTE: [...] 
+            NOTE: [...]
         }
 }
 """

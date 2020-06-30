@@ -3,6 +3,7 @@ from Utils.Logger import Logger
 
 logger = Logger()
 
+
 # tool
 def IDtoINDI(individuals_from_db):
     ans = dict()

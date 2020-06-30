@@ -14,13 +14,13 @@ class US16Test(unittest.TestCase):
     individuals = None
 
     def setUp(self):
-        families = None
-        individuals = None
+        self.families = None
+        self.individuals = None
         self.seed_data()
 
     def tearDown(self):
-        families = None
-        individuals = None
+        self.families = None
+        self.individuals = None
 
     def seed_data(self):
         # seed family data - don't need individual data for this test suite
