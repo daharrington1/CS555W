@@ -1,5 +1,4 @@
 from collections import namedtuple
-from pprint import pprint
 import datetime
 
 BirthDateKeyedIndividual = namedtuple('BirthdayKeyedIndividual', 'birthday name id')
@@ -49,7 +48,7 @@ def getIdMap(records):
         if "FAM" in record:
             idMap.setdefault(record['FAM'], record)
 
-    return idMap;
+    return idMap
 
 
 def getDateTimestamp(date):
@@ -59,7 +58,7 @@ def getDateTimestamp(date):
     :returns Timestamp of the date
     """
     if date == [] or date == '':
-        return 0;
+        return 0
 
     # convert to timestamp - inputs: year/month/date
     date_timestamp = datetime.datetime(date[2], date[1], date[0]).timestamp()
@@ -69,7 +68,7 @@ def getDateTimestamp(date):
 def getParent2ChildrenMap(families):
     """
      Build a map of parent to children - crosses families if married more than once
-    :param List of Individuals and Families 
+    :param List of Individuals and Families
     :returns Map of all Parent IDs to Children
     """
     parentId2Children = {}
@@ -100,7 +99,7 @@ def getParent2ChildrenMap(families):
                         else:
                             parentId2Children[wife] = [child]
 
-    return parentId2Children;
+    return parentId2Children
 
 
 def getMySpouse(id, fam):
@@ -138,7 +137,7 @@ def getSpousesInFamily(fam):
      Return spouses in a single family in one array
 
     :param a single family
-    :returns array of the spouses 
+    :returns array of the spouses
     """
 
     Spouses = []
@@ -179,7 +178,7 @@ def getLatestDate(dates):
             date = getDateTimestamp(dates[i])
             if date <= latest_date:
                 i = i + 1
-                continue;
+                continue
             else:
                 latest_date = date
                 latest_date_val = dates[i]
@@ -192,7 +191,7 @@ def getLatestDate(dates):
 def getMaritalStatus(individuals, families):
     """
      Build a map of person to marriage/divorces
-    :param List of Families 
+    :param List of Families
     :returns Map of all IDs to Marriage/Divorces
     """
     # get map of ID to individual information
@@ -201,17 +200,17 @@ def getMaritalStatus(individuals, families):
 
     # build a map of marriages and divorces for each spouse in a family
     for fam in families:
-        # check for single parent 
+        # check for single parent
         if ("WIFE" in fam and type(fam["WIFE"]) is list and len(fam["WIFE"]) == 1):
             if ("HUSB" in fam and type(fam["HUSB"]) is not list and fam["HUSB"] == "-"):
                 # they are single parent and not married, divorced or widower
-                continue;
+                continue
 
-        # check for single parent 
+        # check for single parent
         if ("HUSB" in fam and type(fam["HUSB"]) is list and len(fam["HUSB"]) == 1):
             if ("WIFE" in fam and type(fam["WIFE"]) is not list and fam["WIFE"] == "-"):
                 # they are single parent and not married, divorced or widower
-                continue;
+                continue
 
         for spouse in ["HUSB", "WIFE"]:  # loop through the spouses
             if (spouse in fam) and type(fam[spouse]) is list:
@@ -222,7 +221,7 @@ def getMaritalStatus(individuals, families):
                     # If there is a divorce date - then you can't still be married or a widower to this person
                     if "DIV" in fam and type(fam["DIV"]) is list:
                         Id2MarrStatus[person]["DIV"].append(fam["DIV"])  # append the date
-                        continue;
+                        continue
 
                     # you are married or a widower
                     if "MARR" in fam and type(fam["MARR"]) is list:
@@ -241,10 +240,10 @@ def getMaritalStatus(individuals, families):
         # check if this person is dead - if so, then are not married, divorce or single
         if "DEAT" in ind and type(ind["DEAT"]) is list:
             if ind["INDI"] in Id2MarrStatus:
-                Id2MarrStatus[ind["INDI"]]["Status"] = "Dead";
+                Id2MarrStatus[ind["INDI"]]["Status"] = "Dead"
             else:
                 Id2MarrStatus[ind["INDI"]] = {"MARR": [], "DIV": [], "WIDOWER": [], "Status": 'Dead'}
-            continue;
+            continue
 
         # check if they are married
         if ind["INDI"] in Id2MarrStatus:

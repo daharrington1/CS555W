@@ -14,6 +14,8 @@ class US16Test(unittest.TestCase):
     individuals = None
 
     def setUp(self):
+        families = None
+        individuals = None
         self.seed_data()
 
     def tearDown(self):
@@ -130,13 +132,13 @@ class US16Test(unittest.TestCase):
     def test_US16_noinputs(self):
         # bad inputs
         with self.assertRaises(Exception) as context:
-            ret = us16_male_last_names(None, None)
+            us16_male_last_names(None, None)
 
         with self.assertRaises(Exception) as context:
-            ret = us16_male_last_names(self.families)
+            us16_male_last_names(self.families)
 
         with self.assertRaises(Exception) as context:
-            ret = us16_male_last_names(self.individuals)
+            us16_male_last_names(self.individuals)
 
     def test_US16_1family(self):
         # should to get 1 match

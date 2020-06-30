@@ -9,7 +9,7 @@ def us17_no_marr2child(individuals=None, families=None):
     :returns List of Familes that have a spouse married to a child
     """
 
-    if (individuals == None) or (families == None):
+    if (individuals is None) or (families is None):
         raise Exception(ValueError, "Missing Inputs")
 
     ret = []  # list of suspect families

@@ -14,6 +14,8 @@ class US18Test(unittest.TestCase):
     individuals = None
 
     def setUp(self):
+        families = None
+        individuals = None
         self.seed_data()
 
     def tearDown(self):

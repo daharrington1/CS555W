@@ -9,11 +9,11 @@ for unit test ability.
 
 
 class Logger:
-
     """
     Inner data class to logger to represent an individual log entry
     This data class handles knowing how to sort itself and converting to a proper string format
     """
+
     class Log:
         level = ""
         collection = ""
@@ -32,10 +32,10 @@ class Logger:
 
         def __str__(self):
             return "{}: {}: {}{:02d}: {}".format(self.level,
-                                          self.collection,
-                                          self._use_case_label,
-                                          self.use_case,
-                                          self.error_message)
+                                                 self.collection,
+                                                 self._use_case_label,
+                                                 self.use_case,
+                                                 self.error_message)
 
     # Defines for labels and collections for creating logs
     _error_label = "Error"
@@ -44,7 +44,6 @@ class Logger:
 
     _individual_collection = "Individual"
     _family_collection = "Family"
-
 
     _outputMessages = []
 
