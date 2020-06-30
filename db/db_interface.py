@@ -377,18 +377,18 @@ class GenComDb:
                     "CHIL": {"$exists": "true", "$ne": "-"},
                     "HUSB": {"$exists": "true", "$ne": "-"}
                 }
-            },
+             },
             {"$project":
                 {
                     "_id": 0, "FAM": 1, "HUSB": 1, "WIFE": 1, "CHIL": 1, "MarriagetoChildren": 1,
                     "MarriagetoChildren": {"$setIntersection": ["$HUSB", "$CHIL"]},
                 }
-            },
+             },
             {"$match":
                 {
                     "MarriagetoChildren": {"$exists": "true", "$not": {"$size": 0}}
                 }
-            }
+             }
         ]
 
         try:
@@ -406,18 +406,18 @@ class GenComDb:
                     "CHIL": {"$exists": "true", "$ne": "-"},
                     "WIFE": {"$exists": "true", "$ne": "-"}
                 }
-            },
+             },
             {"$project":
                 {
                     "_id": 0, "FAM": 1, "HUSB": 1, "WIFE": 1, "CHIL": 1, "MarriagetoChildren": 1,
                     "MarriagetoChildren": {"$setIntersection": ["$WIFE", "$CHIL"]},
                 }
-            },
+             },
             {"$match":
                 {
                     "MarriagetoChildren": {"$exists": "true", "$not": {"$size": 0}}
                 }
-            }
+             }
         ]
 
         try:
