@@ -20,7 +20,6 @@ def us18_no_siblingmarriages(individuals=None, families=None):
 
     for fam in families:
         # get all husband/wives in the family and check to see if their spouse is their child
-        #spouses = getSpousesInFamily(fam)
         spouses = normalize_spouse_ids(fam)
         # print("spouses: {}".format(spouses))
 

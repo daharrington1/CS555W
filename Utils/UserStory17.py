@@ -17,7 +17,6 @@ def us17_no_marr2child(individuals=None, families=None):
 
     for fam in families:
         # get all husband/wives in the family and check to see if their spouse is their child
-        #spouses = getSpousesInFamily(fam)
         spouses = normalize_spouse_ids(fam)
         for spouse in spouses:
             mySpouses = getMySpouse(spouse, fam)  # just in case you have more than one spouse
