@@ -43,7 +43,7 @@ def getIdMap(key, records):
     """
     idMap = {}
     for record in records:
-            idMap.setdefault(record[key], record)
+        idMap.setdefault(record[key], record)
 
     return idMap
 
@@ -107,12 +107,12 @@ def getMySpouse(id, fam):
     """
     # get all the spouses in the family
     spouses = normalize_spouse_ids(fam)
-    mySpouses=[]
+    mySpouses = []
 
     # remove myself from the list of all spouses
     for sid in spouses:
         if sid != id and sid != '-' and sid not in mySpouses:
-           mySpouses.append(sid)
+            mySpouses.append(sid)
 
     return mySpouses
 
