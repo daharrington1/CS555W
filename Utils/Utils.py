@@ -119,33 +119,25 @@ def getMySpouse(id, fam):
 
 def getLatestDate(dates):
     """
-     Return the latest data in an array of dates
+     Return the latest date in an array of dates
     :param List of dates
     :returns the latest date
     """
     # for date in dates:
     # print("Latest Dates: date: {}".format(date))
+
     if len(dates) < 1:
         return []
 
-    latest_date = getDateTimestamp(dates[0])
-    latest_date_val = dates[0]
+    # pop the first date off the list for a comparison
+    latest_date = dates.pop()
 
-    if len(dates) > 1:
-        i = 1
-        dlen = len(dates)
-        while i < dlen:
-            date = getDateTimestamp(dates[i])
-            if date <= latest_date:
-                i = i + 1
-                continue
-            else:
-                latest_date = date
-                latest_date_val = dates[i]
+    # loop through the rest of the dates for a larger date
+    for date in dates:
+        if getDateTimestamp(date) > getDateTimestamp(latest_date):
+            latest_date = date
 
-            i = i + 1
-
-    return latest_date_val
+    return latest_date
 
 
 def getMaritalStatus(individuals, families):

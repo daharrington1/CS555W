@@ -22,5 +22,5 @@ def us30_get_married_individuals(individuals=None, families=None):
             ret.append(ind)
 
     # return all matches
-    print("Results: {}".format(ret))
+    # print("Results: {}".format(ret))
     return ret
