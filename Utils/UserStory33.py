@@ -8,7 +8,7 @@ def find_all_orphans(all_individuals, all_families):
     :param all_families: A list of all families to check
     :return: Returns a list of lists of all orphan families, or the empty list if there are no orphans
     """
-    individuals = getIdMap(all_individuals)
+    individuals = getIdMap("INDI", all_individuals)
 
     # Find all families which have both dead members
     parents_dead = [value for value in all_families if all_spouses_dead(individuals, value)]

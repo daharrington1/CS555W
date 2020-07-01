@@ -1,4 +1,4 @@
-from Utils.Utils import getParent2ChildrenMap, getSpousesInFamily
+from Utils.Utils import getParent2ChildrenMap, normalize_spouse_ids
 
 
 def us18_no_siblingmarriages(individuals=None, families=None):
@@ -20,7 +20,8 @@ def us18_no_siblingmarriages(individuals=None, families=None):
 
     for fam in families:
         # get all husband/wives in the family and check to see if their spouse is their child
-        spouses = getSpousesInFamily(fam)
+        #spouses = getSpousesInFamily(fam)
+        spouses = normalize_spouse_ids(fam)
         # print("spouses: {}".format(spouses))
 
         # loop thru parentId2Children and see if there is an intersection of spouses and children

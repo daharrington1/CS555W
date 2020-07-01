@@ -35,18 +35,15 @@ def filter_non_unique_individuals(individuals):
     return {key: value for key, value in birthday_name_mapping.items() if len(value) > 1}
 
 
-def getIdMap(records):
+def getIdMap(key, records):
     """
      Build a map of id to their record
     :param List of either Individuals and Families from the database
     :returns Map of all IDs to record
     """
-    idMap = dict()
+    idMap = {}
     for record in records:
-        if "INDI" in record:
-            idMap.setdefault(record['INDI'], record)
-        if "FAM" in record:
-            idMap.setdefault(record['FAM'], record)
+            idMap.setdefault(record[key], record)
 
     return idMap
 
@@ -104,57 +101,20 @@ def getParent2ChildrenMap(families):
 
 def getMySpouse(id, fam):
     """
-     Figure out My Spouse in the current family
+     Figure out My Spouse in the current family, skips '-' as values
     :param a single family
-    :returns my spouse in the given family
+    :returns my spouse(s) in the given family
     """
-    # check if there is a wife field
+    # get all the spouses in the family
+    spouses = normalize_spouse_ids(fam)
+    mySpouses=[]
 
-    Spouses = []
+    # remove myself from the list of all spouses
+    for sid in spouses:
+        if sid != id and sid != '-' and sid not in mySpouses:
+           mySpouses.append(sid)
 
-    if ("WIFE" in fam) and type(fam["WIFE"]) is list:
-        # if not same sex marriage - your spouse is in the husband field - or there is no spouse
-        if id in fam["WIFE"] and len(fam["WIFE"]) == 1:
-            if "HUSB" in fam and type(fam["HUSB"]) is list:
-                Spouses = fam["HUSB"]
-        else:
-            # get all spouses in the wife list that aren't input id
-            for wid in fam["WIFE"]:
-                if id != wid:
-                    Spouses.append(wid)
-    else:
-        # there is no wife - so both spouses are in the HUSB list or there is no spouse
-        # if I'm the first WIFE, my spouse is the second
-        for wid in fam["HUSB"]:
-            if id != wid:
-                Spouses.append(wid)
-
-    return Spouses
-
-
-def getSpousesInFamily(fam):
-    """
-     Return spouses in a single family in one array
-
-    :param a single family
-    :returns array of the spouses
-    """
-
-    Spouses = []
-
-    if ("WIFE" in fam) and type(fam["WIFE"]) is list:
-        # if not same sex marriage - your spouse is in the husband field - or there is no spouse
-        for wife in fam["WIFE"]:
-            if wife not in Spouses:
-                Spouses.append(wife)
-
-    if ("HUSB" in fam) and type(fam["HUSB"]) is list:
-        # if not same sex marriage - your spouse is in the husband field - or there is no spouse
-        for husb in fam["HUSB"]:
-            if husb not in Spouses:
-                Spouses.append(husb)
-
-    return Spouses
+    return mySpouses
 
 
 def getLatestDate(dates):
@@ -195,7 +155,7 @@ def getMaritalStatus(individuals, families):
     :returns Map of all IDs to Marriage/Divorces
     """
     # get map of ID to individual information
-    indMap = getIdMap(individuals)
+    indMap = getIdMap("INDI", individuals)
     Id2MarrStatus = {}
 
     # build a map of marriages and divorces for each spouse in a family
