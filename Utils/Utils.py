@@ -256,7 +256,9 @@ def getMaritalStatus(individuals, families):
             latest_widower = getLatestDate(Id2MarrStatus[ind["INDI"]]["WIDOWER"])
             latest_marriage = getLatestDate(Id2MarrStatus[ind["INDI"]]["MARR"])
             latest_divorce = getLatestDate(Id2MarrStatus[ind["INDI"]]["DIV"])
-            # print("++++++++++Individual {}: latest_widower: {}, latest_marriage: {}, latest_divorce: {}".format(ind["INDI"], latest_widower, latest_marriage, latest_divorce))
+            # print("++++++++++Individual {}: latest_widower: {}, latest_marriage: {}, 
+            #        latest_divorce: {}".format(ind["INDI"], latest_widower, 
+            #        latest_marriage, latest_divorce))
 
             latest_widower_timestamp = getDateTimestamp(latest_widower)
             latest_marriage_timestamp = getDateTimestamp(latest_marriage)
@@ -271,7 +273,8 @@ def getMaritalStatus(individuals, families):
                     else:
                         Id2MarrStatus[ind["INDI"]]["Status"] = "Married"
             else:  # at least one of your spouses died
-                if latest_widower_timestamp >= latest_divorce_timestamp and latest_widower_timestamp >= latest_marriage_timestamp:
+                if (latest_widower_timestamp >= latest_divorce_timestamp) \
+                   and (latest_widower_timestamp >= latest_marriage_timestamp):
                     Id2MarrStatus[ind["INDI"]]["Status"] = "Widower"
                 else:
                     if latest_divorce_timestamp >= latest_marriage_timestamp:

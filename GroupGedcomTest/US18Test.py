@@ -350,16 +350,15 @@ class US18Test(unittest.TestCase):
             "INDI": "I27"
          })
 
-
     def test_US18_noinputs(self):
         # bad inputs
-        with self.assertRaises(Exception) as context:
+        with self.assertRaises(Exception):
             us18_no_siblingmarriages(None, None)
 
-        with self.assertRaises(Exception) as context:
+        with self.assertRaises(Exception):
             us18_no_siblingmarriages(self.families)
 
-        with self.assertRaises(Exception) as context:
+        with self.assertRaises(Exception):
             us18_no_siblingmarriages(self.individuals)
 
     def test_US18_listsswitched(self):
