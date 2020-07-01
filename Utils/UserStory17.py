@@ -1,4 +1,4 @@
-from Utils.Utils import getParent2ChildrenMap, getSpousesInFamily, getMySpouse
+from Utils.Utils import getParent2ChildrenMap, normalize_spouse_ids, getMySpouse
 
 
 def us17_no_marr2child(individuals=None, families=None):
@@ -17,7 +17,8 @@ def us17_no_marr2child(individuals=None, families=None):
 
     for fam in families:
         # get all husband/wives in the family and check to see if their spouse is their child
-        spouses = getSpousesInFamily(fam)
+        #spouses = getSpousesInFamily(fam)
+        spouses = normalize_spouse_ids(fam)
         for spouse in spouses:
             mySpouses = getMySpouse(spouse, fam)  # just in case you have more than one spouse
             for myspouse in mySpouses:
