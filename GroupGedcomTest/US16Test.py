@@ -353,13 +353,13 @@ class US16Test(unittest.TestCase):
 
     def test_US16_noinputs(self):
         # bad inputs
-        with self.assertRaises(Exception) as context:
+        with self.assertRaises(Exception):
             us16_male_last_names(None, None)
 
-        with self.assertRaises(Exception) as context:
+        with self.assertRaises(Exception):
             us16_male_last_names(self.families)
 
-        with self.assertRaises(Exception) as context:
+        with self.assertRaises(Exception):
             us16_male_last_names(self.individuals)
 
     def test_US16_1family(self):
