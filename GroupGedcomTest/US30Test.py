@@ -23,7 +23,7 @@ class US30Test(unittest.TestCase):
         self.individuals = None
 
     def seed_data(self):
-        # seed initial testing data 
+        # seed initial testing data
         self.families.append({
             "HUSB": ["I1"],
             "WIFE": ["I2"],
@@ -406,7 +406,6 @@ class US30Test(unittest.TestCase):
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
-
     def test_US30_AddAnotherSameSexMarriageDeath(self):
         # Make Mitchell Dead - so then Cam should not be included either
         self.individuals[3]["DEAT"] = [28, 12, 2021]
@@ -433,6 +432,7 @@ class US30Test(unittest.TestCase):
 
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
+
 
 if __name__ == '__main__':
     unittest.main()
