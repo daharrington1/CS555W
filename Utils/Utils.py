@@ -55,7 +55,7 @@ def getDateTimestamp(date):
     :returns Timestamp of the date
     """
     if date == [] or date == '':
-        return 0
+        return -1
 
     # convert to timestamp - inputs: year/month/date
     date_timestamp = datetime.datetime(date[2], date[1], date[0]).timestamp()
@@ -64,7 +64,8 @@ def getDateTimestamp(date):
 
 def getParent2ChildrenMap(families):
     """
-     Build a map of parent to children - crosses families if married more than once
+     Build a map of parent to children - crosses families
+     if married more than once
     :param List of Individuals and Families
     :returns Map of all Parent IDs to Children
     """
@@ -117,7 +118,7 @@ def getMySpouse(id, fam):
     return mySpouses
 
 
-def getLatestDate(dates):
+def getLatestDate(i_dates):
     """
      Return the latest date in an array of dates
     :param List of dates
@@ -125,6 +126,7 @@ def getLatestDate(dates):
     """
     # for date in dates:
     # print("Latest Dates: date: {}".format(date))
+    dates = i_dates.copy()
 
     if len(dates) < 1:
         return []
@@ -147,32 +149,43 @@ def getMaritalStatus(individuals, families):
     :returns Map of all IDs to Marriage/Divorces
     """
     # get map of ID to individual information
-    indMap = getIdMap("INDI", individuals)
+    indMap = getIdMap('INDI', individuals)
     Id2MarrStatus = {}
 
     # build a map of marriages and divorces for each spouse in a family
     for fam in families:
         # check for single parent
-        if ("WIFE" in fam and type(fam["WIFE"]) is list and len(fam["WIFE"]) == 1):
-            if ("HUSB" in fam and type(fam["HUSB"]) is not list and fam["HUSB"] == "-"):
+        if "WIFE" in fam and type(fam["WIFE"]) is list and \
+                             len(fam["WIFE"]) == 1:
+            if "HUSB" in fam and type(fam["HUSB"]) is not list and \
+                                 fam["HUSB"] == "-":
                 # they are single parent and not married, divorced or widower
                 continue
 
         # check for single parent
-        if ("HUSB" in fam and type(fam["HUSB"]) is list and len(fam["HUSB"]) == 1):
-            if ("WIFE" in fam and type(fam["WIFE"]) is not list and fam["WIFE"] == "-"):
+        if "HUSB" in fam and type(fam["HUSB"]) is list and \
+           len(fam["HUSB"]) == 1:
+            if "WIFE" in fam and type(fam["WIFE"]) is not list and \
+                  fam["WIFE"] == "-":
                 # they are single parent and not married, divorced or widower
                 continue
 
+        # print("\n\nLOOKING AT FAMILY: {}".format(fam))
         for spouse in ["HUSB", "WIFE"]:  # loop through the spouses
             if (spouse in fam) and type(fam[spouse]) is list:
                 for person in fam[spouse]:
                     if person not in Id2MarrStatus:
-                        Id2MarrStatus[person] = {"MARR": [], "DIV": [], "WIDOWER": [], "Status": ''}
+                        Id2MarrStatus[person] = {
+                            "MARR": [],
+                            "DIV": [],
+                            "WIDOWER": [],
+                            "Status": ''
+                         }
 
-                    # If there is a divorce date - then you can't still be married or a widower to this person
+                    # If there is a divorce date - then you can't still
+                    # be married or a widower to this person
                     if "DIV" in fam and type(fam["DIV"]) is list:
-                        Id2MarrStatus[person]["DIV"].append(fam["DIV"])  # append the date
+                        Id2MarrStatus[person]["DIV"].append(fam["DIV"])
                         continue
 
                     # you are married or a widower
@@ -180,61 +193,51 @@ def getMaritalStatus(individuals, families):
                         my_spouses = getMySpouse(person, fam)
                         marriage_date = fam["MARR"]
                         for my_spouse in my_spouses:
-                            # at this point you are either still married to spouse or windower
-                            if "DEAT" in indMap[my_spouse] and type(indMap[my_spouse]["DEAT"]) is list:
+                            # at this point you are either still married
+                            # to spouse or windower
+                            if "DEAT" in indMap[my_spouse] and \
+                               type(indMap[my_spouse]["DEAT"]) is list:
                                 Id2MarrStatus[person]["WIDOWER"].append(indMap[my_spouse]["DEAT"])
                             else:
-                                # if you are not a widower, then you are still married to this person
+                                # if you are not a widower, then you are still
+                                # married to this person
                                 Id2MarrStatus[person]["MARR"].append(marriage_date)
 
     for ind in individuals:
+        key = ind["INDI"]
+
+        # Initialize the entry as being single
+        if key not in Id2MarrStatus:
+            Id2MarrStatus[key] = {"MARR": [], "DIV": [], "WIDOWER": [], "DEAT": [], "Status": 'Single'}
 
         # check if this person is dead - if so, then are not married, divorce or single
         if "DEAT" in ind and type(ind["DEAT"]) is list:
-            if ind["INDI"] in Id2MarrStatus:
-                Id2MarrStatus[ind["INDI"]]["Status"] = "Dead"
-            else:
-                Id2MarrStatus[ind["INDI"]] = {"MARR": [], "DIV": [], "WIDOWER": [], "Status": 'Dead'}
+            Id2MarrStatus[key]["DEAT"] = ind["DEAT"]
+            Id2MarrStatus[key]["Status"] = "Dead"
             continue
 
         # check if they are married
-        if ind["INDI"] in Id2MarrStatus:
-            # then  this person has been either married or divorced or widowed
-            # print("\n\nId2MarrStatus: {}".format(Id2MarrStatus[ind["INDI"]]))
-            if Id2MarrStatus[ind["INDI"]]["Status"] == "Dead":
-                continue
-
+        if key in Id2MarrStatus and Id2MarrStatus[key]["Status"] != 'Single':
             # look at all the non dead people
-            latest_widower = getLatestDate(Id2MarrStatus[ind["INDI"]]["WIDOWER"])
-            latest_marriage = getLatestDate(Id2MarrStatus[ind["INDI"]]["MARR"])
-            latest_divorce = getLatestDate(Id2MarrStatus[ind["INDI"]]["DIV"])
-            # print("++++++++++Individual {}: latest_widower: {}, latest_marriage: {}
-            #        latest_divorce: {}".format(ind["INDI"], latest_widower
-            #        latest_marriage, latest_divorce))
+            latest_widower = getLatestDate(Id2MarrStatus[key]["WIDOWER"])
+            latest_marriage = getLatestDate(Id2MarrStatus[key]["MARR"])
+            latest_divorce = getLatestDate(Id2MarrStatus[key]["DIV"])
 
             latest_widower_timestamp = getDateTimestamp(latest_widower)
             latest_marriage_timestamp = getDateTimestamp(latest_marriage)
             latest_divorce_timestamp = getDateTimestamp(latest_divorce)
 
-            if latest_widower_timestamp == 0:
-                if latest_divorce_timestamp == 0:
-                    Id2MarrStatus[ind["INDI"]]["Status"] = "Married"
-                else:
-                    if latest_divorce_timestamp >= latest_marriage_timestamp:
-                        Id2MarrStatus[ind["INDI"]]["Status"] = "Divorced"
-                    else:
-                        Id2MarrStatus[ind["INDI"]]["Status"] = "Married"
-            else:  # at least one of your spouses died
-                if (latest_widower_timestamp >= latest_divorce_timestamp) \
-                   and (latest_widower_timestamp >= latest_marriage_timestamp):
-                    Id2MarrStatus[ind["INDI"]]["Status"] = "Widower"
-                else:
-                    if latest_divorce_timestamp >= latest_marriage_timestamp:
-                        Id2MarrStatus[ind["INDI"]]["Status"] = "Divorced"
-                    else:
-                        Id2MarrStatus[ind["INDI"]]["Status"] = "Married"
-        else:  # else the person was never married
-            Id2MarrStatus[ind["INDI"]] = {"MARR": [], "DIV": [], "Status": "Single"}
+            if latest_widower_timestamp > latest_divorce_timestamp and  \
+               latest_widower_timestamp > latest_marriage_timestamp:
+                Id2MarrStatus[key]["Status"] = "Widower"
+                continue
+
+            if latest_divorce_timestamp > latest_widower_timestamp and  \
+               latest_divorce_timestamp > latest_marriage_timestamp:
+                Id2MarrStatus[key]["Status"] = "Divorced"
+                continue
+
+            Id2MarrStatus[key]["Status"] = "Married"
 
     return Id2MarrStatus
 

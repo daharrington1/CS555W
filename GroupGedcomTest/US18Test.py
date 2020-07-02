@@ -3,7 +3,7 @@ from Utils.UserStory18 import us18_no_siblingmarriages
 
 
 #
-# Test Scripts for User Story 17: No marriages to children
+# Test Scripts for User Story 18: No marriages to siblings
 # Author: Debbie Harrington
 #
 # Test Scripts for verifying US18 user story
@@ -23,7 +23,7 @@ class US18Test(unittest.TestCase):
         self.individuals = None
 
     def seed_data(self):
-        # seed family data - don't need individual data for this test suite
+        # seed initial test data
         self.families.append({
             "HUSB": ["I1"],
             "WIFE": ["I2"],
