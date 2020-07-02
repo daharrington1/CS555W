@@ -142,6 +142,59 @@ def getLatestDate(i_dates):
     return latest_date
 
 
+def single_parent(fam):
+    """
+     Build a map of person to marriage/divorces
+    :param List of Families
+    :returns Map of all IDs to Marriage/Divorces
+    """
+    ret = False
+
+    # check for single parent
+    if "WIFE" in fam and type(fam["WIFE"]) is list and \
+       len(fam["WIFE"]) == 1:
+        if "HUSB" in fam and type(fam["HUSB"]) is not list and \
+           fam["HUSB"] == "-":
+            # they are single parent and not married, divorced or widower
+            ret = True
+
+    # check for single parent
+    if "HUSB" in fam and type(fam["HUSB"]) is list and \
+       len(fam["HUSB"]) == 1:
+        if "WIFE" in fam and type(fam["WIFE"]) is not list and \
+              fam["WIFE"] == "-":
+            # they are single parent and not married, divorced or widower
+            ret = True
+
+    return ret
+
+
+def get_marriage_status(entry):
+    """
+     Determine the marriage status of a person
+    :param List of Marriage/Divorce/Widow status for the given person
+    :returns the marital status
+    """
+    # look at all the non dead people
+    latest_widower = getLatestDate(entry["WIDOWER"])
+    latest_marriage = getLatestDate(entry["MARR"])
+    latest_divorce = getLatestDate(entry["DIV"])
+
+    latest_widower_timestamp = getDateTimestamp(latest_widower)
+    latest_marriage_timestamp = getDateTimestamp(latest_marriage)
+    latest_divorce_timestamp = getDateTimestamp(latest_divorce)
+
+    if latest_widower_timestamp > latest_divorce_timestamp and  \
+       latest_widower_timestamp > latest_marriage_timestamp:
+        return "Widower"
+
+    if latest_divorce_timestamp > latest_widower_timestamp and  \
+       latest_divorce_timestamp > latest_marriage_timestamp:
+        return "Divorced"
+
+    return "Married"
+
+
 def getMaritalStatus(individuals, families):
     """
      Build a map of person to marriage/divorces
@@ -155,20 +208,8 @@ def getMaritalStatus(individuals, families):
     # build a map of marriages and divorces for each spouse in a family
     for fam in families:
         # check for single parent
-        if "WIFE" in fam and type(fam["WIFE"]) is list and \
-                             len(fam["WIFE"]) == 1:
-            if "HUSB" in fam and type(fam["HUSB"]) is not list and \
-                                 fam["HUSB"] == "-":
-                # they are single parent and not married, divorced or widower
-                continue
-
-        # check for single parent
-        if "HUSB" in fam and type(fam["HUSB"]) is list and \
-           len(fam["HUSB"]) == 1:
-            if "WIFE" in fam and type(fam["WIFE"]) is not list and \
-                  fam["WIFE"] == "-":
-                # they are single parent and not married, divorced or widower
-                continue
+        if single_parent(fam):
+            continue
 
         # print("\n\nLOOKING AT FAMILY: {}".format(fam))
         for spouse in ["HUSB", "WIFE"]:  # loop through the spouses
@@ -218,26 +259,7 @@ def getMaritalStatus(individuals, families):
 
         # check if they are married
         if key in Id2MarrStatus and Id2MarrStatus[key]["Status"] != 'Single':
-            # look at all the non dead people
-            latest_widower = getLatestDate(Id2MarrStatus[key]["WIDOWER"])
-            latest_marriage = getLatestDate(Id2MarrStatus[key]["MARR"])
-            latest_divorce = getLatestDate(Id2MarrStatus[key]["DIV"])
-
-            latest_widower_timestamp = getDateTimestamp(latest_widower)
-            latest_marriage_timestamp = getDateTimestamp(latest_marriage)
-            latest_divorce_timestamp = getDateTimestamp(latest_divorce)
-
-            if latest_widower_timestamp > latest_divorce_timestamp and  \
-               latest_widower_timestamp > latest_marriage_timestamp:
-                Id2MarrStatus[key]["Status"] = "Widower"
-                continue
-
-            if latest_divorce_timestamp > latest_widower_timestamp and  \
-               latest_divorce_timestamp > latest_marriage_timestamp:
-                Id2MarrStatus[key]["Status"] = "Divorced"
-                continue
-
-            Id2MarrStatus[key]["Status"] = "Married"
+            Id2MarrStatus[key]["Status"] = get_marriage_status(Id2MarrStatus[key])
 
     return Id2MarrStatus
 
