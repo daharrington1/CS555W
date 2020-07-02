@@ -175,21 +175,13 @@ def get_marriage_status(entry):
     :param List of Marriage/Divorce/Widow status for the given person
     :returns the marital status
     """
-    # look at all the non dead people
-    latest_widower = getLatestDate(entry["WIDOWER"])
-    latest_marriage = getLatestDate(entry["MARR"])
-    latest_divorce = getLatestDate(entry["DIV"])
-
-    latest_widower_timestamp = getDateTimestamp(latest_widower)
-    latest_marriage_timestamp = getDateTimestamp(latest_marriage)
-    latest_divorce_timestamp = getDateTimestamp(latest_divorce)
-
-    if latest_widower_timestamp > latest_divorce_timestamp and  \
-       latest_widower_timestamp > latest_marriage_timestamp:
+    # look at all the divorced, widowed and married peoplee
+    if getDateTimestamp(getLatestDate(entry["WIDOWER"])) > getDateTimestamp(getLatestDate(entry["DIV"])) and  \
+       getDateTimestamp(getLatestDate(entry["WIDOWER"])) > getDateTimestamp(getLatestDate(entry["MARR"])):
         return "Widower"
 
-    if latest_divorce_timestamp > latest_widower_timestamp and  \
-       latest_divorce_timestamp > latest_marriage_timestamp:
+    if getDateTimestamp(getLatestDate(entry["DIV"])) > getDateTimestamp(getLatestDate(entry["WIDOWER"])) and  \
+       getDateTimestamp(getLatestDate(entry["DIV"])) > getDateTimestamp(getLatestDate(entry["MARR"])):
         return "Divorced"
 
     return "Married"
