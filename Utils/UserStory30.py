@@ -15,7 +15,7 @@ def us30_get_married_individuals(individuals=None, families=None):
     # declare empty list
     ret = []  # list of mappings of parent to siblings
 
-    results = getMaritalStatus(individuals, families)  # create a map of all parents to children
+    results = getMaritalStatus(individuals, families)  # get Marital Status
 
     for ind in results:
         if results[ind]["Status"] == "Married":
