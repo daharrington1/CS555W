@@ -416,6 +416,25 @@ class US31Test(unittest.TestCase):
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
+    def test_US31_NoLivingSingles(self):
+        # Test no living singles by making them all dead
+        LivingSingles = ['I9', 'I10', 'I89', 'I14', 'I15', 'I31', 'I19',
+                         'I22', 'I23', 'I24', 'I25']
+
+        # Make all the living singles dead
+        for ind in self.individuals:
+            if ind["INDI"] in LivingSingles:
+                ind["DEAT"] = [28, 12, 2021]
+
+        expected_ret = []
+        ret = us31_get_single_individuals(self.individuals, self.families)
+
+        self.assertEqual(len(ret), 0,
+                         "Did not get the expected results")
+
+        self.assertListEqual(expected_ret, ret,
+                             "Expected Return does not match")
+
 
 if __name__ == '__main__':
     unittest.main()

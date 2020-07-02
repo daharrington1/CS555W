@@ -117,17 +117,17 @@ else:
 
 ret = UserStory30.us30_get_married_individuals(individuals_from_db, families_from_db)
 if len(ret) == 0:
-    print("There are no Marriaged Individuals")
+    print("There are no Living Marriage Individuals")
 else:
     ret.sort()
-    logger.log_family_error(30, "Married Individuals:{}".format(",".join(ret)))
+    logger.log_family_error(30, "Living Married Individuals:{}".format(",".join(ret)))
 
 ret = UserStory31.us31_get_single_individuals(individuals_from_db, families_from_db)
 if len(ret) == 0:
-    print("There are no single (i.e. non-divorced, non-married individuals")
+    print("There are no living single (i.e. non-divorced, non-married) individuals")
 else:
     ret.sort()
-    logger.log_family_error(31, "Individuals who are single (never married or divorced):{}".format(",".join(ret)))
+    logger.log_family_error(31, "Living Single Individuals (never married or divorced):{}".format(",".join(ret)))
 
 orphans = find_all_orphans(individuals_from_db, families_from_db)
 if len(orphans) > 0:
