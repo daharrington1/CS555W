@@ -433,6 +433,23 @@ class US30Test(unittest.TestCase):
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
+        def test_US31_NoLivingMarried(self):
+            # Test No married individuals by makin them all dead
+            LivingMarried = ['I1', 'I2', 'I4', 'I5', 'I16', 'I17', 'I7', 'I6',
+                             'I21', 'I20', 'I26', 'I27']
+
+            # Make all the living singles dead
+            for ind in self.individuals:
+                if ind["INDI"] in LivingMarried:
+                    ind["DEAT"] = [28, 12, 2021]
+
+                    expected_ret = []
+
+                    self.assertEqual(len(ret), 0,
+                                     "Did not get the expected results")
+                    self.assertListEqual(expected_ret, ret,
+                                         "Expected Return does not match")
+
 
 if __name__ == '__main__':
     unittest.main()
