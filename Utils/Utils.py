@@ -100,14 +100,31 @@ def getParent2ChildrenMap(families):
     return parentId2Children
 
 
-def getMySpouse(id, fam):
+def getSpouses(fam):
     """
-     Figure out My Spouse in the current family, skips '-' as values
+     Return all spouses in the family, excluding '-'
+     All values returned in an array, including empty array
+    :param a single family
+    :returns my spouse(s) in the given family
+    """
+    spouses = []
+    for key in ["HUSB", "WIFE"]:
+        if key in fam and type(fam[key]) is list and key not in spouses:
+            spouses += fam[key]
+
+    # print ("[getSpouses] FAM({}), spouses: {}".format(fam["FAM"], spouses))
+    return spouses
+
+
+def getMySpouses(id, fam):
+    """
+     Figure out My Spouse in the current family
+     Calls getSpouses which skips '-' entries
     :param a single family
     :returns my spouse(s) in the given family
     """
     # get all the spouses in the family
-    spouses = normalize_spouse_ids(fam)
+    spouses = getSpouses(fam)
     mySpouses = []
 
     # remove myself from the list of all spouses
@@ -115,6 +132,7 @@ def getMySpouse(id, fam):
         if sid != id and sid != '-' and sid not in mySpouses:
             mySpouses.append(sid)
 
+    # print("[getMySpouses] Me({}), my spouses: {}".format(id, mySpouses))
     return mySpouses
 
 
@@ -144,27 +162,22 @@ def getLatestDate(i_dates):
 
 def single_parent(fam):
     """
-     Build a map of person to marriage/divorces
-    :param List of Families
-    :returns Map of all IDs to Marriage/Divorces
+     Determine if the family is a single parent family
+    :param Family object
+    :returns true if the family is a single parent family.
     """
     ret = False
 
-    # check for single parent
-    if "WIFE" in fam and type(fam["WIFE"]) is list and \
-       len(fam["WIFE"]) == 1:
-        if "HUSB" in fam and type(fam["HUSB"]) is not list and \
-           fam["HUSB"] == "-":
-            # they are single parent and not married, divorced or widower
-            ret = True
+    # make every thing and array or None
+    fam = normalize_family_entry(fam)
 
     # check for single parent
-    if "HUSB" in fam and type(fam["HUSB"]) is list and \
-       len(fam["HUSB"]) == 1:
-        if "WIFE" in fam and type(fam["WIFE"]) is not list and \
-              fam["WIFE"] == "-":
-            # they are single parent and not married, divorced or widower
-            ret = True
+    if fam["WIFE"] is not None and len(fam["WIFE"]) == 1 and fam["HUSB"] is None:
+        ret = True
+
+    # check for single parent
+    if fam["HUSB"] is not None and len(fam["HUSB"]) == 1 and fam["WIFE"] is None:
+        ret = True
 
     return ret
 
@@ -187,54 +200,53 @@ def get_marriage_status(entry):
     return "Married"
 
 
+def update_marriage_info(fam, spouse, individuals, Id2MarrStatus):
+    """
+     Update Id2MarrStatus with the marital information
+     of the given id in the family
+    :param spouse, family object and Id2MarrStatus Map
+    :returns Updated Id2MarrStatus Map
+    """
+    indMap = getIdMap('INDI', individuals)
+    fam = normalize_family_entry(fam)
+    # If there is a divorce date - then you can't still
+    # be married or a widower to this person
+    if fam["DIV"] is not None:
+        Id2MarrStatus[spouse]["DIV"].append(fam["DIV"])
+    elif fam["MARR"] is not None:
+        # you are married or a widower
+        for my_spouse in getMySpouses(spouse, fam):
+            # you are either married to spouse or windower
+            # print("FAM ({}), ee({}), my spouse: {}".format(fam["FAM"], person, my_spouse))
+            if "DEAT" in indMap[my_spouse] and \
+               type(indMap[my_spouse]["DEAT"]) is list:
+                Id2MarrStatus[spouse]["WIDOWER"].append(indMap[my_spouse]["DEAT"])
+            else:
+                # if you are not a widower, then you are still
+                # married to this person
+                Id2MarrStatus[spouse]["MARR"].append(fam["MARR"])
+
+    return Id2MarrStatus
+
+
 def getMaritalStatus(individuals, families):
     """
      Build a map of person to marriage/divorces
     :param List of Families
     :returns Map of all IDs to Marriage/Divorces
     """
-    # get map of ID to individual information
-    indMap = getIdMap('INDI', individuals)
-    Id2MarrStatus = {}
-
     # build a map of marriages and divorces for each spouse in a family
+    Id2MarrStatus = {}
     for fam in families:
         # check for single parent
         if single_parent(fam):
             continue
 
         # print("\n\nLOOKING AT FAMILY: {}".format(fam))
-        for spouse in ["HUSB", "WIFE"]:  # loop through the spouses
-            if (spouse in fam) and type(fam[spouse]) is list:
-                for person in fam[spouse]:
-                    if person not in Id2MarrStatus:
-                        Id2MarrStatus[person] = {
-                            "MARR": [],
-                            "DIV": [],
-                            "WIDOWER": [],
-                            "Status": ''
-                         }
-
-                    # If there is a divorce date - then you can't still
-                    # be married or a widower to this person
-                    if "DIV" in fam and type(fam["DIV"]) is list:
-                        Id2MarrStatus[person]["DIV"].append(fam["DIV"])
-                        continue
-
-                    # you are married or a widower
-                    if "MARR" in fam and type(fam["MARR"]) is list:
-                        my_spouses = getMySpouse(person, fam)
-                        marriage_date = fam["MARR"]
-                        for my_spouse in my_spouses:
-                            # at this point you are either still married
-                            # to spouse or windower
-                            if "DEAT" in indMap[my_spouse] and \
-                               type(indMap[my_spouse]["DEAT"]) is list:
-                                Id2MarrStatus[person]["WIDOWER"].append(indMap[my_spouse]["DEAT"])
-                            else:
-                                # if you are not a widower, then you are still
-                                # married to this person
-                                Id2MarrStatus[person]["MARR"].append(marriage_date)
+        for spouse in getSpouses(fam):
+            if spouse not in Id2MarrStatus:
+                Id2MarrStatus[spouse] = {"MARR": [], "DIV": [], "WIDOWER": [], "Status": ''}
+            update_marriage_info(fam, spouse, individuals, Id2MarrStatus)
 
     for ind in individuals:
         key = ind["INDI"]
@@ -247,13 +259,26 @@ def getMaritalStatus(individuals, families):
         if "DEAT" in ind and type(ind["DEAT"]) is list:
             Id2MarrStatus[key]["DEAT"] = ind["DEAT"]
             Id2MarrStatus[key]["Status"] = "Dead"
-            continue
-
-        # check if they are married
-        if key in Id2MarrStatus and Id2MarrStatus[key]["Status"] != 'Single':
+        elif key in Id2MarrStatus and Id2MarrStatus[key]["Status"] != 'Single':
+            # check if they are married
             Id2MarrStatus[key]["Status"] = get_marriage_status(Id2MarrStatus[key])
 
     return Id2MarrStatus
+
+
+def normalize_family_entry(i_fam):
+    """
+    Normalizes all arrays in family entry
+    :param family: The family object
+    :return: all the keys that take arrays are arrays
+    """
+    fam = i_fam.copy()
+    keys = ["MARR", "DIV", "HUSB", "WIFE"]
+    for key in keys:
+        if key not in fam or fam[key] == '-':
+            fam[key] = None
+
+    return fam
 
 
 def normalize_spouse_ids(family):
