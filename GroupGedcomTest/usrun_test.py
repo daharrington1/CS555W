@@ -176,7 +176,7 @@ class usruntest(unittest.TestCase):
         self.assertEqual(multiple_births(tmpfam, self.individuals),
                          [('4/1/2013', 'F1', ['I10', 'I10']), ('28/12/2021', 'F1', ['I1', 'I1', 'I1'])])
 
-    # Test US37
+    # Test US38
 
     def test_ub(self):
         # test upcoming_birthdays()
