@@ -38,7 +38,7 @@ class MyTest(unittest.TestCase):
         self.assertListEqual(invalid, ['I10086'])
 
     def setUp(self) -> None:
-        self.totest = parser4("ModernFamilyTest2.ged", Logger())
+        self.totest = parser4("ModernFamilyTest.ged", Logger())
 
     def tearDown(self) -> None:
         self.totest = None
