@@ -44,8 +44,8 @@
 * US30 living married
 * US31 living single
 * US42 invalid date: I10086 DEAT
-* US33 list orphan: I7
-* US38 list upcoming birt: I23
+* US33 list orphan: I26
+* US38 list upcoming birt: I23 I22
 * US11 bigamy I6 in F128 and F6
 # Test File Note
 * I10086 and I128 should not appear in any family, they're listed only as erroneous examples
