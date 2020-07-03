@@ -18,7 +18,7 @@ individual_database.dropCollection()
 family_database.dropCollection()
 
 # parsed_individuals, parsed_families = raw2dic("ModernFamilyTest.ged")
-new_parser = parser4("ModernFamilyTest2.ged", logger)
+new_parser = parser4("ModernFamilyTest.ged", logger)
 parsed_individuals = new_parser.indi_dic
 parsed_families = new_parser.fam_dic
 
