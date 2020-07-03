@@ -1,0 +1,88 @@
+Individuals
++--------+----------------------------+--------+------------+------+-------+------------+----------+------------+
+|   Id   |            Name            | Gender |  Birthday  |  Age | Alive |   Death    | Child Id | Spouse Id  |
++--------+----------------------------+--------+------------+------+-------+------------+----------+------------+
+|   I1   |      Jay /Pritchett/       |   M    | 23/05/1947 |  73  | True  |    N/A     |   N/A    | F1,F2,F129 |
+|  I10   |      Joe /Pritchett/       |   M    | 04/01/2013 |  7   | True  |    N/A     |    F1    |    F128    |
+| I10086 |      Luke /Hastings/       |   M    | 23/05/2025 | 175  | False | 32/11/2200 |   N/A    |    N/A     |
+|  I11   |       Frank /Dunphy/       |   M    | 01/01/1945 |  75  | False | 15/01/2020 |   N/A    |   F7,F8    |
+|  I12   |     Lorraine /Dunphy/      |   F    | 01/01/1965 |  55  | True  |    N/A     |    F7    |     F8     |
+|  I128  |      Jay /Pritchett/       |   M    | 23/05/1947 |  0   | False | 20/05/1947 |   N/A    |    N/A     |
+|  I13   |       Grace /Dunphy/       |   F    | 01/01/1945 |  64  | False | 01/01/2009 |   N/A    |     F7     |
+|  I14   |  Lily /Tucker-Pritchett/   |   F    | 19/02/2008 |  12  | True  |    N/A     |    F4    |    N/A     |
+|  I15   | Rexford /Tucker-Pritchett/ |   M    | 01/04/2020 |  0   | True  |    N/A     |    F4    |    N/A     |
+|  I16   |       Merle /Tucker/       |   M    | 01/01/1943 |  77  | True  |    N/A     |   N/A    |     F5     |
+|  I17   |       Barb /Tucker/        |   F    | 01/01/1943 |  77  | True  |    N/A     |   N/A    |     F5     |
+|  I18   |      Pameron /Tucker/      |   F    | 01/01/1970 |  50  | True  |    N/A     |    F5    |     F9     |
+|  I19   |      Calhoun /Tucker/      |   M    | 05/04/2017 |  3   | True  |    N/A     |    F9    |     F9     |
+|   I2   |      Gloria /Unknown/      |   F    | 10/05/1971 |  49  | True  |    N/A     |   N/A    | F1,F3,F129 |
+|  I20   |       Haley /Dunphy/       |   F    | 10/12/1993 |  27  | True  |    N/A     |    F6    |    F10     |
+|  I21   |      Dylan /Marshall/      |   M    | 03/04/1991 |  29  | True  |    N/A     |   N/A    |    F10     |
+|  I22   |      Poppy /Marshall/      |   F    | 08/07/2019 |  1   | True  |    N/A     |   F10    |    N/A     |
+|  I23   |     George /Marshall/      |   M    | 08/07/2019 |  1   | True  |    N/A     |   F10    |    N/A     |
+|  I24   |       Alex /Dunphy/        |   F    | 14/01/1997 |  23  | True  |    N/A     |    F6    |    N/A     |
+|  I25   |       Luke /Dunphy/        |   M    | 28/11/1998 |  22  | True  |    N/A     |    F6    |    F12     |
+|  I26   |      Alicia /Miller/       |   F    | 25/01/2007 |  13  | True  |    N/A     |   F11    |    F12     |
+|  I27   |       Lynn /Miller/        |   F    | 06/01/1980 |  32  | False | 08/05/2012 |   N/A    |    F11     |
+|  I28   |       Will /Miller/        |   M    | 25/01/1979 |  33  | False | 08/05/2012 |   N/A    |    F11     |
+|   I3   |      DeDe /Pritchett/      |   F    | 23/01/1947 |  71  | False | 31/10/2018 |   N/A    |     F2     |
+|   I4   |    Mitchell /Pritchett/    |   M    | 01/06/1975 |  45  | True  |    N/A     |    F2    |     F4     |
+|   I5   |      Cameron /Tucker/      |   M    | 29/02/1972 |  48  | True  |    N/A     |    F5    |     F4     |
+|   I6   |     Claire /Pritchett/     |   F    | 03/03/1970 |  50  | True  |    N/A     |    F2    |  F6,F128   |
+|   I7   |       Phil /Dunphy/        |   M    | 03/04/1967 |  53  | True  |    N/A     |    F7    |     F6     |
+|   I8   |      Javier /Delgado/      |   M    | 01/01/1969 |  51  | True  |    N/A     |   N/A    |     F3     |
+|   I9   |      Manny /Delgado/       |   M    | 04/01/1999 |  21  | True  |    N/A     |    F3    |    N/A     |
++--------+----------------------------+--------+------------+------+-------+------------+----------+------------+
+US29: Dead Individuals
++--------+------------------+--------+------------+------+-------+------------+----------+-----------+
+|   Id   |       Name       | Gender |  Birthday  |  Age | Alive |   Death    | Child Id | Spouse Id |
++--------+------------------+--------+------------+------+-------+------------+----------+-----------+
+| I10086 | Luke /Hastings/  |   M    | 23/05/2025 | 175  | False | 32/11/2200 |   N/A    |    N/A    |
+|  I11   |  Frank /Dunphy/  |   M    | 01/01/1945 |  75  | False | 15/01/2020 |   N/A    |   F7,F8   |
+|  I128  | Jay /Pritchett/  |   M    | 23/05/1947 |  0   | False | 20/05/1947 |   N/A    |    N/A    |
+|  I13   |  Grace /Dunphy/  |   F    | 01/01/1945 |  64  | False | 01/01/2009 |   N/A    |    F7     |
+|  I27   |  Lynn /Miller/   |   F    | 06/01/1980 |  32  | False | 08/05/2012 |   N/A    |    F11    |
+|  I28   |  Will /Miller/   |   M    | 25/01/1979 |  33  | False | 08/05/2012 |   N/A    |    F11    |
+|   I3   | DeDe /Pritchett/ |   F    | 23/01/1947 |  71  | False | 31/10/2018 |   N/A    |    F2     |
++--------+------------------+--------+------------+------+-------+------------+----------+-----------+
+Families
++------+------------+------------+------------+-----------------------------------------+---------+--------------------+--------------+
+|  Id  |  Married   |  Divorced  | Husband Id |              Husband Name               | Wife Id |     Wife Name      | Children Ids |
++------+------------+------------+------------+-----------------------------------------+---------+--------------------+--------------+
+|  F1  | 01/01/2009 |    N/A     |     I1     |             Jay /Pritchett/             |   I2    |  Gloria /Unknown/  |     I10      |
+| F10  | 08/03/2019 |    N/A     |    I21     |            Dylan /Marshall/             |   I20   |   Haley /Dunphy/   |   I22,I23    |
+| F11  | 08/08/2003 |    N/A     |    I27     |              Lynn /Miller/              |   I28   |   Will /Miller/    |     I26      |
+| F12  | 08/01/2020 |    N/A     |    I25     |              Luke /Dunphy/              |   I26   |  Alicia /Miller/   |     None     |
+| F128 | 25/12/2007 |    N/A     |    I10     |             Joe /Pritchett/             |   I6    | Claire /Pritchett/ |     None     |
+| F129 | 01/01/2009 |    N/A     |     I1     |             Jay /Pritchett/             |   I2    |  Gloria /Unknown/  |     None     |
+|  F2  | 01/01/1968 | 01/01/2003 |     I1     |             Jay /Pritchett/             |   I3    |  DeDe /Pritchett/  |    I4,I6     |
+|  F3  | 01/01/1995 | 01/01/2006 |     I8     |            Javier /Delgado/             |   I2    |  Gloria /Unknown/  |      I9      |
+|  F4  | 01/01/2014 |    N/A     |   I4,I5    | Mitchell /Pritchett/ & Cameron /Tucker/ |    -    |         -          |   I14,I15    |
+|  F5  | 01/01/1963 |    N/A     |    I16     |             Merle /Tucker/              |   I17   |   Barb /Tucker/    |    I18,I5    |
+|  F6  | 01/04/1993 |    N/A     |     I7     |              Phil /Dunphy/              |   I6    | Claire /Pritchett/ | I20,I24,I25  |
+|  F7  | 01/01/1965 |    N/A     |    I11     |             Frank /Dunphy/              |   I13   |   Grace /Dunphy/   |    I12,I7    |
+|  F8  | 05/04/2017 |    N/A     |    I11     |             Frank /Dunphy/              |   I12   | Lorraine /Dunphy/  |     None     |
+|  F9  | 25/12/2008 |    N/A     |    I19     |            Calhoun /Tucker/             |   I18   |  Pameron /Tucker/  |     I19      |
++------+------------+------------+------------+-----------------------------------------+---------+--------------------+--------------+
+Error: Individual: US07: I10086 is More than 150 years old. - Birthday: 23/5/2025 Death: 32/11/2200
+Error: Individual: US01: I10086 Birthday: 23/5/2025 Occurs in the future
+Error: Individual: US01: I10086 Death: 32/11/2200 Occurs in the future
+Error: Individual: US03: I128: 20/5/1947 Death is before 23/5/1947 birthday.
+Error: Individual: US42: [32, 11, 2200] is an invalid date
+Error: Individual: US23: Same Name & birthday For Name: Jay /Pritchett/ and Date: 23/05/1947 for ids I1,I128
+Anomaly: Individual: US33: ['I26'] is an orphan
+Warning: Individual: US38: Individual I22's birthday JUL 8 is coming soon
+Warning: Individual: US38: Individual I23's birthday JUL 8 is coming soon
+Error: Individual: US11: Individual I1 has more than 1 spouse at the same time
+Error: Individual: US11: Individual I2 has more than 1 spouse at the same time
+Error: Individual: US11: Individual I6 has more than 1 spouse at the same time
+Error: Family: US02: F9: 25/12/2008 Marriage Date is before husband ['I19'] 's 5/4/2017 birthday.
+Error: Family: US02: F128: 25/12/2007 Marriage Date is before husband ['I10'] 's 4/1/2013 birthday.
+Error: Family: US00: Family F4 missing wife
+Error: Family: US17: F8: My spouse (I12) is one of my children: Parent (I11), Children (['I7', 'I12'])
+Error: Family: US17: F9: My spouse (I19) is one of my children: Parent (I18), Children (['I19'])
+Error: Family: US18: F128 has siblings as parents: {'I6', 'I10'}
+Anomaly: Family: US30: Living Married Individuals:I1,I10,I16,I17,I18,I19,I2,I20,I21,I25,I26,I4,I5,I6,I7
+Anomaly: Family: US31: Living Single Individuals (never married or divorced):I14,I15,I22,I23,I24,I9
+Error: Family: US24: Family F1 and Family F129 share the same spouses by name and marriage date 1/1/2009
+Warning: Family: US32: Family F10 has children I22 and I23 with the same birthday 8/7/2019
