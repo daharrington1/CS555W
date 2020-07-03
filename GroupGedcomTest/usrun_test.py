@@ -1,11 +1,11 @@
 import unittest
 from usrun import *
+import copy
 
 
-# Author: Debbie Harrington
-#
+# Individuals and Families: Debbie Harrington
+# User and Author : Chengyi Zhang
 # Test Scripts for User Stories
-# Format Use : Chengyi Zhang
 #
 # Test Scripts for verifying Chengyi Zhang sprints
 #
@@ -135,6 +135,11 @@ class usruntest(unittest.TestCase):
         self.assertEqual(len(IDtoINDI(self.individuals)), 28)
         self.assertEqual(IDtoINDI(self.individuals)['I1'], self.individuals[0])
 
+    def test_mo(self):
+        # test months
+        self.assertEqual(months[1], 'JAN')
+        self.assertNotEqual(months[6], 'JUL')
+
     # Test US24
 
     def test_uf(self):
@@ -171,6 +176,31 @@ class usruntest(unittest.TestCase):
         self.assertEqual(multiple_births(tmpfam, self.individuals),
                          [('4/1/2013', 'F1', ['I10', 'I10']), ('28/12/2021', 'F1', ['I1', 'I1', 'I1'])])
 
+    # Test US37
+
+    def test_ub(self):
+        # test upcoming_birthdays()
+        tmpind = self.individuals.copy()
+        tmpind.append({"NAME": "Luke/Hastings/", "SEX": "M", "BIRT": [10, 7, 1998], "FAMS": ["F11"], "FAMC": ["F11"],
+                       "NOTE": "MarryToChildFAMILY", "AGE": 22, "INDI": "I30"})
+        self.assertEqual(upcoming_birthdays(tmpind), [("I30", "JUL 10")])
+
+    # Test US11
+
+    def test_nb1(self):
+        # test no_bigamy_one_fam
+        tmpfam = copy.deepcopy(self.families)
+        self.assertEqual(len(no_bigamy_one_fam(self.families, self.individuals)), 0)
+        tmpfam[0]['WIFE'].append('I3')
+        self.assertEqual(no_bigamy_one_fam(tmpfam, self.individuals), ['F1'])
+
+
+    def test_nbs(self):
+        # test no_bigamy_sev_fam
+        tmpfam = self.families.copy()
+        self.assertEqual(no_bigamy_sev_fam(self.families, self.individuals), ['I1'])
+        tmpfam.append({"HUSB": "-", "WIFE": ["I2",'I3'], "CHIL": ["I10"], "MARR": [1, 1, 2009], "FAM": "F20"})
+        self.assertEqual(no_bigamy_sev_fam(tmpfam, self.individuals), ['I1', 'I2'])
 
 if __name__ == '__main__':
     unittest.main()
