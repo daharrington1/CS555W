@@ -1,0 +1,98 @@
+./run_utests.sh
+
+
+GroupGedcomTest/DBInterfaceTest.py:
+Seeding data in Individual Collection
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.069s
+
+OK
+
+
+GroupGedcomTest/DateValidatorTest.py:
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+OK
+
+
+GroupGedcomTest/TablePrinterTest.py:
+...............
+----------------------------------------------------------------------
+Ran 15 tests in 0.004s
+
+OK
+
+
+GroupGedcomTest/US16Test.py:
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK
+
+
+GroupGedcomTest/US17Test.py:
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 0.002s
+
+OK
+
+
+GroupGedcomTest/US18Test.py:
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.001s
+
+OK
+
+
+GroupGedcomTest/US30Test.py:
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.002s
+
+OK
+
+
+GroupGedcomTest/US31Test.py:
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.002s
+
+OK
+
+
+GroupGedcomTest/US33Test.py:
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.001s
+
+OK
+
+
+GroupGedcomTest/UtilTest.py:
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+OK
+
+
+GroupGedcomTest/parserTest.py:
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.124s
+
+OK
+
+
+GroupGedcomTest/usrun_test.py:
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.002s
+
+OK
