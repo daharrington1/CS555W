@@ -120,14 +120,14 @@ if len(ret) == 0:
     print("There are no Living Marriage Individuals")
 else:
     ret.sort()
-    logger.log_family_error(30, "Living Married Individuals:{}".format(",".join(ret)))
+    logger.log_family_anomaly(30, "Living Married Individuals:{}".format(",".join(ret)))
 
 ret = UserStory31.us31_get_single_individuals(individuals_from_db, families_from_db)
 if len(ret) == 0:
     print("There are no living single (i.e. non-divorced, non-married) individuals")
 else:
     ret.sort()
-    logger.log_family_error(31, "Living Single Individuals (never married or divorced):{}".format(",".join(ret)))
+    logger.log_family_anomaly(31, "Living Single Individuals (never married or divorced):{}".format(",".join(ret)))
 
 orphans = find_all_orphans(individuals_from_db, families_from_db)
 if len(orphans) > 0:
@@ -141,7 +141,7 @@ else:
 usrun.us24(families_from_db, individuals_from_db)
 usrun.us32(families_from_db, individuals_from_db)
 # Sprint 2
-usrun.us37(families_from_db, individuals_from_db)
+usrun.us38(families_from_db, individuals_from_db)
 usrun.us11(families_from_db, individuals_from_db)
 # Logger Print
 usrun.logger.print_log()

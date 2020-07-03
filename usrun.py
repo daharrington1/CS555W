@@ -94,10 +94,10 @@ def multiple_births(families_from_db, individuals_from_db):
 
 # US37 Upcoming Birthdays
 
-def us37(families_from_db, individuals_from_db):
+def us38(families_from_db, individuals_from_db):
     ret = upcoming_birthdays(individuals_from_db)
     for indiid, date in ret:
-        logger.log_individual_warning(37, "Individual {}'s birthday {} is coming soon"
+        logger.log_individual_warning(38, "Individual {}'s birthday {} is coming soon"
                                   .format(indiid, date))
 
 
@@ -123,7 +123,7 @@ def us11(families_from_db, individuals_from_db):
 
     ret = no_bigamy_sev_fam(families_from_db, individuals_from_db)
     for one in ret:
-        logger.log_individual_error(11, "Individual {} has more than 1 spouses at sometime".format(one))
+        logger.log_individual_error(11, "Individual {} has more than 1 spouse at the same time".format(one))
 
 
 def no_bigamy_one_fam(families_from_db, individuals_from_db):
