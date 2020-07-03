@@ -92,7 +92,7 @@ def multiple_births(families_from_db, individuals_from_db):
 
 # Sprint 2
 
-# US37 Upcoming Birthdays
+# US38 Upcoming Birthdays
 
 def us38(families_from_db, individuals_from_db):
     ret = upcoming_birthdays(individuals_from_db)
