@@ -136,7 +136,12 @@ if len(orphans) > 0:
 else:
     logger.log_individual_anomaly(33, "No orphans in file")
 
-# Chengyi Zhang Sprint 1
+# Chengyi Zhang
+# Sprint 1
 usrun.us24(families_from_db, individuals_from_db)
 usrun.us32(families_from_db, individuals_from_db)
+# Sprint 2
+usrun.us37(families_from_db, individuals_from_db)
+usrun.us11(families_from_db, individuals_from_db)
+# Logger Print
 usrun.logger.print_log()
