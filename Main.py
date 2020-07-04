@@ -6,7 +6,7 @@ from Utils.Logger import Logger
 from Utils import UserStory17, UserStory18, UserStory30, UserStory31
 import usrun
 from Utils.UserStory33 import find_all_orphans
-from Utils.DateValidator import DateValidator
+from Utils.DateValidator import DateValidator, format_date
 
 logger = Logger()
 dateValidator = DateValidator(logger)
@@ -84,7 +84,7 @@ if len(non_uniques) > 0:
     for conflict in non_uniques.values():
         formatted = "Same Name & birthday For Name: {} and Date: {} for ids {}" \
             .format(conflict[0].name,
-                    printer.format_date(conflict[0].birthday),
+                    format_date(conflict[0].birthday, conflict[0].birthday),
                     ",".join([id.id for id in conflict]))
         logger.log_individual_error(23, formatted)
 else:
