@@ -109,18 +109,6 @@ class TablePrinterTest(unittest.TestCase):
         result = self._testPrinter.format_families([test_dictionary])
         self.assertNotEqual(self._testPrinter.format_families([]), result, "Returned empty table")
 
-    def testValidDateMapping(self):
-        self.assertEqual("01/01/2000", self._testPrinter.format_date([1, 1, 2000]))
-        self.assertEqual("01/10/2001", self._testPrinter.format_date([1, 10, 2001]))
-        self.assertEqual("10/31/0023", self._testPrinter.format_date([10, 31, 23]))
-        self.assertEqual("07/17/2010", self._testPrinter.format_date([7, 17, 2010]))
-
-    def testInvalidSyntaxDateMappings(self):
-        self.assertEqual("-", self._testPrinter.format_date([1, 3]))
-        self.assertEqual("-", self._testPrinter.format_date(None))
-        self.assertEqual("-", self._testPrinter.format_date({"someKey": "someValue"}))
-        self.assertEqual("-", self._testPrinter.format_date((1, 2, 3)))
-
 
 if __name__ == '__main__':
     unittest.main()

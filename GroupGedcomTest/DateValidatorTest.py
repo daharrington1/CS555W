@@ -1,7 +1,7 @@
 import unittest
 from Utils.DateValidator import DateValidator
 from Utils.Logger import Logger
-from Utils.DateValidator import is_leap_year
+from Utils.DateValidator import is_leap_year, format_date
 
 
 class DateValidatorTest(unittest.TestCase):
@@ -63,6 +63,18 @@ class DateValidatorTest(unittest.TestCase):
         self.assertFalse(self._test_validator.validate_date([32, 10, 2000]))
         self.assertFalse(self._test_validator.validate_date([31, 11, 2000]))
         self.assertFalse(self._test_validator.validate_date([32, 12, 2000]))
+
+    def testValidDateMapping(self):
+        self.assertEqual("01/01/2000", format_date([1, 1, 2000], "-"))
+        self.assertEqual("01/10/2001", format_date([1, 10, 2001], "-"))
+        self.assertEqual("10/31/0023", format_date([10, 31, 23], "-"))
+        self.assertEqual("07/17/2010", format_date([7, 17, 2010], "-"))
+
+    def testInvalidSyntaxDateMappings(self):
+        self.assertEqual("-", format_date([1, 3], "-"))
+        self.assertEqual("-", format_date(None, "-"))
+        self.assertEqual("-", format_date({"someKey": "someValue"}, "-"))
+        self.assertEqual("-", format_date((1, 2, 3), "-"))
 
 
 if __name__ == '__main__':

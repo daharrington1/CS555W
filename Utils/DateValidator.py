@@ -19,7 +19,8 @@ class DateValidator:
         self._logger = logger
 
     def _log(self, date, is_individual):
-        self._logger.log_error(42, is_individual, "{} is an invalid date".format(date))
+        self._logger.log_error(42, is_individual, "{} is an invalid date".format(
+            format_date(date, date)))
 
     def validate_date(self, date, is_individual=True):
         """
@@ -47,3 +48,17 @@ class DateValidator:
             return day <= self.month_map[month]
         except KeyError:
             return False
+
+
+def format_date(date, error_value):
+    """
+    Converts a list date to a date for output
+    :param date as a list, with indexes [day, month, year]
+    :param error_value is the value to use in error cases
+    :return: String of the format in DD/MM/YYYY if valid format, otherwise strips [] from list toString
+    """
+    if type(date) is not list or len(date) < 3:
+        # Mal formed date, do not attempt to parse
+        return error_value
+    # DD MM YYYY.
+    return "{:02d}/{:02d}/{:04d}".format(date[0], date[1], date[2])
