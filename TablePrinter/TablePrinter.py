@@ -1,4 +1,6 @@
 from tabulate import tabulate
+from Utils.DateValidator import format_date
+
 
 """
 Class which contains the logic to print out individuals or families into a formatted table
@@ -57,10 +59,10 @@ class TablePrinter:
         return (individual["INDI"],
                 individual["NAME"],
                 individual["SEX"],
-                self.format_date(individual["BIRT"]),
+                format_date(individual["BIRT"], self.error_output),
                 individual["AGE"] if "AGE" in individual else self.error_output,
                 False if "DEAT" in individual else True,
-                self.format_date(individual["DEAT"]) if "DEAT" in individual else self._not_applicable,
+                format_date(individual["DEAT"], self.error_output) if "DEAT" in individual else self._not_applicable,
                 individual["FAMC"][0] if "FAMC" in individual else self._not_applicable,
                 ",".join(individual["FAMS"]) if "FAMS" in individual else self._not_applicable)
 
@@ -92,8 +94,8 @@ class TablePrinter:
         # Map 1:1, except replace divorced with self._not_applicable if there was no divorce
         # If children is None or size 0, map to string "None", otherwise sorted in ascending order
         return (fam["FAM"],
-                self.format_date(fam["MARR"]),
-                self.format_date(fam["DIV"]) if "DIV" in fam else self._not_applicable,
+                format_date(fam["MARR"], self.error_output),
+                format_date(fam["DIV"], self.error_output) if "DIV" in fam else self._not_applicable,
                 ",".join(fam["HUSB"]),
                 self._look_up_name_by_id(fam["HUSB"]),
                 ",".join(fam["WIFE"]),
@@ -131,16 +133,3 @@ class TablePrinter:
         for individual in individual_ids:
             all_names.append(self.individual_database.getName(individual.replace("@", "").strip()))
         return " & ".join(all_names)
-
-    """
-    Converts a list date to a date for output
-    :param A date as a list, with indexes [day, month, year]
-    :return: String of the format in DD/MM/YYYY if valid format, otherwise strips [] from list toString
-    """
-
-    def format_date(self, date):
-        if type(date) is not list or len(date) < 3:
-            # Mal formed date, do not attempt to parse
-            return self.error_output
-        # DD MM YYYY.
-        return "{:02d}/{:02d}/{:04d}".format(date[0], date[1], date[2])
