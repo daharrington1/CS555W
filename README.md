@@ -34,7 +34,7 @@
 * US07 age more than 150 years: I10086
 * US18 I10 I6 in F128 half siblings married
 * US17 marry to child: F8 & F9
-* US29 list deceased: I10086 I11 I128 I13 I128 I27 I28 I3
+* US29 list deceased: I10086 I11 I128 I13 I27 I28 I3
 * US23 I1 I128 unique name and birt
 * US24 I1 I2 in F1 and F129 unique familys by spouse
 * US32 I22 I23 multiple birt
