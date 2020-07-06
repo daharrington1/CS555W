@@ -43,7 +43,7 @@
 * US03 birt before deat: I128
 * US30 living married: I1 I10 I16 I17 I18 I19 I2 I20 I21 I25 I26 I4 I5 I6 I7
 * US31 living single: I14 I15 I22 I23 I24 I9
-* US42 invalid date: I10086 DEAT
+* US42 invalid date: I30 birth
 * US33 list orphan: F11 I26
 * US38 list upcoming birt: I23 I22
 * US11 bigamy I1, I2 & I6
