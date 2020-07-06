@@ -1,6 +1,3 @@
-from Utils import Logger
-
-
 def is_leap_year(year):
     """
     Checks if the current year is a leap year on the Gregorian Calendar
