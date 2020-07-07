@@ -41,6 +41,7 @@ class Logger:
     _error_label = "Error"
     _anomaly_label = "Anomaly"
     _warning_label = "Warning"
+    _info_label = "Info"
 
     _individual_collection = "Individual"
     _family_collection = "Family"
@@ -69,6 +70,9 @@ class Logger:
     def log_individual_warning(self, use_case, error_message):
         self._log(self._warning_label, self._individual_collection, use_case, error_message)
 
+    def log_individual_info(self, use_case, error_message):
+        self._log(self._info_label, self._individual_collection, use_case, error_message)
+
     def log_family_error(self, use_case, error_message):
         self._log(self._error_label, self._family_collection, use_case, error_message)
 
@@ -77,6 +81,9 @@ class Logger:
 
     def log_family_warning(self, use_case, error_message):
         self._log(self._warning_label, self._family_collection, use_case, error_message)
+
+    def log_family_info(self, use_case, error_message):
+        self._log(self._info_label, self._family_collection, use_case, error_message)
 
     def log_error(self, use_case, is_individual, error_message):
         self._log(self._error_label, self._individual_collection if is_individual else self._family_collection,

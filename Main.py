@@ -89,12 +89,12 @@ if len(non_uniques) > 0:
                     ",".join([id.id for id in conflict]))
         logger.log_individual_error(23, formatted)
 else:
-    print("All individuals are unique in the file, by name and birth date")
+    logger.log_individual_info(23, "All individuals are unique in the file, by name and birth date")
 
 # Check for any parents married to children
 ret = UserStory17.us17_no_marr2child(individuals_from_db, families_from_db)
 if len(ret) == 0:
-    print("No spouses in families are married to children")
+    logger.log_family_info(17, "No spouses in families are married to children")
 else:
     for item in ret:
         logger.log_family_error(17, "{}: My spouse ({}) is one of my children: Parent ({}), Children ({})".format(
@@ -111,21 +111,21 @@ else:
 
 ret = UserStory18.us18_no_siblingmarriages(individuals_from_db, families_from_db)
 if len(ret) == 0:
-    print("There are no marriages with siblings")
+    logger.log_family_info(18, "There are no marriages with siblings")
 else:
     for fam in ret:
         logger.log_family_error(18, "{} has siblings as parents: {}".format(fam["FAM"], fam["Parents"]))
 
 ret = UserStory30.us30_get_married_individuals(individuals_from_db, families_from_db)
 if len(ret) == 0:
-    print("There are no Living Marriage Individuals")
+    logger.log_family_info(30, "There are no Living Marriage Individuals")
 else:
     ret.sort()
     logger.log_family_anomaly(30, "Living Married Individuals:{}".format(",".join(ret)))
 
 ret = UserStory31.us31_get_single_individuals(individuals_from_db, families_from_db)
 if len(ret) == 0:
-    print("There are no living single (i.e. non-divorced, non-married) individuals")
+    logger.log_family_info(31, "There are no living single (i.e. non-divorced, non-married) individuals")
 else:
     ret.sort()
     logger.log_family_anomaly(31, "Living Single Individuals (never married or divorced):{}".format(",".join(ret)))
@@ -135,14 +135,14 @@ if len(orphans) > 0:
     for orphan in orphans:
         logger.log_individual_anomaly(33, "{} is an orphan".format(" ".join(orphan)))
 else:
-    logger.log_individual_anomaly(33, "No orphans in file")
+    logger.log_individual_info(33, "No orphans in file")
 
 mismatched_marriage_roles = find_mistitled_spouse(parsed_individuals, families_from_db)
 if len(mismatched_marriage_roles) > 0:
     for mismatched_role in mismatched_marriage_roles:
         logger.log_individual_error(21, "{} is the wrong sex for their listed marriage role ".format(mismatched_role))
 else:
-    logger.log_individual_anomaly(21, "No mismatched marriage roles in file")
+    logger.log_individual_info(21, "No mismatched marriage roles in file")
 
 # Chengyi Zhang
 # Sprint 1
