@@ -1,3 +1,5 @@
+from Utils.Utils import normalize_family_entry, getSpouses
+
 def us16_male_last_names(individuals, families):
     """
     User Story 16: Checks for Male Last Names
@@ -14,6 +16,7 @@ def us16_male_last_names(individuals, families):
     # build map of id to mail last names
     for ind in individuals:
         if ind["SEX"] == "M":  # only store male names
+            # print("Adding Id({}), Name({}), sex({}) to in2Name: ".format(ind["INDI"], ind["NAME"], ind["SEX"]))
             id2Name[ind["INDI"]] = ind["NAME"].split("/")[1]
 
     for fam in families:
@@ -22,18 +25,16 @@ def us16_male_last_names(individuals, families):
         # assume it is a bad family at first
         badFam = {"FAM": fam["FAM"]}
 
-        # look at husbands last names
-        if ("HUSB" in fam) and type(fam["HUSB"]) is list:
-
-            for male in fam["HUSB"]:
-                if male not in id2Name:
-                    raise Exception(ValueError, "Husband {} is not in the male mapping".format(male))
-
-                if id2Name[male] not in lastNames:
-                    lastNames.append(id2Name[male])
+        # look at all spouses in case information is backwards
+        spouses=getSpouses(fam);
+        for male in fam["HUSB"]:
+            # skip over anyone not identified as a male
+            if male in id2Name and id2Name[male] not in lastNames:
+                lastNames.append(id2Name[male])
 
         # look at male children last names
-        if ("CHIL" in fam) and type(fam["CHIL"]) is list:
+        fam=normalize_family_entry(fam);
+        if fam["CHIL"] is not None:
             for child in fam["CHIL"]:
                 # only look at males and non-unique last names
                 if child in id2Name and id2Name[child] not in lastNames:

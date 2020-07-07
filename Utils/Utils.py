@@ -273,7 +273,7 @@ def normalize_family_entry(i_fam):
     :return: all the keys that take arrays are arrays
     """
     fam = i_fam.copy()
-    keys = ["MARR", "DIV", "HUSB", "WIFE"]
+    keys = ["MARR", "DIV", "HUSB", "WIFE", "CHIL"]
     for key in keys:
         if key not in fam or fam[key] == '-':
             fam[key] = None

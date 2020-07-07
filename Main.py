@@ -3,7 +3,7 @@ from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
 from Utils.Logger import Logger
-from Utils import UserStory17, UserStory18, UserStory30, UserStory31
+from Utils import UserStory17, UserStory18, UserStory30, UserStory31, UserStory16, UserStory39
 import usrun
 from Utils.UserStory33 import find_all_orphans
 from Utils.DateValidator import DateValidator, format_date
@@ -99,15 +99,6 @@ else:
         logger.log_family_error(17, "{}: My spouse ({}) is one of my children: Parent ({}), Children ({})".format(
             item["FAM"], item["MySpouse"], item["Spouse"], item["MyChildren"]))
 
-# User Story to be delivered in future sprint
-# ret=UserStory16.us16_male_last_names(individuals_from_db, families_from_db)
-# if len(ret)==0:
-#    print("All males in families have the same last name")
-# else:
-#    for fam in ret:
-#        logger.log_family_warning(16, "{} has multiple last names: {}".format(fam["FAM"], fam["LNAMES"]))
-
-
 ret = UserStory18.us18_no_siblingmarriages(individuals_from_db, families_from_db)
 if len(ret) == 0:
     print("There are no marriages with siblings")
@@ -120,14 +111,14 @@ if len(ret) == 0:
     print("There are no Living Marriage Individuals")
 else:
     ret.sort()
-    logger.log_family_anomaly(30, "Living Married Individuals:{}".format(",".join(ret)))
+    logger.log_family_anomaly(30, "Living Married Individuals: {}".format(",".join(ret)))
 
 ret = UserStory31.us31_get_single_individuals(individuals_from_db, families_from_db)
 if len(ret) == 0:
     print("There are no living single (i.e. non-divorced, non-married) individuals")
 else:
     ret.sort()
-    logger.log_family_anomaly(31, "Living Single Individuals (never married or divorced):{}".format(",".join(ret)))
+    logger.log_family_anomaly(31, "Living Single Individuals (never married or divorced): {}".format(",".join(ret)))
 
 orphans = find_all_orphans(individuals_from_db, families_from_db)
 if len(orphans) > 0:
@@ -143,5 +134,22 @@ usrun.us32(families_from_db, individuals_from_db)
 # Sprint 2
 usrun.us38(families_from_db, individuals_from_db)
 usrun.us11(families_from_db, individuals_from_db)
+
+# User Story 16 - get families where the males don't all have the same last name
+ret=UserStory16.us16_male_last_names(individuals_from_db, families_from_db)
+if len(ret)==0:
+   print("All males in families have the same last name")
+else:
+   for fam in ret:
+       logger.log_family_warning(16, "{} has multiple last names: {}".format(fam["FAM"], fam["LNAMES"]))
+
+# User Story 39: list upcoming anniversaries
+ret=UserStory39.us39_upcoming_anniversaries(individuals_from_db, families_from_db)
+if len(ret)==0:
+   print("No famililes have upcoming anniversaries in the next 30 days")
+else:
+   for fam in ret:
+       logger.log_family_anomaly(39, "FAMILY ({}) has an upcoming anniversary: {}".format(fam[0], str(fam[1][1])+'/'+str(fam[1][0])+'/'+str(fam[1][2])))
+
 # Logger Print
 usrun.logger.print_log()
