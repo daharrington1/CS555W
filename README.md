@@ -55,6 +55,6 @@
 * US13 sibings spacing: F11 I26 I29 birth 
 * US12 parents too old: F12 I26 I30
 * US05 marr before death: F129 I10086
-* US19 ...
+* US19 first cousins marry: F13 I23 I31
 # Test File Note
 * I10086 and I128 in family F129, they're listed only as erroneous examples
