@@ -8,6 +8,7 @@ import usrun
 from Utils.UserStory33 import find_all_orphans
 from Utils.DateValidator import DateValidator, format_date
 from Utils.UserStory21 import find_mistitled_spouse
+from Utils.UserStory13 import find_invalid_sibling_spacing
 
 logger = Logger()
 dateValidator = DateValidator(logger)
@@ -143,6 +144,14 @@ if len(mismatched_marriage_roles) > 0:
         logger.log_individual_error(21, "{} is the wrong sex for their listed marriage role ".format(mismatched_role))
 else:
     logger.log_individual_info(21, "No mismatched marriage roles in file")
+
+invalid_spaced_siblings = find_invalid_sibling_spacing(parsed_individuals, families_from_db)
+if len(invalid_spaced_siblings) > 0:
+    for invalid_sibling_id in invalid_spaced_siblings:
+        logger.log_individual_anomaly(13, "{} birth is less than 8 months away from a non-twin"
+                                      .format(invalid_sibling_id))
+else:
+    logger.log_family_info(13, "All siblings in all families are twins or spaced more than 8 months apart")
 
 # Chengyi Zhang
 # Sprint 1

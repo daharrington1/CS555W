@@ -8,9 +8,23 @@ def is_leap_year(year):
     return year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
 
 
+def day_mapping_for_year(year):
+    """
+    Gets a copy of the month to day mapping for a given year. Handles leap year check for February.
+    :param year: The year to check for in the day_mapping
+    :return: A copy of month_map with February updated to the correct leap year value
+    """
+    day_mapping = month_map.copy()
+    if is_leap_year(year):
+        day_mapping[2] = 29
+    return day_mapping
+
+
+month_map = {1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31}
+
+
 class DateValidator:
     _logger = None
-    month_map = {1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31}
 
     def __init__(self, logger):
         self._logger = logger
@@ -36,13 +50,8 @@ class DateValidator:
             return False
 
         month = date[1]
-        # February handling because it has to be difficult
-        # Only need to check for a valid leap day, as the below return handles the normal 28 days
-        if month == 2 and day == 29 and is_leap_year(date[2]):
-            return True
-
         try:
-            return day <= self.month_map[month]
+            return day <= day_mapping_for_year(date[2])[month]
         except KeyError:
             return False
 
