@@ -7,6 +7,8 @@ from Utils import UserStory17, UserStory18, UserStory30, UserStory31, UserStory1
 import usrun
 from Utils.UserStory33 import find_all_orphans
 from Utils.DateValidator import DateValidator, format_date
+from Utils.UserStory21 import find_mistitled_spouse
+from Utils.UserStory13 import find_invalid_sibling_spacing
 
 logger = Logger()
 dateValidator = DateValidator(logger)
@@ -88,12 +90,12 @@ if len(non_uniques) > 0:
                     ",".join([id.id for id in conflict]))
         logger.log_individual_error(23, formatted)
 else:
-    print("All individuals are unique in the file, by name and birth date")
+    logger.log_individual_info(23, "All individuals are unique in the file, by name and birth date")
 
 # Check for any parents married to children
 ret = UserStory17.us17_no_marr2child(individuals_from_db, families_from_db)
 if len(ret) == 0:
-    print("No spouses in families are married to children")
+    logger.log_family_info(17, "No spouses in families are married to children")
 else:
     for item in ret:
         logger.log_family_error(17, "{}: My spouse ({}) is one of my children: Parent ({}), Children ({})".format(
@@ -101,21 +103,21 @@ else:
 
 ret = UserStory18.us18_no_siblingmarriages(individuals_from_db, families_from_db)
 if len(ret) == 0:
-    print("There are no marriages with siblings")
+    logger.log_family_info(18, "There are no marriages with siblings")
 else:
     for fam in ret:
         logger.log_family_error(18, "{} has siblings as parents: {}".format(fam["FAM"], fam["Parents"]))
 
 ret = UserStory30.us30_get_married_individuals(individuals_from_db, families_from_db)
 if len(ret) == 0:
-    print("There are no Living Marriage Individuals")
+    logger.log_family_info(30, "There are no Living Marriage Individuals")
 else:
     ret.sort()
     logger.log_family_anomaly(30, "Living Married Individuals: {}".format(",".join(ret)))
 
 ret = UserStory31.us31_get_single_individuals(individuals_from_db, families_from_db)
 if len(ret) == 0:
-    print("There are no living single (i.e. non-divorced, non-married) individuals")
+    logger.log_family_info(31, "There are no living single (i.e. non-divorced, non-married) individuals")
 else:
     ret.sort()
     logger.log_family_anomaly(31, "Living Single Individuals (never married or divorced): {}".format(",".join(ret)))
@@ -125,7 +127,22 @@ if len(orphans) > 0:
     for orphan in orphans:
         logger.log_individual_anomaly(33, "{} is an orphan".format(" ".join(orphan)))
 else:
-    logger.log_individual_anomaly(33, "No orphans in file")
+    logger.log_individual_info(33, "No orphans in file")
+
+mismatched_marriage_roles = find_mistitled_spouse(parsed_individuals, families_from_db)
+if len(mismatched_marriage_roles) > 0:
+    for mismatched_role in mismatched_marriage_roles:
+        logger.log_individual_error(21, "{} is the wrong sex for their listed marriage role ".format(mismatched_role))
+else:
+    logger.log_individual_info(21, "No mismatched marriage roles in file")
+
+invalid_spaced_siblings = find_invalid_sibling_spacing(parsed_individuals, families_from_db)
+if len(invalid_spaced_siblings) > 0:
+    for invalid_sibling_id in invalid_spaced_siblings:
+        logger.log_individual_anomaly(13, "{} birth is less than 8 months away from a non-twin"
+                                      .format(invalid_sibling_id))
+else:
+    logger.log_family_info(13, "All siblings in all families are twins or spaced more than 8 months apart")
 
 # Chengyi Zhang
 # Sprint 1
