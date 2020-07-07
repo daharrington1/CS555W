@@ -58,9 +58,11 @@ def getDateTimestamp(date):
         return -1
 
     # convert to timestamp - inputs: year/month/date
-    date_timestamp = datetime.datetime(date[2], date[1], date[0]).timestamp()
-    return date_timestamp
-
+    try:
+        date_timestamp = datetime.datetime(date[2], date[1], date[0]).timestamp()
+        return date_timestamp
+    except Exception:
+        return -1
 
 def getParent2ChildrenMap(families):
     """
