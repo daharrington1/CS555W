@@ -11,7 +11,7 @@ def us39_upcoming_anniversaries(individuals, families):
     :param Individuals and Family lists
     :returns List of all living couples with upcoming anniversaries
     """
-    ret=[]
+    ret = []
     deadList = {}  # map of dead individuals
 
     # build map of id to mail last names
@@ -39,8 +39,7 @@ def us39_upcoming_anniversaries(individuals, families):
             continue
 
         # see if the anniversary is within 30 days
-        date_diff = datetime.datetime(datetime.datetime.today().year, 
-                                      fam['MARR'][1], fam['MARR'][0]) - datetime.datetime.today()
+        date_diff=datetime.datetime(datetime.datetime.today().year, fam['MARR'][1], fam['MARR'][0]) - datetime.datetime.today()
         if (date_diff > datetime.timedelta(days = 0) and date_diff < datetime.timedelta(days = 30)):
             ret.append((fam['FAM'], fam['MARR']))
 

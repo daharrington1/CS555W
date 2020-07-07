@@ -137,7 +137,7 @@ usrun.us11(families_from_db, individuals_from_db)
 
 # User Story 16 - get families where the males don't all have the same last name
 ret = UserStory16.us16_male_last_names(individuals_from_db, families_from_db)
-if len(ret)==0:
+if len(ret) == 0:
     print("All males in families have the same last name")
 else:
     for fam in ret:
@@ -145,7 +145,7 @@ else:
 
 # User Story 39: list upcoming anniversaries
 ret = UserStory39.us39_upcoming_anniversaries(individuals_from_db, families_from_db)
-if len(ret)==0:
+if len(ret) == 0:
     print("No famililes have upcoming anniversaries in the next 30 days")
 else:
     for fam in ret:
