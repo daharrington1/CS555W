@@ -136,20 +136,21 @@ usrun.us38(families_from_db, individuals_from_db)
 usrun.us11(families_from_db, individuals_from_db)
 
 # User Story 16 - get families where the males don't all have the same last name
-ret=UserStory16.us16_male_last_names(individuals_from_db, families_from_db)
+ret = UserStory16.us16_male_last_names(individuals_from_db, families_from_db)
 if len(ret)==0:
-   print("All males in families have the same last name")
+    print("All males in families have the same last name")
 else:
-   for fam in ret:
-       logger.log_family_warning(16, "{} has multiple last names: {}".format(fam["FAM"], fam["LNAMES"]))
+    for fam in ret:
+        logger.log_family_warning(16, "{} has multiple last names: {}".format(fam["FAM"], fam["LNAMES"]))
 
 # User Story 39: list upcoming anniversaries
-ret=UserStory39.us39_upcoming_anniversaries(individuals_from_db, families_from_db)
+ret = UserStory39.us39_upcoming_anniversaries(individuals_from_db, families_from_db)
 if len(ret)==0:
-   print("No famililes have upcoming anniversaries in the next 30 days")
+    print("No famililes have upcoming anniversaries in the next 30 days")
 else:
-   for fam in ret:
-       logger.log_family_anomaly(39, "FAMILY ({}) has an upcoming anniversary: {}".format(fam[0], str(fam[1][1])+'/'+str(fam[1][0])+'/'+str(fam[1][2])))
+    for fam in ret:
+        logger.log_family_anomaly(39, "FAMILY ({}) has an upcoming anniversary: {}"
+                                  .format(fam[0], str(fam[1][1])+'/'+str(fam[1][0])+'/'+str(fam[1][2])))
 
 # Logger Print
 usrun.logger.print_log()
