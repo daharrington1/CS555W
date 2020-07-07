@@ -43,7 +43,7 @@ def us39_upcoming_anniversaries(individuals, families):
             date_diff = datetime.datetime(datetime.datetime.today().year, fam['MARR'][1], fam['MARR'][0]) - datetime.datetime.today()
             if (date_diff > datetime.timedelta(days=0) and date_diff < datetime.timedelta(days=30)):
                 ret.append((fam['FAM'], fam['MARR']))
-        except Exception as e:
+        except Exception:
             # problem with dates - skip this entry
             continue
 
