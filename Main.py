@@ -7,6 +7,7 @@ from Utils import UserStory17, UserStory18, UserStory30, UserStory31
 import usrun
 from Utils.UserStory33 import find_all_orphans
 from Utils.DateValidator import DateValidator, format_date
+from Utils.UserStory21 import find_mistitled_spouse
 
 logger = Logger()
 dateValidator = DateValidator(logger)
@@ -135,6 +136,13 @@ if len(orphans) > 0:
         logger.log_individual_anomaly(33, "{} is an orphan".format(" ".join(orphan)))
 else:
     logger.log_individual_anomaly(33, "No orphans in file")
+
+mismatched_marriage_roles = find_mistitled_spouse(parsed_individuals, families_from_db)
+if len(mismatched_marriage_roles) > 0:
+    for mismatched_role in mismatched_marriage_roles:
+        logger.log_individual_error(21, "{} is the wrong sex for their listed marriage role ".format(mismatched_role))
+else:
+    logger.log_individual_anomaly(21, "No mismatched marriage roles in file")
 
 # Chengyi Zhang
 # Sprint 1
