@@ -64,6 +64,7 @@ def getDateTimestamp(date):
     except Exception:
         return -1
 
+
 def getParent2ChildrenMap(families):
     """
      Build a map of parent to children - crosses families
