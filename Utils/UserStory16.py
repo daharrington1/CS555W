@@ -1,5 +1,6 @@
 from Utils.Utils import normalize_family_entry, getSpouses
 
+
 def us16_male_last_names(individuals, families):
     """
     User Story 16: Checks for Male Last Names
@@ -26,14 +27,14 @@ def us16_male_last_names(individuals, families):
         badFam = {"FAM": fam["FAM"]}
 
         # look at all spouses in case information is backwards
-        spouses=getSpouses(fam);
-        for male in fam["HUSB"]:
+        spouses = getSpouses(fam)
+        for male in spouses:
             # skip over anyone not identified as a male
             if male in id2Name and id2Name[male] not in lastNames:
                 lastNames.append(id2Name[male])
 
         # look at male children last names
-        fam=normalize_family_entry(fam);
+        fam=normalize_family_entry(fam)
         if fam["CHIL"] is not None:
             for child in fam["CHIL"]:
                 # only look at males and non-unique last names

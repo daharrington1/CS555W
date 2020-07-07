@@ -2,6 +2,7 @@
 from Utils.Utils import normalize_family_entry, getSpouses
 import datetime
 
+
 def us39_upcoming_anniversaries(individuals, families):
     """
     User Story 39: List all living couples in a GEDCOM file whose marriage
@@ -12,8 +13,6 @@ def us39_upcoming_anniversaries(individuals, families):
     """
     ret=[]
     deadList = {}  # map of dead individuals
-    months = {1: 'JAN', 2: 'FEB', 3: 'MAR', 4: 'APR', 5: 'MAY', 6: 'JUN', 7: 'JUL', 8: 'AUG',
-              9: 'SEP', 10: 'OCT', 11: 'NOV', 12: 'DEC'}
 
     # build map of id to mail last names
     for ind in individuals:
@@ -22,26 +21,27 @@ def us39_upcoming_anniversaries(individuals, families):
             deadList[ind["INDI"]] = ind
 
     for fam in families:
-        fam=normalize_family_entry(fam)
+        fam = normalize_family_entry(fam)
 
         # skip over divorced people
         if fam["DIV"] is not None:
-            continue;
+            continue
 
         # check if any of the spouses are dead - if so - skip them
-        widower=False;
-        spouses=getSpouses(fam)
+        widower = False
+        spouses = getSpouses(fam)
         for spouse in spouses:
             if spouse in deadList:
-                widower=True
+                widower = True
                 break
 
         if widower:
             continue
-       
+
         # see if the anniversary is within 30 days
-        date_diff=datetime.datetime(datetime.datetime.today().year, fam['MARR'][1], fam['MARR'][0]) - datetime.datetime.today()
-        if (date_diff > datetime.timedelta(days=0) and date_diff < datetime.timedelta(days=30)):
+        date_diff = datetime.datetime(datetime.datetime.today().year, 
+                                      fam['MARR'][1], fam['MARR'][0]) - datetime.datetime.today()
+        if (date_diff > datetime.timedelta(days = 0) and date_diff < datetime.timedelta(days = 30)):
             ret.append((fam['FAM'], fam['MARR']))
 
     return ret
