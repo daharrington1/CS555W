@@ -118,17 +118,17 @@ else:
 
 ret = UserStory30.us30_get_married_individuals(ind_map, fam_map)
 if len(ret) == 0:
-    logger.log_family_info(30, "There are no Living Marriage Individuals")
+    logger.log_individual_info(30, "There are no Living Marriage Individuals")
 else:
     ret.sort()
-    logger.log_family_anomaly(30, "Living Married Individuals: {}".format(",".join(ret)))
+    logger.log_individual_info(30, "Living Married Individuals: {}".format(",".join(ret)))
 
 ret = UserStory31.us31_get_single_individuals(ind_map, fam_map)
 if len(ret) == 0:
-    logger.log_family_info(31, "There are no living single (i.e. non-divorced, non-married) individuals")
+    logger.log_individual_info(31, "There are no living single (i.e. non-divorced, non-married) individuals")
 else:
     ret.sort()
-    logger.log_family_anomaly(31, "Living Single Individuals (never married or divorced): {}".format(",".join(ret)))
+    logger.log_individual_info(31, "Living Single Individuals (never married or divorced): {}".format(",".join(ret)))
 
 orphans = find_all_orphans(individuals_from_db, families_from_db)
 if len(orphans) > 0:
@@ -174,8 +174,8 @@ if len(ret) == 0:
     print("No famililes have upcoming anniversaries in the next 30 days")
 else:
     for fam in ret:
-        logger.log_family_anomaly(39, "FAMILY ({}) has an upcoming anniversary: {}"
-                                  .format(fam[0], str(fam[1][1])+'/'+str(fam[1][0])+'/'+str(fam[1][2])))
+        logger.log_family_info(39, "FAMILY ({}) has an upcoming anniversary: {}"
+                               .format(fam[0], str(fam[1][1])+'/'+str(fam[1][0])+'/'+str(fam[1][2])))
 
 # Logger Print
 usrun.logger.print_log()
