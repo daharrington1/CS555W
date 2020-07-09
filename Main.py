@@ -175,7 +175,7 @@ if len(ret) == 0:
 else:
     for fam in ret:
         logger.log_family_info(39, "FAMILY ({}) has an upcoming anniversary: {}"
-                                  .format(fam[0], str(fam[1][1])+'/'+str(fam[1][0])+'/'+str(fam[1][2])))
+                               .format(fam[0], str(fam[1][1])+'/'+str(fam[1][0])+'/'+str(fam[1][2])))
 
 # Logger Print
 usrun.logger.print_log()

@@ -16,10 +16,10 @@ def us39_upcoming_anniversaries(ind_map, fam_map):
     for fam_id, fam in fam_map.items():
         # check non-divorced couples and non-widowers
         if len(fam["DIV"]) < 1:
-            Widower=False
+            Widower = False
             for spouse in getSpouses(fam):
                 if "DEAT" in ind_map[spouse] and type(ind_map[spouse]["DEAT"]) is list:
-                    Widower=True
+                    Widower = True
 
             # check if the anniversary is within 30 days
             if not Widower:

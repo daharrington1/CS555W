@@ -162,7 +162,7 @@ class US39Test(unittest.TestCase):
         # should no matches
         for id, fam in self.famMap.items():
             # overwrite all Marriages as one day ago
-            dt=datetime.date.today()-datetime.timedelta(days=1)
+            dt = datetime.date.today()-datetime.timedelta(days=1)
             self.famMap[id]["MARR"]=[]
             self.famMap[id]["MARR"]=[dt.day, dt.month, dt.year]
 
@@ -173,26 +173,25 @@ class US39Test(unittest.TestCase):
         # should no matches
         for id, fam in self.famMap.items():
             # overwrite all Marriages as one day ago
-            dt=datetime.date.today()-datetime.timedelta(days=1)
+            dt = datetime.date.today()-datetime.timedelta(days=1)
             self.famMap[id]["MARR"]=[dt.day, dt.month, dt.year]
 
         # overwrite Haley/Dylan marriage to be the next day
-        dt=datetime.date.today()+datetime.timedelta(days=1)
+        dt = datetime.date.today()+datetime.timedelta(days=1)
         self.famMap["F10"]["MARR"]=[dt.day, dt.month, dt.year]
 
         ret = us39_upcoming_anniversaries(self.indMap, self.famMap)
         self.assertEqual(len(ret), 1, "Did not get the expected results")
-
 
     def test_US39_1dayLater(self):
         # should no matches
         for id, fam in self.famMap.items():
             # overwrite all Marriages as one day ago
-            dt=datetime.date.today()-datetime.timedelta(days=1)
+            dt = datetime.date.today()-datetime.timedelta(days=1)
             self.famMap[id]["MARR"]=[dt.year, dt.month, dt.day]
 
         # overwrite Haley/Dylan marriage to be the next day
-        dt=datetime.date.today()+datetime.timedelta(days=1)
+        dt = datetime.date.today()+datetime.timedelta(days=1)
         self.famMap["F10"]["MARR"]=[dt.day, dt.month, dt.year]
 
         # should find 1 match and the following expected result
@@ -200,32 +199,30 @@ class US39Test(unittest.TestCase):
         expected_ret = [('F10', [dt.day, dt.month, dt.year])]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
-
 
     def test_US39_30daysLaterLen(self):
         # should no matches
         for id, fam in self.famMap.items():
             # overwrite all Marriages as one day ago
-            dt=datetime.date.today()-datetime.timedelta(days=1)
+            dt = datetime.date.today()-datetime.timedelta(days=1)
             self.famMap[id]["MARR"]=[dt.day, dt.month, dt.year]
 
         # overwrite Haley/Dylan marriage to be the next day
-        dt=datetime.date.today()+datetime.timedelta(days=30)
+        dt = datetime.date.today()+datetime.timedelta(days=30)
         self.famMap["F10"]["MARR"]=[dt.day, dt.month, dt.year]
 
         ret = us39_upcoming_anniversaries(self.indMap, self.famMap)
         self.assertEqual(len(ret), 1, "Did not get the expected results")
 
-
     def test_US39_30daysLater(self):
         # should no matches
         for id, fam in self.famMap.items():
             # overwrite all Marriages as one day ago
-            dt=datetime.date.today()-datetime.timedelta(days=1)
+            dt = datetime.date.today()-datetime.timedelta(days=1)
             self.famMap[id]["MARR"]=[dt.year, dt.month, dt.day]
 
         # overwrite Haley/Dylan marriage to be the next day
-        dt=datetime.date.today()+datetime.timedelta(days=30)
+        dt = datetime.date.today()+datetime.timedelta(days=30)
         self.famMap["F10"]["MARR"]=[dt.day, dt.month, dt.year]
 
         # should find 1 match and the following expected result
@@ -234,31 +231,29 @@ class US39Test(unittest.TestCase):
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
-
     def test_US39_31daysLaterLen(self):
         # should no matches
         for id, fam in self.famMap.items():
             # overwrite all Marriages as one day ago
-            dt=datetime.date.today()-datetime.timedelta(days=1)
+            dt = datetime.date.today()-datetime.timedelta(days=1)
             self.famMap[id]["MARR"]=[dt.day, dt.month, dt.year]
 
         # overwrite Haley/Dylan marriage to be the next day
-        dt=datetime.date.today()+datetime.timedelta(days=31)
+        dt = datetime.date.today()+datetime.timedelta(days=31)
         self.famMap["F10"]["MARR"]=[dt.day, dt.month, dt.year]
 
         ret = us39_upcoming_anniversaries(self.indMap, self.famMap)
         self.assertEqual(len(ret), 0, "Did not get the expected results")
 
-
     def test_US39_31daysLater(self):
         # should no matches
         for id, fam in self.famMap.items():
             # overwrite all Marriages as one day ago
-            dt=datetime.date.today()-datetime.timedelta(days=1)
+            dt = datetime.date.today()-datetime.timedelta(days=1)
             self.famMap[id]["MARR"]=[dt.year, dt.month, dt.day]
 
         # overwrite Haley/Dylan marriage to be the next day
-        dt=datetime.date.today()+datetime.timedelta(days=31)
+        dt = datetime.date.today()+datetime.timedelta(days=31)
         self.famMap["F10"]["MARR"]=[dt.day, dt.month, dt.year]
 
         # should find 1 match and the following expected result
@@ -267,33 +262,32 @@ class US39Test(unittest.TestCase):
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
-    def test_US39_2DatesUpcoming(self):
+    def test_US39_2DatesUpcomingLen(self):
         # should no matches
         for id, fam in self.famMap.items():
             # overwrite all Marriages as one day ago
-            dt=datetime.date.today()-datetime.timedelta(days=1)
+            dt = datetime.date.today()-datetime.timedelta(days=1)
             self.famMap[id]["MARR"]=[dt.day, dt.month, dt.year]
 
         # overwrite Haley/Dylan marriage to be the next day
-        dt=datetime.date.today()+datetime.timedelta(days=30)
+        dt = datetime.date.today()+datetime.timedelta(days=30)
         self.famMap["F10"]["MARR"]=[dt.day, dt.month, dt.year]
 
-        dt=datetime.date.today()+datetime.timedelta(days=1)
+        dt = datetime.date.today()+datetime.timedelta(days=1)
         self.famMap["F4"]["MARR"]=[dt.day, dt.month, dt.year]
 
         ret = us39_upcoming_anniversaries(self.indMap, self.famMap)
         self.assertEqual(len(ret), 2, "Did not get the expected results")
 
-
     def test_US39_2DatesUpcoming(self):
         # should no matches
         for id, fam in self.famMap.items():
             # overwrite all Marriages as one day ago
-            dt=datetime.date.today()-datetime.timedelta(days=1)
+            dt = datetime.date.today()-datetime.timedelta(days=1)
             self.famMap[id]["MARR"]=[dt.year, dt.month, dt.day]
 
         # overwrite Haley/Dylan marriage to be the next day
-        dt=datetime.date.today()+datetime.timedelta(days=30)
+        dt = datetime.date.today()+datetime.timedelta(days=30)
         self.famMap["F10"]["MARR"]=[dt.day, dt.month, dt.year]
 
         dt1=datetime.date.today()+datetime.timedelta(days=1)
@@ -305,34 +299,32 @@ class US39Test(unittest.TestCase):
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
-
-    def test_US39_2DatesUpcoming1Widower(self):
+    def test_US39_2DatesUpcoming1WidowerLen(self):
         # should no matches
         for id, fam in self.famMap.items():
             # overwrite all Marriages as one day ago
-            dt=datetime.date.today()-datetime.timedelta(days=1)
+            dt = datetime.date.today()-datetime.timedelta(days=1)
             self.famMap[id]["MARR"]=[dt.day, dt.month, dt.year]
 
         # overwrite Haley/Dylan marriage to be the next day
-        dt=datetime.date.today()+datetime.timedelta(days=30)
+        dt = datetime.date.today()+datetime.timedelta(days=30)
         self.famMap["F10"]["MARR"]=[dt.day, dt.month, dt.year]
 
-        dt=datetime.date.today()+datetime.timedelta(days=1)
+        dt = datetime.date.today()+datetime.timedelta(days=1)
         self.famMap["F8"]["MARR"]=[dt.day, dt.month, dt.year]
 
         ret = us39_upcoming_anniversaries(self.indMap, self.famMap)
         self.assertEqual(len(ret), 1, "Did not get the expected results")
 
-
     def test_US39_2DatesUpcoming1Widower(self):
         # should no matches
         for id, fam in self.famMap.items():
             # overwrite all Marriages as one day ago
-            dt=datetime.date.today()-datetime.timedelta(days=1)
+            dt = datetime.date.today()-datetime.timedelta(days=1)
             self.famMap[id]["MARR"]=[dt.year, dt.month, dt.day]
 
         # overwrite Haley/Dylan marriage to be the next day
-        dt=datetime.date.today()+datetime.timedelta(days=30)
+        dt = datetime.date.today()+datetime.timedelta(days=30)
         self.famMap["F10"]["MARR"]=[dt.day, dt.month, dt.year]
 
         dt1=datetime.date.today()+datetime.timedelta(days=1)
