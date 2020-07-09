@@ -4,7 +4,7 @@ from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
 from Utils.Logger import Logger
 from Utils import UserStory17, UserStory18, UserStory30, UserStory31, UserStory16, UserStory39
-from Utils.Utils import normalize_family_entry, normalize_ind_entry
+from Utils.Utils import normalize_family_entry
 import usrun
 from Utils.UserStory33 import find_all_orphans
 from Utils.DateValidator import DateValidator, format_date
