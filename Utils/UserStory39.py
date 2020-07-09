@@ -1,4 +1,3 @@
-# The UserStory program by developer&tester Chengyi Zhang
 from Utils.Utils import getSpouses, check_dates
 import datetime
 
