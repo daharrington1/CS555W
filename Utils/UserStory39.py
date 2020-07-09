@@ -16,15 +16,17 @@ def us39_upcoming_anniversaries(ind_map, fam_map):
     for fam_id, fam in fam_map.items():
         # check non-divorced couples and non-widowers
         if len(fam["DIV"]) < 1:
+            Widower=False
             for spouse in getSpouses(fam):
                 if "DEAT" in ind_map[spouse] and type(ind_map[spouse]["DEAT"]) is list:
-                    continue
+                    Widower=True
 
             # check if the anniversary is within 30 days
-            try:
-                if check_dates(datetime.date(datetime.date.today().year, fam['MARR'][1],
-                               fam['MARR'][0]), datetime.date.today(), 30, 'days', upcoming=True):
-                    ret.append((fam_id, fam['MARR']))
-            except Exception:
-                continue    # problem with dates - skip this entry
+            if not Widower:
+                try:
+                    if check_dates(datetime.date(datetime.date.today().year, fam['MARR'][1],
+                                   fam['MARR'][0]), datetime.date.today(), 30, 'days', upcoming=True):
+                        ret.append((fam_id, fam['MARR']))
+                except Exception:
+                    continue    # problem with dates - skip this entry
     return ret
