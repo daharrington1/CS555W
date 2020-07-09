@@ -273,32 +273,57 @@ class parser4:
                     if fam_id not in current_result:
                         current_result[fam_id] = []
                     current_result[fam_id].append('MARR')
+                if 'DIV' in family:
+                    if not self.compTwoDate(family['MARR'], family['DIV']):
+                        self.logger.log_family_error(4,
+                                                         "{}: {} Divorce is before {} marriage."
+                                                         .format(fam_id,
+                                                                 "/".join(str(x) for x in family['DIV']),
+                                                                 "/".join(str(x) for x in family['MARR'])))
                 if 'HUSB' in family:
                     for hid in family['HUSB']:
                         h = self.indi_dic[hid]
                         if 'BIRT' in h:
                             b = h['BIRT']
-                        if not self.compTwoDate(b, family['MARR']):
-                            self.logger.log_family_error(2,
+                            if not self.compTwoDate(b, family['MARR']):
+                                self.logger.log_family_error(2,
                                                          "{}: {} Marriage Date is before husband {} 's {} birthday."
                                                          .format(fam_id,
                                                                  "/".join(str(x) for x in family['MARR']),
-                                                                 family['HUSB'],
+                                                                 hid,
                                                                  "/".join(str(x) for x in b)))
                             birthMarr_result.append((fam_id, hid))
+                        if 'DEAT' in h:
+                            d = h['DEAT']
+                            if not self.compTwoDate(family['MARR'], d):
+                                self.logger.log_family_error(5,
+                                                             "{}: {} Marriage Date is after husband {} 's {} death day."
+                                                             .format(fam_id,
+                                                                     "/".join(str(x) for x in family['MARR']),
+                                                                     hid,
+                                                                     "/".join(str(x) for x in d)))
                 if 'WIFE' in family:
                     for wid in family['WIFE']:
                         w = self.indi_dic[wid]
                         if 'BIRT' in w:
                             b = w['BIRT']
-                        if not self.compTwoDate(b, family['MARR']):
-                            self.logger.log_family_error(2,
+                            if not self.compTwoDate(b, family['MARR']):
+                                self.logger.log_family_error(2,
                                                          "{}: {} Marriage Date is before wife {} 's {} birthday."
                                                          .format(fam_id,
                                                                  "/".join(str(x) for x in family['MARR']),
-                                                                 family['WIFE'],
+                                                                 wid,
                                                                  "/".join(str(x) for x in b)))
                             birthMarr_result.append((fam_id, wid))
+                        if 'DEAT' in w:
+                            d = w['DEAT']
+                            if not self.compTwoDate(family['MARR'], d):
+                                self.logger.log_family_error(5,
+                                                             "{}: {} Marriage Date is after wife {} 's {} death day."
+                                                             .format(fam_id,
+                                                                     "/".join(str(x) for x in family['MARR']),
+                                                                     wid,
+                                                                     "/".join(str(x) for x in d)))
             if 'DIV' in family:
                 if not self.us01_currentDate(family['DIV']):
                     self.logger.log_family_error(1, "{} Divorce Date: {} Occurs in the future"
