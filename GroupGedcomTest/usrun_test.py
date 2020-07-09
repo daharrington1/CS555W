@@ -194,13 +194,13 @@ class usruntest(unittest.TestCase):
         tmpfam[0]['WIFE'].append('I3')
         self.assertEqual(no_bigamy_one_fam(tmpfam, self.individuals), ['F1'])
 
-
     def test_nbs(self):
         # test no_bigamy_sev_fam
         tmpfam = self.families.copy()
         self.assertEqual(no_bigamy_sev_fam(self.families, self.individuals), ['I1'])
-        tmpfam.append({"HUSB": "-", "WIFE": ["I2",'I3'], "CHIL": ["I10"], "MARR": [1, 1, 2009], "FAM": "F20"})
+        tmpfam.append({"HUSB": "-", "WIFE": ["I2", 'I3'], "CHIL": ["I10"], "MARR": [1, 1, 2009], "FAM": "F20"})
         self.assertEqual(no_bigamy_sev_fam(tmpfam, self.individuals), ['I1', 'I2'])
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -24,13 +24,13 @@ class MyTest(unittest.TestCase):
     def test_dataTrav(self):
         currentComp, bmComp, bdComp = self.totest.dateCheck()
         # test error numbers
-        #self.assertEqual(len(currentComp.keys()), 1)
-        #self.assertEqual(len(bmComp), 2)
-        #self.assertEqual(len(bdComp), 1)
+        # self.assertEqual(len(currentComp.keys()), 1)
+        # self.assertEqual(len(bmComp), 2)
+        # self.assertEqual(len(bdComp), 1)
         # test error types
         self.assertListEqual(currentComp['I10086'], ['BIRT', 'DEAT'])
-        #self.assertListEqual(bmComp, [('F9', 'I19'), ('F128', 'I10')])
-        #self.assertListEqual(bdComp, ['I128'])
+        # self.assertListEqual(bmComp, [('F9', 'I19'), ('F128', 'I10')])
+        # self.assertListEqual(bdComp, ['I128'])
 
     # age is less than 150
     def test_age(self):

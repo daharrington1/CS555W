@@ -4,6 +4,7 @@ from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
 from Utils.Logger import Logger
 from Utils import UserStory17, UserStory18, UserStory30, UserStory31, UserStory16, UserStory39
+from Utils.Utils import normalize_family_entry, normalize_ind_entry
 import usrun
 from Utils.UserStory33 import find_all_orphans
 from Utils.DateValidator import DateValidator, format_date
@@ -66,14 +67,21 @@ for family_id in parsed_families:
 
 # Read the data back out from the DB
 individuals_from_db = []
+ind_map = {}
 all_ids = individual_database.getAllIds()
 for individual_id in all_ids:
-    individuals_from_db.append(individual_database.getDoc(individual_id["INDI"]))
+    rec = individual_database.getDoc(individual_id["INDI"])
+    individuals_from_db.append(rec)
+    # ind_map[rec["INDI"]]=normalize_ind_entry(rec)
+    ind_map[rec["INDI"]] = rec
 
 families_from_db = []
+fam_map = {}
 all_families = family_database.getAllIds()
 for family_id in all_families:
-    families_from_db.append(family_database.getDoc(family_id["FAM"]))
+    rec = family_database.getDoc(family_id["FAM"])
+    families_from_db.append(rec)
+    fam_map[rec["FAM"]] = normalize_family_entry(rec)
 
 # Output the data
 printer = TablePrinter(individual_database)
@@ -93,7 +101,7 @@ else:
     logger.log_individual_info(23, "All individuals are unique in the file, by name and birth date")
 
 # Check for any parents married to children
-ret = UserStory17.us17_no_marr2child(individuals_from_db, families_from_db)
+ret = UserStory17.us17_no_marr2child(ind_map, fam_map)
 if len(ret) == 0:
     logger.log_family_info(17, "No spouses in families are married to children")
 else:
@@ -101,21 +109,21 @@ else:
         logger.log_family_error(17, "{}: My spouse ({}) is one of my children: Parent ({}), Children ({})".format(
             item["FAM"], item["MySpouse"], item["Spouse"], item["MyChildren"]))
 
-ret = UserStory18.us18_no_siblingmarriages(individuals_from_db, families_from_db)
+ret = UserStory18.us18_no_siblingmarriages(ind_map, fam_map)
 if len(ret) == 0:
     logger.log_family_info(18, "There are no marriages with siblings")
 else:
     for fam in ret:
         logger.log_family_error(18, "{} has siblings as parents: {}".format(fam["FAM"], fam["Parents"]))
 
-ret = UserStory30.us30_get_married_individuals(individuals_from_db, families_from_db)
+ret = UserStory30.us30_get_married_individuals(ind_map, fam_map)
 if len(ret) == 0:
     logger.log_family_info(30, "There are no Living Marriage Individuals")
 else:
     ret.sort()
     logger.log_family_anomaly(30, "Living Married Individuals: {}".format(",".join(ret)))
 
-ret = UserStory31.us31_get_single_individuals(individuals_from_db, families_from_db)
+ret = UserStory31.us31_get_single_individuals(ind_map, fam_map)
 if len(ret) == 0:
     logger.log_family_info(31, "There are no living single (i.e. non-divorced, non-married) individuals")
 else:
@@ -161,7 +169,7 @@ else:
         logger.log_family_warning(16, "{} has multiple last names: {}".format(fam["FAM"], fam["LNAMES"]))
 
 # User Story 39: list upcoming anniversaries
-ret = UserStory39.us39_upcoming_anniversaries(individuals_from_db, families_from_db)
+ret = UserStory39.us39_upcoming_anniversaries(ind_map, fam_map)
 if len(ret) == 0:
     print("No famililes have upcoming anniversaries in the next 30 days")
 else:

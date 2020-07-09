@@ -1,5 +1,6 @@
 import unittest
 from Utils.UserStory31 import us31_get_single_individuals
+from Utils.Utils import normalize_family_entry
 
 
 #
@@ -12,15 +13,21 @@ from Utils.UserStory31 import us31_get_single_individuals
 class US31Test(unittest.TestCase):
     families = None
     individuals = None
+    famMap = None
+    indMap = None
 
     def setUp(self):
         self.families = []
         self.individuals = []
+        self.famMap = {}
+        self.indMap = {}
         self.seed_data()
 
     def tearDown(self):
         self.families = None
         self.individuals = None
+        self.famMap = None
+        self.indMap = None
 
     def seed_data(self):
         # seed initial testing data
@@ -350,25 +357,31 @@ class US31Test(unittest.TestCase):
             "INDI": "I27"
          })
 
+        for ind in self.individuals:
+            self.indMap[ind["INDI"]] = ind
+
+        for fam in self.families:
+            self.famMap[fam["FAM"]] = normalize_family_entry(fam)
+
     def test_US31_noinputs(self):
         # bad inputs
         with self.assertRaises(Exception):
             us31_get_single_individuals(None, None)
 
         with self.assertRaises(Exception):
-            us31_get_single_individuals(self.families)
+            us31_get_single_individuals(self.famMap)
 
         with self.assertRaises(Exception):
-            us31_get_single_individuals(self.individuals)
+            us31_get_single_individuals(self.indMap)
 
     def test_US31_listsswitched(self):
         # If send inputs in the wrong order, will get an assert eventually
         with self.assertRaises(Exception):
-            us31_get_single_individuals(self.families, self.individuals)
+            us31_get_single_individuals(self.famMap, self.indMap)
 
     def test_US31_Existing(self):
         # should return 11 singles on the initial data
-        ret = us31_get_single_individuals(self.individuals, self.families)
+        ret = us31_get_single_individuals(self.indMap, self.famMap)
         self.assertEqual(len(ret), 11,
                          "Did not get the expected results")
 
@@ -376,16 +389,16 @@ class US31Test(unittest.TestCase):
         # should get the following single individuals on the initial data
         expected_ret = ['I9', 'I10', 'I89', 'I14', 'I15', 'I31', 'I19',
                         'I22', 'I23', 'I24', 'I25']
-        ret = us31_get_single_individuals(self.individuals, self.families)
+        ret = us31_get_single_individuals(self.indMap, self.famMap)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
     def test_US31_AddAnotherDeath(self):
         # make Manny dead - should decrease the singles by one.
-        self.individuals[8]["DEAT"] = [28, 12, 2021]
+        self.indMap["I9"]["DEAT"] = [28, 12, 2021]
         expected_ret = ['I10', 'I89', 'I14', 'I15', 'I31', 'I19',
                         'I22', 'I23', 'I24', 'I25']
-        ret = us31_get_single_individuals(self.individuals, self.families)
+        ret = us31_get_single_individuals(self.indMap, self.famMap)
 
         self.assertEqual(len(ret), 10,
                          "Did not get the expected results")
@@ -395,7 +408,7 @@ class US31Test(unittest.TestCase):
 
     def test_US31_AddAnotherSingle(self):
         # Add another child to family F3, so should have one more single
-        self.individuals.append({
+        self.indMap["I28"] = {
             "NAME": "Don/Harrington/",
             "SEX": "M",
             "BIRT": [28, 12, 2021],
@@ -403,12 +416,12 @@ class US31Test(unittest.TestCase):
             "NOTE": "Add another child to Family 3",
             "AGE": 20,
             "INDI": "I28"
-         })
-        self.families[2]["CHIL"] = ["I9", "I28"],
+         }
+        self.famMap["F2"]["CHIL"] = ["I9", "I28"],
 
         expected_ret = ['I9', 'I10', 'I89', 'I14', 'I15', 'I31', 'I19',
                         'I22', 'I23', 'I24', 'I25', 'I28']
-        ret = us31_get_single_individuals(self.individuals, self.families)
+        ret = us31_get_single_individuals(self.indMap, self.famMap)
 
         self.assertEqual(len(ret), 12,
                          "Did not get the expected results")
@@ -422,13 +435,12 @@ class US31Test(unittest.TestCase):
                          'I22', 'I23', 'I24', 'I25']
 
         # Make all the living singles dead
-        for ind in self.individuals:
-            if ind["INDI"] in LivingSingles:
-                ind["DEAT"] = [28, 12, 2021]
+        for id, ind in self.indMap.items():
+            if id in LivingSingles:
+                self.indMap[id]["DEAT"] = [28, 12, 2021]
 
         expected_ret = []
-        ret = us31_get_single_individuals(self.individuals, self.families)
-
+        ret = us31_get_single_individuals(self.indMap, self.famMap)
         self.assertEqual(len(ret), 0,
                          "Did not get the expected results")
 

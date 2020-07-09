@@ -1,5 +1,6 @@
 import unittest
 from Utils.UserStory18 import us18_no_siblingmarriages
+from Utils.Utils import normalize_family_entry
 
 
 #
@@ -12,15 +13,21 @@ from Utils.UserStory18 import us18_no_siblingmarriages
 class US18Test(unittest.TestCase):
     families = None
     individuals = None
+    famMap = None
+    indMap = None
 
     def setUp(self):
         self.families = []
         self.individuals = []
+        self.famMap = {}
+        self.indMap = {}
         self.seed_data()
 
     def tearDown(self):
         self.families = None
         self.individuals = None
+        self.famMap = None
+        self.indMap = None
 
     def seed_data(self):
         # seed initial test data
@@ -350,47 +357,46 @@ class US18Test(unittest.TestCase):
             "INDI": "I27"
          })
 
+        for ind in self.individuals:
+            self.indMap[ind["INDI"]] = ind
+        for fam in self.families:
+            self.famMap[fam["FAM"]] = normalize_family_entry(fam)
+
     def test_US18_noinputs(self):
         # bad inputs
         with self.assertRaises(Exception):
             us18_no_siblingmarriages(None, None)
 
         with self.assertRaises(Exception):
-            us18_no_siblingmarriages(self.families)
+            us18_no_siblingmarriages(self.famMap)
 
         with self.assertRaises(Exception):
-            us18_no_siblingmarriages(self.individuals)
-
-    def test_US18_listsswitched(self):
-        # should to get 1 match
-        ret = us18_no_siblingmarriages(self.families, self.individuals)
-        self.assertEqual(len(ret), 0,
-                         "Did not get the expected results")
+            us18_no_siblingmarriages(self.indMap)
 
     def test_US18_1family(self):
         # should to get 1 match
-        ret = us18_no_siblingmarriages(self.individuals, self.families)
+        ret = us18_no_siblingmarriages(self.indMap, self.famMap)
         self.assertEqual(len(ret), 1,
                          "Did not get the expected results")
 
     def test_US18_1family_text(self):
         # should find 1 match and the following expected result
         expected_ret = [{'Parents': {'I5', 'I4'}, 'FAM': 'F4'}]
-        ret = us18_no_siblingmarriages(self.individuals, self.families)
+        ret = us18_no_siblingmarriages(self.indMap, self.famMap)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
     def test_US18_half_sibling(self):
         # should get 2 matches
         # testing half sibling
-        self.families[0] = {
+        self.famMap["F1"] = {
             "HUSB": ["I1"],
             "WIFE": ["I2"],
             "CHIL": ["I10", "I1"],
             "MARR": [1, 1, 2009],
             "NOTE": "JAY/GLORIA FAMILY", "FAM": "F1"
          }
-        self.families[2] = {
+        self.famMap["F3"] = {
             "HUSB": ["I8"],
             "WIFE": ["I2"],
             "CHIL": ["I9", "I2"],
@@ -399,13 +405,13 @@ class US18Test(unittest.TestCase):
             "NOTE": "JAVIER/GLORIA",
             "FAM": "F3"
          }
-        ret = us18_no_siblingmarriages(self.individuals, self.families)
+        ret = us18_no_siblingmarriages(self.indMap, self.famMap)
         self.assertEqual(len(ret), 2,
                          "Did not get the expected results")
 
     def test_US18_half_sibling_text(self):
         # testing half sibling
-        self.families[0] = {
+        self.famMap["F1"] = {
             "HUSB": ["I1"],
             "WIFE": ["I2"],
             "CHIL": ["I10", "I1"],
@@ -413,7 +419,7 @@ class US18Test(unittest.TestCase):
             "NOTE": "JAY/GLORIA FAMILY",
             "FAM": "F1"
          }
-        self.families[2] = {
+        self.famMap["F3"] = {
             "HUSB": ["I8"],
             "WIFE": ["I2"],
             "CHIL": ["I9", "I2"],
@@ -433,39 +439,39 @@ class US18Test(unittest.TestCase):
                 'Parents': {'I5', 'I4'}
              }
          ]
-        ret = us18_no_siblingmarriages(self.individuals, self.families)
+        ret = us18_no_siblingmarriages(self.indMap, self.famMap)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
     #
     def test_US18_nomatches(self):
-        self.families[3] = {
+        self.famMap["F4"] = {
             "HUSB": ["I4", "I5"],
             "CHIL": ["I14", "I15"],
             "MARR": [1, 1, 2014],
             "NOTE": "PRITCHETT/TUCKER FAMILY",
             "FAM": "F4",
-            "WIFE": "-"
+            "WIFE": []
          }
         # Remove the family where parent is married to a child
 
-        ret = us18_no_siblingmarriages(self.individuals, self.families)
+        ret = us18_no_siblingmarriages(self.indMap, self.famMap)
         self.assertEqual(len(ret), 0,
                          "Did not get the expected results")
 
     def test_US18_nomatches_text(self):
         # Remove the family where parent is married to a child
-        self.families[3] = {
+        self.famMap["F4"] = {
             "HUSB": ["I4", "I5"],
             "CHIL": ["I14", "I15"],
             "MARR": [1, 1, 2014],
             "NOTE": "PRITCHETT/TUCKER FAMILY",
             "FAM": "F4",
-            "WIFE": "-"
+            "WIFE": []
          }
 
         expected_ret = []
-        ret = us18_no_siblingmarriages(self.individuals, self.families)
+        ret = us18_no_siblingmarriages(self.indMap, self.famMap)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 

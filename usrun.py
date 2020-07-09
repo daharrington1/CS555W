@@ -98,7 +98,7 @@ def us38(families_from_db, individuals_from_db):
     ret = upcoming_birthdays(individuals_from_db)
     for indiid, date in ret:
         logger.log_individual_warning(38, "Individual {}'s birthday {} is coming soon"
-                                  .format(indiid, date))
+                                      .format(indiid, date))
 
 
 def upcoming_birthdays(individuals_from_db):

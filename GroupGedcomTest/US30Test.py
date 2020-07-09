@@ -1,5 +1,6 @@
 import unittest
 from Utils.UserStory30 import us30_get_married_individuals
+from Utils.Utils import normalize_family_entry
 
 
 #
@@ -12,15 +13,21 @@ from Utils.UserStory30 import us30_get_married_individuals
 class US30Test(unittest.TestCase):
     families = None
     individuals = None
+    famMap = None
+    indMap = None
 
     def setUp(self):
         self.families = []
         self.individuals = []
+        self.famMap = {}
+        self.indMap = {}
         self.seed_data()
 
     def tearDown(self):
         self.families = None
         self.individuals = None
+        self.famMap = None
+        self.indMap = None
 
     def seed_data(self):
         # seed initial testing data
@@ -350,25 +357,26 @@ class US30Test(unittest.TestCase):
             "INDI": "I27"
          })
 
+        for ind in self.individuals:
+            self.indMap[ind["INDI"]] = ind
+
+        for fam in self.families:
+            self.famMap[fam["FAM"]] = normalize_family_entry(fam)
+
     def test_US30_noinputs(self):
         # bad inputs
         with self.assertRaises(Exception):
             us30_get_married_individuals(None, None)
 
         with self.assertRaises(Exception):
-            us30_get_married_individuals(self.families)
+            us30_get_married_individuals(self.famMap)
 
         with self.assertRaises(Exception):
-            us30_get_married_individuals(self.individuals)
-
-    def test_US30_listsswitched(self):
-        # If send the inputs backwards, will get an assert eventually
-        with self.assertRaises(Exception):
-            us30_get_married_individuals(self.families, self.individuals)
+            us30_get_married_individuals(self.indMap)
 
     def test_US30_Existing(self):
         # should to get 12 married individuals on the original test data
-        ret = us30_get_married_individuals(self.individuals, self.families)
+        ret = us30_get_married_individuals(self.indMap, self.famMap)
         self.assertEqual(len(ret), 12,
                          "Did not get the expected results")
 
@@ -376,16 +384,16 @@ class US30Test(unittest.TestCase):
         # should match the following expected result for married individuals
         expected_ret = ['I1', 'I2', 'I4', 'I5', 'I16', 'I17', 'I7', 'I6',
                         'I21', 'I20', 'I26', 'I27']
-        ret = us30_get_married_individuals(self.individuals, self.families)
+        ret = us30_get_married_individuals(self.indMap, self.famMap)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
     def test_US30_AddDivorce(self):
         # Make Family 10 - Haley/Dillon divorced so 2 less married individuals
-        self.families[9]["DIV"] = [8, 4, 2019]
+        self.famMap["F10"]["DIV"] = [8, 4, 2019]
         expected_ret = ['I1', 'I2', 'I4', 'I5', 'I16', 'I17', 'I7', 'I6',
                         'I26', 'I27']
-        ret = us30_get_married_individuals(self.individuals, self.families)
+        ret = us30_get_married_individuals(self.indMap, self.famMap)
 
         self.assertEqual(len(ret), 10,
                          "Did not get the expected results")
@@ -395,10 +403,10 @@ class US30Test(unittest.TestCase):
 
     def test_US30_AddAnotherDeath(self):
         # Make Jay Dead - so Gloria is then a widower and Jay is Dead
-        self.individuals[0]["DEAT"] = [28, 12, 2021]
+        self.indMap["I1"]["DEAT"] = [28, 12, 2021]
         expected_ret = ['I4', 'I5', 'I16', 'I17', 'I7', 'I6', 'I21',
                         'I20', 'I26', 'I27']
-        ret = us30_get_married_individuals(self.individuals, self.families)
+        ret = us30_get_married_individuals(self.indMap, self.famMap)
 
         self.assertEqual(len(ret), 10,
                          "Did not get the expected results")
@@ -408,10 +416,10 @@ class US30Test(unittest.TestCase):
 
     def test_US30_AddAnotherSameSexMarriageDeath(self):
         # Make Mitchell Dead - so then Cam should not be included either
-        self.individuals[3]["DEAT"] = [28, 12, 2021]
+        self.indMap["I4"]["DEAT"] = [28, 12, 2021]
         expected_ret = ['I1', 'I2', 'I16', 'I17', 'I7', 'I6', 'I21',
                         'I20', 'I26', 'I27']
-        ret = us30_get_married_individuals(self.individuals, self.families)
+        ret = us30_get_married_individuals(self.indMap, self.famMap)
 
         self.assertEqual(len(ret), 10,
                          "Did not get the expected results")
@@ -421,11 +429,11 @@ class US30Test(unittest.TestCase):
 
     def test_US30_RemoveJayGloriaMarriage(self):
         # Make Mitchell Dead & Jay and Gloria were never married
-        self.families[0]["MARR"] = None
-        self.individuals[3]["DEAT"] = [28, 12, 2021]
+        self.famMap["F1"]["MARR"] = []
+        self.indMap["I4"]["DEAT"] = [28, 12, 2021]
         expected_ret = ['I16', 'I17', 'I7', 'I6', 'I21',
                         'I20', 'I26', 'I27']
-        ret = us30_get_married_individuals(self.individuals, self.families)
+        ret = us30_get_married_individuals(self.indMap, self.famMap)
 
         self.assertEqual(len(ret), 8,
                          "Did not get the expected results")
@@ -439,12 +447,12 @@ class US30Test(unittest.TestCase):
                              'I21', 'I20', 'I26', 'I27']
 
             # Make all the living singles dead
-            for ind in self.individuals:
-                if ind["INDI"] in LivingMarried:
-                    ind["DEAT"] = [28, 12, 2021]
+            for id, ind in self.indMap.items():
+                if id in LivingMarried:
+                    self.indMap[id]["DEAT"] = [28, 12, 2021]
 
                     expected_ret = []
-
+                    ret = us30_get_married_individuals(self.indMap, self.famMap)
                     self.assertEqual(len(ret), 0,
                                      "Did not get the expected results")
                     self.assertListEqual(expected_ret, ret,
