@@ -1,7 +1,7 @@
 from Utils.Utils import getMaritalStatus
 
 
-def us30_get_married_individuals(individuals=None, families=None):
+def us30_get_married_individuals(ind_map=None, fam_map=None):
     """
     User Story 30: Get Married Individuals
 
@@ -9,13 +9,13 @@ def us30_get_married_individuals(individuals=None, families=None):
     :returns List of Married Individuals
     """
 
-    if (individuals is None) or (families is None):
+    if (ind_map is None) or (fam_map is None):
         raise Exception(ValueError, "Missing Inputs")
 
     # declare empty list
     ret = []  # list of mappings of parent to siblings
 
-    results = getMaritalStatus(individuals, families)  # get Marital Status
+    results = getMaritalStatus(ind_map, fam_map)  # get Marital Status
 
     for ind in results:
         if results[ind]["Status"] == "Married":

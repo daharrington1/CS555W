@@ -37,7 +37,7 @@ def filter_non_unique_individuals(individuals):
 
 def getIdMap(key, records):
     """
-     Build a map of id to their record
+    Build a map of id to their record
     :param List of either Individuals and Families from the database
     :returns Map of all IDs to record
     """
@@ -65,7 +65,7 @@ def getDateTimestamp(date):
         return -1
 
 
-def getParent2ChildrenMap(families):
+def getParent2ChildrenMap(fam_map):
     """
      Build a map of parent to children - crosses families
      if married more than once
@@ -74,31 +74,14 @@ def getParent2ChildrenMap(families):
     """
     parentId2Children = {}
 
-    for fam in families:
-
-        # don't need to do anything if there's no children
-        if ("CHIL" in fam) and type(fam["CHIL"]) is list:
-
-            # add child to parent id mapping
-            for child in fam["CHIL"]:
-                # build husband parent to child mapping
-                if ("HUSB" in fam) and type(fam["HUSB"]) is list:
-                    for husb in fam["HUSB"]:
-                        if husb in parentId2Children:
-                            if child not in parentId2Children[husb]:
-                                parentId2Children[husb].append(child)
-                        else:
-                            parentId2Children[husb] = []
-                            parentId2Children[husb].append(child)
-
-                # build husband parent to child mapping
-                if ("WIFE" in fam) and type(fam["WIFE"]) is list:
-                    for wife in fam["WIFE"]:
-                        if wife in parentId2Children:
-                            if child not in parentId2Children[wife]:
-                                parentId2Children[wife].append(child)
-                        else:
-                            parentId2Children[wife] = [child]
+    # build parent to child mapping
+    for fam_id, fam in fam_map.items():
+        for child in fam["CHIL"]:
+            for spouse in getSpouses(fam):
+                if spouse in parentId2Children and child not in parentId2Children[spouse]:
+                    parentId2Children[spouse].append(child)
+                else:
+                    parentId2Children[spouse] = [child]
 
     return parentId2Children
 
@@ -112,10 +95,9 @@ def getSpouses(fam):
     """
     spouses = []
     for key in ["HUSB", "WIFE"]:
-        if key in fam and type(fam[key]) is list and key not in spouses:
-            spouses += fam[key]
+        for spouse in fam[key]:
+            spouses.append(spouse) if spouse not in spouses else spouses
 
-    # print ("[getSpouses] FAM({}), spouses: {}".format(fam["FAM"], spouses))
     return spouses
 
 
@@ -131,9 +113,8 @@ def getMySpouses(id, fam):
     mySpouses = []
 
     # remove myself from the list of all spouses
-    for sid in spouses:
-        if sid != id and sid != '-' and sid not in mySpouses:
-            mySpouses.append(sid)
+    for spouse in spouses:
+        mySpouses.append(spouse) if spouse != id and spouse not in mySpouses else mySpouses
 
     # print("[getMySpouses] Me({}), my spouses: {}".format(id, mySpouses))
     return mySpouses
@@ -169,20 +150,7 @@ def single_parent(fam):
     :param Family object
     :returns true if the family is a single parent family.
     """
-    ret = False
-
-    # make every thing and array or None
-    fam = normalize_family_entry(fam)
-
-    # check for single parent
-    if fam["WIFE"] is not None and len(fam["WIFE"]) == 1 and fam["HUSB"] is None:
-        ret = True
-
-    # check for single parent
-    if fam["HUSB"] is not None and len(fam["HUSB"]) == 1 and fam["WIFE"] is None:
-        ret = True
-
-    return ret
+    return ((len(fam["WIFE"]) == 1 and len(fam["HUSB"]) < 1) or (len(fam["HUSB"]) == 1 and len(fam["WIFE"]) < 1))
 
 
 def get_marriage_status(entry):
@@ -203,27 +171,25 @@ def get_marriage_status(entry):
     return "Married"
 
 
-def update_marriage_info(fam, spouse, individuals, Id2MarrStatus):
+def update_marriage_info(fam, spouse, ind_map, Id2MarrStatus):
     """
      Update Id2MarrStatus with the marital information
      of the given id in the family
     :param spouse, family object and Id2MarrStatus Map
     :returns Updated Id2MarrStatus Map
     """
-    indMap = getIdMap('INDI', individuals)
-    fam = normalize_family_entry(fam)
     # If there is a divorce date - then you can't still
     # be married or a widower to this person
-    if fam["DIV"] is not None:
+    if len(fam["DIV"]) > 0:
         Id2MarrStatus[spouse]["DIV"].append(fam["DIV"])
-    elif fam["MARR"] is not None:
+    elif len(fam["MARR"]) > 0:
         # you are married or a widower
         for my_spouse in getMySpouses(spouse, fam):
             # you are either married to spouse or windower
             # print("FAM ({}), ee({}), my spouse: {}".format(fam["FAM"], person, my_spouse))
-            if "DEAT" in indMap[my_spouse] and \
-               type(indMap[my_spouse]["DEAT"]) is list:
-                Id2MarrStatus[spouse]["WIDOWER"].append(indMap[my_spouse]["DEAT"])
+            if "DEAT" in ind_map[my_spouse] and \
+               type(ind_map[my_spouse]["DEAT"]) is list:
+                Id2MarrStatus[spouse]["WIDOWER"].append(ind_map[my_spouse]["DEAT"])
             else:
                 # if you are not a widower, then you are still
                 # married to this person
@@ -232,7 +198,7 @@ def update_marriage_info(fam, spouse, individuals, Id2MarrStatus):
     return Id2MarrStatus
 
 
-def getMaritalStatus(individuals, families):
+def getMaritalStatus(ind_map, fam_map):
     """
      Build a map of person to marriage/divorces
     :param List of Families
@@ -240,26 +206,23 @@ def getMaritalStatus(individuals, families):
     """
     # build a map of marriages and divorces for each spouse in a family
     Id2MarrStatus = {}
-    for fam in families:
+    for fam_id, fam in fam_map.items():
         # check for single parent
-        if single_parent(fam):
-            continue
+        if not single_parent(fam):
+            # print("\n\nLOOKING AT FAMILY: {}".format(fam))
+            for spouse in getSpouses(fam):
+                if spouse not in Id2MarrStatus:
+                    Id2MarrStatus[spouse] = {"MARR": [], "DIV": [], "WIDOWER": [], "Status": ''}
+                update_marriage_info(fam, spouse, ind_map, Id2MarrStatus)
 
-        # print("\n\nLOOKING AT FAMILY: {}".format(fam))
-        for spouse in getSpouses(fam):
-            if spouse not in Id2MarrStatus:
-                Id2MarrStatus[spouse] = {"MARR": [], "DIV": [], "WIDOWER": [], "Status": ''}
-            update_marriage_info(fam, spouse, individuals, Id2MarrStatus)
-
-    for ind in individuals:
-        key = ind["INDI"]
+    for key, ind in ind_map.items():
 
         # Initialize the entry as being single
         if key not in Id2MarrStatus:
             Id2MarrStatus[key] = {"MARR": [], "DIV": [], "WIDOWER": [], "DEAT": [], "Status": 'Single'}
 
         # check if this person is dead - if so, then are not married, divorce or single
-        if "DEAT" in ind and type(ind["DEAT"]) is list:
+        if "DEAT" in ind:
             Id2MarrStatus[key]["DEAT"] = ind["DEAT"]
             Id2MarrStatus[key]["Status"] = "Dead"
         elif key in Id2MarrStatus and Id2MarrStatus[key]["Status"] != 'Single':
@@ -276,12 +239,47 @@ def normalize_family_entry(i_fam):
     :return: all the keys that take arrays are arrays
     """
     fam = i_fam.copy()
-    keys = ["MARR", "DIV", "HUSB", "WIFE", "CHIL"]
-    for key in keys:
-        if key not in fam or fam[key] == '-':
-            fam[key] = None
+    for key in ["MARR", "DIV", "HUSB", "WIFE", "CHIL"]:
+        if key not in fam or type(fam[key]) is not list:
+            fam[key] = []
 
     return fam
+
+
+def normalize_ind_entry(i_ind):
+    """
+    Normalizes all arrays in indily entry
+    :param indily: The indily object
+    :return: all the keys that take arrays are arrays
+    """
+    ind = i_ind.copy()
+    for key in ["BIRT", "DEAT"]:
+        if key not in ind or type(ind[key]) is not list:
+            ind[key] = []
+
+
+def check_dates(dt1, dt2, span, units, upcoming=False):
+    """
+    check_dates: check if all the dates are within the specified range
+                 This routine was based on CS555W class notes provided by Professor Rowland
+                 It was adapted to support upcoming dates also.
+
+                 dt1, dt2: 2 datetime dates are passed in (no time units should be passed, optimally).
+                 span: range that the 2 dates must fall within
+                 units: indicator if checking days, months or years
+    :param dt1, dt2, span, units, upcoming
+    :returns returns true or false depending if the dates are in range
+    """
+    dtMap = {"days": 1, "months": 30.4, "years": 365.25}
+
+    if units not in dtMap:
+        return False
+
+    dt_diff = (dt1-dt2).days
+    if upcoming is True:
+        return (dt_diff/dtMap[units] >= 0 and dt_diff/dtMap[units] <= span)
+    else:
+        return (abs(dt_diff)/dtMap[units] <= span)
 
 
 def normalize_spouse_ids(family):

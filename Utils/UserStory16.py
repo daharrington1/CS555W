@@ -35,11 +35,9 @@ def us16_male_last_names(individuals, families):
 
         # look at male children last names
         fam = normalize_family_entry(fam)
-        if fam["CHIL"] is not None:
-            for child in fam["CHIL"]:
-                # only look at males and non-unique last names
-                if child in id2Name and id2Name[child] not in lastNames:
-                    lastNames.append(id2Name[child])
+        for child in fam["CHIL"]:
+            # only look at males and non-unique last names
+            lastNames.append(id2Name[child]) if child in id2Name and id2Name[child] not in lastNames else lastNames
 
         # check for unique male last names in families
         if len(lastNames) > 1:

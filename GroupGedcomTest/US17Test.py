@@ -1,5 +1,6 @@
 import unittest
 from Utils.UserStory17 import us17_no_marr2child
+from Utils.Utils import normalize_family_entry
 
 
 #
@@ -12,15 +13,21 @@ from Utils.UserStory17 import us17_no_marr2child
 class US17Test(unittest.TestCase):
     families = None
     individuals = None
+    famMap = None
+    indMap = None
 
     def setUp(self):
         self.families = []
         self.individuals = []
+        self.famMap = {}
+        self.indMap = {}
         self.seed_data()
 
     def tearDown(self):
         self.families = None
         self.individuals = None
+        self.famMap = None
+        self.indMap = None
 
     def seed_data(self):
         # seed initial testing data
@@ -350,6 +357,12 @@ class US17Test(unittest.TestCase):
             "INDI": "I27"
          })
 
+        for ind in self.individuals:
+            self.indMap[ind["INDI"]] = ind
+
+        for fam in self.families:
+            self.famMap[fam["FAM"]] = normalize_family_entry(fam)
+
     def test_US17_noinputs(self):
         # bad inputs
         with self.assertRaises(Exception):
@@ -361,14 +374,9 @@ class US17Test(unittest.TestCase):
         with self.assertRaises(Exception):
             us17_no_marr2child(self.individuals)
 
-    def test_US17_listsswitched(self):
-        # should to get 1 match
-        ret = us17_no_marr2child(self.families, self.individuals)
-        self.assertEqual(len(ret), 0, "Did not get the expected results")
-
     def test_US17_1family(self):
         # should to get 1 match
-        ret = us17_no_marr2child(self.individuals, self.families)
+        ret = us17_no_marr2child(self.indMap, self.famMap)
         self.assertEqual(len(ret), 1, "Did not get the expected results")
 
     def test_US17_1family_text(self):
@@ -379,21 +387,21 @@ class US17Test(unittest.TestCase):
             'FAM': 'F11',
             'MyChildren': ['I26']
          }]
-        ret = us17_no_marr2child(self.individuals, self.families)
+        ret = us17_no_marr2child(self.indMap, self.famMap)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
     def test_US17_2family(self):
         # should get 2 matches
         # Adding Lorraine as a child of Frank's first marriage
-        self.individuals[12] = {
+        self.indMap["I12"] = {
             "NAME": "Lorraine/Dunphy/",
             "SEX": "F",
             "BIRT": [1, 1, 1965],
             "FAMS": ["F8", "F7"],
             "AGE": 55, "INDI": "I12"
          }
-        self.families[6] = {
+        self.famMap["F7"] = {
             "HUSB": ["I11"],
             "WIFE": ["I13"],
             "CHIL": ["I7", "I12"],
@@ -402,13 +410,13 @@ class US17Test(unittest.TestCase):
             "FAM": "F7"
          }
 
-        ret = us17_no_marr2child(self.individuals, self.families)
+        ret = us17_no_marr2child(self.indMap, self.famMap)
         self.assertEqual(len(ret), 2, "Did not get the expected results")
 
     def test_US17_2family_text(self):
         # should find 2 matches and the following expected result
         # Adding Lorraine as a child of Frank's first marriage
-        self.individuals[12] = {
+        self.indMap["I12"] = {
             "NAME": "Lorraine/Dunphy/",
             "SEX": "F",
             "BIRT": [1, 1, 1965],
@@ -416,7 +424,7 @@ class US17Test(unittest.TestCase):
             "AGE": 55,
             "INDI": "I12"
          }
-        self.families[6] = {
+        self.famMap["F7"] = {
             "HUSB": ["I11"],
             "WIFE": ["I13"],
             "CHIL": ["I7", "I12"],
@@ -439,14 +447,14 @@ class US17Test(unittest.TestCase):
                 'MyChildren': ['I26']
             }
          ]
-        ret = us17_no_marr2child(self.individuals, self.families)
+        ret = us17_no_marr2child(self.indMap, self.famMap)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
     def test_US17_3family_text(self):
         # should find 2 matches and the following expected result
         # Adding Lorraine as a child of Frank's first marriage
-        self.individuals[12] = {
+        self.indMap["I12"] = {
             "NAME": "Lorraine/Dunphy/",
             "SEX": "F",
             "BIRT": [1, 1, 1965],
@@ -454,7 +462,7 @@ class US17Test(unittest.TestCase):
             "AGE": 55,
             "INDI": "I12"
          }
-        self.families[6] = {
+        self.famMap["F7"] = {
             "HUSB": ["I11"],
             "WIFE": ["I13"],
             "CHIL": ["I7", "I12"],
@@ -462,13 +470,13 @@ class US17Test(unittest.TestCase):
             "NOTE": "FRANK/GRACE FAMILY",
             "FAM": "F7"
          }
-        self.families[3] = {
+        self.famMap["F4"] = {
             "HUSB": ["I4", "I5"],
             "CHIL": ["I14", "I15", "I5"],
             "MARR": [1, 1, 2014],
             "NOTE": "PRITCHETT/TUCKER FAMILY",
             "FAM": "F4",
-            "WIFE": "-"
+            "WIFE": []
          }
 
         expected_ret = [
@@ -491,13 +499,13 @@ class US17Test(unittest.TestCase):
                 'MyChildren': ['I26']
              }
          ]
-        ret = us17_no_marr2child(self.individuals, self.families)
+        ret = us17_no_marr2child(self.indMap, self.famMap)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
     def test_US17_nomatches(self):
         # Remove the family where parent is married to a child
-        self.families[10] = {
+        self.famMap["F11"] = {
             "HUSB": ["I26"],
             "WIFE": ["I27"],
             "CHIL": ["I3"],
@@ -506,12 +514,12 @@ class US17Test(unittest.TestCase):
             "FAM": "F11"
          }
 
-        ret = us17_no_marr2child(self.individuals, self.families)
+        ret = us17_no_marr2child(self.indMap, self.famMap)
         self.assertEqual(len(ret), 0, "Did not get the expected results")
 
     def test_US17_nomatches_text(self):
         # Remove the family where parent is married to a child
-        self.families[10] = {
+        self.famMap["F11"] = {
             "HUSB": ["I26"],
             "WIFE": ["I27"],
             "CHIL": ["I3"],
@@ -521,7 +529,7 @@ class US17Test(unittest.TestCase):
          }
 
         expected_ret = []
-        ret = us17_no_marr2child(self.individuals, self.families)
+        ret = us17_no_marr2child(self.indMap, self.famMap)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
