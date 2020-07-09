@@ -290,7 +290,7 @@ class US39Test(unittest.TestCase):
         dt = datetime.date.today()+datetime.timedelta(days=30)
         self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
 
-        dt1=datetime.date.today()+datetime.timedelta(days=1)
+        dt1 = datetime.date.today()+datetime.timedelta(days=1)
         self.famMap["F4"]["MARR"] = [dt1.day, dt1.month, dt1.year]
 
         # should find 1 match and the following expected result
@@ -327,7 +327,7 @@ class US39Test(unittest.TestCase):
         dt = datetime.date.today()+datetime.timedelta(days=30)
         self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
 
-        dt1=datetime.date.today()+datetime.timedelta(days=1)
+        dt1 = datetime.date.today()+datetime.timedelta(days=1)
         self.famMap["F8"]["MARR"] = [dt1.day, dt1.month, dt1.year]
 
         # should find 1 match and the following expected result
