@@ -181,9 +181,9 @@ class usruntest(unittest.TestCase):
     def test_ub(self):
         # test upcoming_birthdays()
         tmpind = self.individuals.copy()
-        tmpind.append({"NAME": "Luke/Hastings/", "SEX": "M", "BIRT": [10, 7, 1998], "FAMS": ["F11"], "FAMC": ["F11"],
+        tmpind.append({"NAME": "Luke/Hastings/", "SEX": "M", "BIRT": [29, 7, 1998], "FAMS": ["F11"], "FAMC": ["F11"],
                        "NOTE": "MarryToChildFAMILY", "AGE": 22, "INDI": "I30"})
-        self.assertEqual(upcoming_birthdays(tmpind), [("I30", "JUL 10")])
+        self.assertEqual(upcoming_birthdays(tmpind), [("I30", "JUL 29")])
 
     # Test US11
 
