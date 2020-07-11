@@ -120,7 +120,7 @@ def getMySpouses(id, fam):
     return mySpouses
 
 
-def getLatestDate(i_dates):
+def getLatestDate(dates):
     """
      Return the latest date in an array of dates
     :param List of dates
@@ -128,13 +128,11 @@ def getLatestDate(i_dates):
     """
     # for date in dates:
     # print("Latest Dates: date: {}".format(date))
-    dates = i_dates.copy()
-
     if len(dates) < 1:
         return []
 
-    # pop the first date off the list for a comparison
-    latest_date = dates.pop()
+    # just set the first date to the latest date
+    latest_date = dates[0]
 
     # loop through the rest of the dates for a larger date
     for date in dates:
