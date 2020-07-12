@@ -1,3 +1,4 @@
+from operator import itemgetter
 """
 Logging class that handles formatting of Errors, Warnings, and Anomalies in a standard format.
 Also handles ensuring that the logs are printed in the correct groupings per the expected formatting
@@ -57,7 +58,7 @@ class Logger:
         :param error_message: The custom formatted error message from the class
         :return: None
         """
-        self._outputMessages.append(Logger.Log(level, collection, use_case, error_message))
+        self._outputMessages.append((level, collection, use_case, error_message))
 
     # Public Wrapper functions to increase readability from calling code
 
@@ -90,7 +91,6 @@ class Logger:
                   use_case, error_message)
 
     def print_log(self):
-        self._outputMessages.sort(reverse=True)
+        self._outputMessages.sort(key=itemgetter(2,0))
         for log_entry in self._outputMessages:
-            print("{}".format(log_entry))
-        self._outputMessages = []
+            print("{}".format(Logger.Log(log_entry[0], log_entry[1], log_entry[2], log_entry[3])))
