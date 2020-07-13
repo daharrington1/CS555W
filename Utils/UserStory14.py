@@ -18,7 +18,9 @@ def us14_mult_births(ind_map=None, fam_map=None, count=2):
     for id, fam in fam_map.items():
         birthdays = {}
         for child in fam["CHIL"]:
-            birthdays.setdefault(str(ind_map[child]["BIRT"][1])+'/'+str(ind_map[child]["BIRT"][0])+'/'+str(ind_map[child]["BIRT"][2]), []).append(child)
+            birthdays.setdefault(str(ind_map[child]["BIRT"][1])+'/'+ \
+                                 str(ind_map[child]["BIRT"][0])+'/'+ \
+                                 str(ind_map[child]["BIRT"][2]), []).append(child)
 
         for bday, ids in birthdays.items():
             if len(ids) >= count:
