@@ -184,7 +184,7 @@ else:
 #     logger.log_family_info(15, "No sibling count greater than 15")
 # else:
 #     for siblings in ret:
-#         logger.log_family_info(15, "{}: {}".format("15 or more siblings/half-siblings 
+#         logger.log_family_info(15, "{}: {}".format("15 or more siblings/half-siblings
 #                                with the same birthday", ", ".join(siblings)))
 
 # Check for any parents married to children
