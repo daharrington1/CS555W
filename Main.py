@@ -11,6 +11,7 @@ from Utils.UserStory33 import find_all_orphans
 from Utils.DateValidator import DateValidator, format_date
 from Utils.UserStory21 import find_mistitled_spouse
 from Utils.UserStory13 import find_invalid_sibling_spacing
+from Utils.indiDateChecker import indiDateChecker
 
 logger = Logger()
 dateValidator = DateValidator(logger)
@@ -32,6 +33,7 @@ parsed_families = new_parser.fam_dic
 new_parser.add_valid_age()
 # US01: check dates are not before current date
 new_parser.dateCheck()
+indiDatechecker = indiDateChecker(logger)
 
 for parsed_individual_id in parsed_individuals:
     # Grab the individual and insert their id into the dictionary, for the database to use as its primary key
@@ -39,6 +41,9 @@ for parsed_individual_id in parsed_individuals:
 
     individual["INDI"] = parsed_individual_id
     individual_database.AddObj(individual)
+    
+    indiDatechecker.us03_birtBeforeDeat(individual)
+    indiDatechecker.us38_upcomingBirt(individual)
 
     for key in [key for key in ["BIRT", "DEAT"] if key in individual]:
         dateValidator.validate_date(individual[key], True)
@@ -158,7 +163,7 @@ else:
 usrun.us24(families_from_db, individuals_from_db)
 usrun.us32(families_from_db, individuals_from_db)
 # Sprint 2
-usrun.us38(families_from_db, individuals_from_db)
+#usrun.us38(families_from_db, individuals_from_db)
 usrun.us11(families_from_db, individuals_from_db)
 
 # User Story 16 - get families where the males don't all have the same last name
