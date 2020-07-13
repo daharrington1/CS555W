@@ -3,6 +3,7 @@ from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
 from Utils.Logger import Logger
+# from Utils import UserStory14, UserStory15, UserStory17, UserStory18, UserStory30, UserStory31, UserStory16, UserStory39
 from Utils import UserStory17, UserStory18, UserStory30, UserStory31, UserStory16, UserStory39
 from Utils.Utils import normalize_family_entry
 import usrun
@@ -176,6 +177,23 @@ else:
     for fam in ret:
         logger.log_family_info(39, "FAMILY ({}) has an upcoming anniversary: {}"
                                .format(fam[0], str(fam[1][1])+'/'+str(fam[1][0])+'/'+str(fam[1][2])))
+
+# Check for any parents married to children
+# ret = UserStory15.us15_sibling_count(ind_map, fam_map, 15)
+# if len(ret) == 0:
+#     logger.log_family_info(15, "No sibling count greater than 15")
+# else:
+#     for siblings in ret:
+#         logger.log_family_info(15, "{}: {}".format("15 or more siblings/half-siblings
+#                                with the same birthday", ", ".join(siblings)))
+
+# Check for any parents married to children
+# ret = UserStory14.us14_mult_births(ind_map, fam_map, 2)
+# if len(ret) == 0:
+#     logger.log_family_info(14, "There are no siblings with multiple birthdays of 2 or greater")
+# else:
+#     for siblings, bday in ret:
+#         logger.log_family_info(14, "Siblings ({}) have the same birthday: {}".format(", ".join(siblings), bday))
 
 # Logger Print
 usrun.logger.print_log()
