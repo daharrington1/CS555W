@@ -256,14 +256,6 @@ class parser4:
                     if indi_id not in current_result:
                         current_result[indi_id] = []
                     current_result[indi_id].append('DEAT')
-                if 'BIRT' in person:
-                    if not self.compTwoDate(person['BIRT'], person['DEAT']):
-                        self.logger.log_individual_error(3,
-                                                         "{}: {} Death is before {} birthday."
-                                                         .format(indi_id,
-                                                                 "/".join(str(x) for x in person['DEAT']),
-                                                                 "/".join(str(x) for x in person['BIRT'])))
-                        birthDeat_result.append(indi_id)
         for fam_id, family in self.fam_dic.items():
             if 'MARR' in family:
                 if not self.us01_currentDate(family['MARR']):
