@@ -91,6 +91,6 @@ class Logger:
                   use_case, error_message)
 
     def print_log(self):
-        self._outputMessages.sort(key=itemgetter(2,0))
+        self._outputMessages.sort(key = itemgetter(2,0))
         for log_entry in self._outputMessages:
             print("{}".format(Logger.Log(log_entry[0], log_entry[1], log_entry[2], log_entry[3])))
