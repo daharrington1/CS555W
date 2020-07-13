@@ -1,4 +1,4 @@
-from Utils.Utils import getParent2ChildrenMap
+# from Utils.Utils import getParent2ChildrenMap
 
 
 def us14_mult_births(ind_map=None, fam_map=None, count=2):
