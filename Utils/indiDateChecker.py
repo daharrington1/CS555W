@@ -40,9 +40,15 @@ class indiDateChecker:
         ret = []
         current_date = datetime.datetime.today()
         if (current_date.month == 12 and current_date.day > 1):
-            date = datetime.datetime(current_date.year + 1, one['BIRT'][1], one['BIRT'][0])
+            try:
+                date = datetime.datetime(current_date.year + 1, one['BIRT'][1], one['BIRT'][0])
+            except Exception:
+                pass
         else:
-            date = datetime.datetime(current_date.year, one['BIRT'][1], one['BIRT'][0])
+            try:
+                date = datetime.datetime(current_date.year, one['BIRT'][1], one['BIRT'][0])
+            except Exception:
+                pass
         if (date - current_date > datetime.timedelta(days=0) and date - current_date < datetime.timedelta(days=30)):
             ret.append((one['INDI'], self.months[one['BIRT'][1]] + ' ' + str(one['BIRT'][0])))
         for indiid, date in ret:
