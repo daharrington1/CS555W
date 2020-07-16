@@ -139,7 +139,7 @@ else:
 orphans = find_all_orphans(individuals_from_db, families_from_db)
 if len(orphans) > 0:
     for orphan in orphans:
-        logger.log_individual_anomaly(33, "{} is an orphan".format(" ".join(orphan)))
+        logger.log_individual_anomaly(33, "{} is an orphan".format(" & ".join(orphan)))
 else:
     logger.log_individual_info(33, "No orphans in file")
 
