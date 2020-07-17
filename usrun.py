@@ -1,14 +1,15 @@
 # The UserStory program by developer&tester Chengyi Zhang
-from collections import defaultdict
+from collections import defaultdict, Counter
 from Utils.Logger import Logger
 import datetime
+from typing import List
 
 logger = Logger()
 
 
 # tools
 
-def IDtoINDI(individuals_from_db):
+def IDtoINDI(individuals_from_db) -> dict:
     ans = dict()
     for one in individuals_from_db:
         ans.setdefault(one['INDI'], one)
@@ -17,6 +18,18 @@ def IDtoINDI(individuals_from_db):
 
 months = {1: 'JAN', 2: 'FEB', 3: 'MAR', 4: 'APR', 5: 'MAY', 6: 'JUN', 7: 'JUL', 8: 'AUG',
           9: 'SEP', 10: 'OCT', 11: 'NOV', 12: 'DEC'}
+
+
+def IDinFam(families_from_db) -> dict:
+    ans = defaultdict(list)
+    for fam in families_from_db:
+        if fam['HUSB'] != '-':
+            for one in fam['HUSB']:
+                ans[one].append(fam)
+        if fam['WIFE'] != '-':
+            for one in fam['WIFE']:
+                ans[one].append(fam)
+    return ans
 
 
 # US24 Unique Families by spouses
@@ -75,7 +88,7 @@ def multiple_births(families_from_db, individuals_from_db):
     for fam in families_from_db:
         # individual_birthday
         ib = dict()
-        if ('CHIL' in fam and type(fam['CHIL']) is not str):
+        if 'CHIL' in fam and type(fam['CHIL']) is not str:
             for id in fam['CHIL']:
                 one = id_indi[id]
                 if ('BIRT' in one):
@@ -97,19 +110,25 @@ def multiple_births(families_from_db, individuals_from_db):
 def us38(families_from_db, individuals_from_db):
     ret = upcoming_birthdays(individuals_from_db)
     for indiid, date in ret:
-        logger.log_individual_warning(38, "Individual {}'s birthday {} is coming soon"
-                                      .format(indiid, date))
+        logger.log_individual_info(38, "Individual {}'s birthday {} is coming soon"
+                                   .format(indiid, date))
 
 
 def upcoming_birthdays(individuals_from_db):
     ret = []
     for one in individuals_from_db:
         current_date = datetime.datetime.today()
-        if (current_date.month == 12 and current_date.day > 1):
-            date = datetime.datetime(current_date.year + 1, one['BIRT'][1], one['BIRT'][0])
+        if current_date.month == 12 and current_date.day > 1:
+            try:
+                date = datetime.datetime(current_date.year + 1, one['BIRT'][1], one['BIRT'][0])
+            except:
+                continue
         else:
-            date = datetime.datetime(current_date.year, one['BIRT'][1], one['BIRT'][0])
-        if (date - current_date > datetime.timedelta(days=0) and date - current_date < datetime.timedelta(days=30)):
+            try:
+                date = datetime.datetime(current_date.year, one['BIRT'][1], one['BIRT'][0])
+            except:
+                continue
+        if datetime.timedelta(days=0) < date - current_date < datetime.timedelta(days=30):
             ret.append((one['INDI'], months[one['BIRT'][1]] + ' ' + str(one['BIRT'][0])))
     return ret
 
@@ -167,8 +186,8 @@ def no_bigamy_sev_fam(families_from_db, individuals_from_db):
         dates.sort(key=lambda x: x[1])
         havespouse = False
         for fid, date, factor in dates:
-            if(factor):
-                if(havespouse):
+            if (factor):
+                if (havespouse):
                     ret.add(one)
                 else:
                     havespouse = True
@@ -176,4 +195,63 @@ def no_bigamy_sev_fam(families_from_db, individuals_from_db):
                 havespouse = False
     return sorted(list(ret))
 
+
 # End of Sprint 2
+
+# Sprint 3
+
+def us12(families_from_db, individuals_from_db):
+    ret = parents_not_too_old(families_from_db, individuals_from_db)
+    for gen, parent, parentid, child, negative in ret:
+        logger.log_family_error(12, "{} {} is too old compared to {} child {}"
+                                    .format(parent, parentid, gen, child + negative))
+
+
+def parents_not_too_old(families_from_db, individuals_from_db):
+    ret = []
+    id_indi = IDtoINDI(individuals_from_db)
+    for fam in families_from_db:
+        if 'CHIL' in fam:
+            for one in fam['CHIL']:
+                child = id_indi[one]
+                if fam['HUSB'] != '-':
+                    for father in fam['HUSB']:
+                        if id_indi[father]['AGE'] - child['AGE'] > 80:
+                            ret.append(('his', 'Father', father, one, ", while age of the child is negative" if child['AGE'] < 0 else ""))
+                if fam['WIFE'] != '-':
+                    for mother in fam['WIFE']:
+                        if id_indi[mother]['AGE'] - child['AGE'] > 60:
+                            ret.append(('her', 'Mother', mother, one, ", while age of the child is negative" if child['AGE'] < 0 else ""))
+    return ret
+
+
+def us19(families_from_db, individuals_from_db):
+    ret = first_cousin_not_marry(families_from_db, individuals_from_db)
+    for a, b in ret:
+        logger.log_family_error(19, "Couple {} and {} are first cousins".format(a, b))
+
+
+def first_cousin_not_marry(families_from_db, individuals_from_db):
+    ret = []
+    id_fam = IDinFam(families_from_db)
+    for fam in families_from_db:
+        if "CHIL" in fam and len(fam["CHIL"]) > 1:
+            cousins: List[List[str]] = []
+            for one in fam['CHIL']:
+                children = []
+                if one in id_fam:
+                    for ano in id_fam[one]:
+                        if 'CHIL' in ano:
+                            children.extend(ano['CHIL'])
+                cousins.append(children)
+            # check all pairs of cousins
+            for a in range(len(cousins)):
+                for b in range(a+1, len(cousins)):
+                    for x in cousins[a]:
+                        for y in cousins[b]:
+                            if x in id_fam and y in id_fam:
+                                if len([n for n in id_fam[x] if n in id_fam[y]]) > 0:
+                                    ret.append((x, y))
+    return ret
+
+# End of Sprint 3
