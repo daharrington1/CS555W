@@ -64,7 +64,7 @@ class usruntest(unittest.TestCase):
              "INDI": "I2"})
         self.individuals.append(
             {"NAME": "DeDe/Pritchett/", "SEX": "F", "BIRT": [23, 1, 1947], "DEAT": [1, 10, 2100], "FAMS": ["F2"],
-             "AGE": 153, "INDI": "I3"})
+             "AGE": 73, "INDI": "I3"})
         self.individuals.append(
             {"NAME": "Mitchell/Pritchett/", "SEX": "M", "BIRT": [1, 6, 1975], "FAMS": ["F4"], "FAMC": ["F2"], "AGE": 45,
              "INDI": "I4"})
@@ -140,6 +140,11 @@ class usruntest(unittest.TestCase):
         self.assertEqual(months[1], 'JAN')
         self.assertNotEqual(months[6], 'JUL')
 
+    def test_iif(self):
+        # test IDinFam()
+        self.assertEqual(len(IDinFam(self.families)), 18)
+        self.assertEqual(IDinFam(self.families)['I1'], [self.families[0], self.families[1]])
+
     # Test US24
 
     def test_uf(self):
@@ -162,7 +167,7 @@ class usruntest(unittest.TestCase):
         # test multiple_births()
         self.assertEqual(multiple_births(self.families, self.individuals), [('8/5/2019', 'F10', ['I22', 'I23'])])
         self.assertEqual(len(multiple_births(self.families, self.individuals)), 1)
-        tmpfam = self.families.copy()
+        tmpfam = copy.deepcopy(self.families)
         tmpfam[0]['CHIL'].append('I10')
         self.assertEqual(multiple_births(tmpfam, self.individuals),
                          [('4/1/2013', 'F1', ['I10', 'I10']), ('8/5/2019', 'F10', ['I22', 'I23'])])
@@ -200,6 +205,33 @@ class usruntest(unittest.TestCase):
         self.assertEqual(no_bigamy_sev_fam(self.families, self.individuals), ['I1'])
         tmpfam.append({"HUSB": "-", "WIFE": ["I2", 'I3'], "CHIL": ["I10"], "MARR": [1, 1, 2009], "FAM": "F20"})
         self.assertEqual(no_bigamy_sev_fam(tmpfam, self.individuals), ['I1', 'I2'])
+
+    # Test US12
+
+    def test_pnto(self):
+        # test parents_not_too_old
+        tmpfam = copy.deepcopy(self.families)
+        self.assertEqual(len(parents_not_too_old(tmpfam, self.individuals)), 0)
+        tmpfam[1]['CHIL'].append('I89')
+        self.assertEqual(parents_not_too_old(tmpfam, self.individuals)[0][2], 'I3')
+
+    # Test US19
+
+    def test_fcsnm(self):
+        # test first_cousin_not_marry
+        tmpfam = copy.deepcopy(self.families)
+        self.assertEqual(len(first_cousin_not_marry(tmpfam, self.individuals)), 0)
+        tmpfam.append(
+            {"HUSB": ["I16"], "WIFE": ["I6"], "CHIL": ['I10'], "MARR": [1, 1, 1963], "NOTE": "Test",
+             "FAM": "F77"})
+        tmpfam.append(
+            {"HUSB": ["I14"], "WIFE": ["I10"], "MARR": [8, 3, 2019], "FAM": "F66",
+             "NOTE": "Test"})
+        self.assertEqual(len(first_cousin_not_marry(tmpfam, self.individuals)), 1)
+        tmpfam.append(
+            {"HUSB": ["I15"], "WIFE": ["I10"], "MARR": [8, 3, 2019], "FAM": "F55",
+             "NOTE": "Test"})
+        self.assertEqual(len(first_cousin_not_marry(tmpfam, self.individuals)), 2)
 
 
 if __name__ == '__main__':
