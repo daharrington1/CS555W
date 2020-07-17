@@ -158,14 +158,6 @@ if len(invalid_spaced_siblings) > 0:
 else:
     logger.log_family_info(13, "All siblings in all families are twins or spaced more than 8 months apart")
 
-# Chengyi Zhang
-# Sprint 1
-usrun.us24(families_from_db, individuals_from_db)
-usrun.us32(families_from_db, individuals_from_db)
-# Sprint 2
-#usrun.us38(families_from_db, individuals_from_db)
-usrun.us11(families_from_db, individuals_from_db)
-
 # User Story 16 - get families where the males don't all have the same last name
 ret = UserStory16.us16_male_last_names(individuals_from_db, families_from_db)
 if len(ret) == 0:
@@ -201,5 +193,16 @@ else:
 #     for siblings, bday in ret:
 #         logger.log_family_info(14, "Siblings ({}) have the same birthday: {}".format(", ".join(siblings), bday))
 
+# Chengyi Zhang
+# Sprint 1
+usrun.us24(families_from_db, individuals_from_db)
+usrun.us32(families_from_db, individuals_from_db)
+# Sprint 2
+# usrun.us38(families_from_db, individuals_from_db) # refactored by Yikun
+usrun.us11(families_from_db, individuals_from_db)
+# Sprint 3
+usrun.us12(families_from_db, individuals_from_db)
+usrun.us19(families_from_db, individuals_from_db)
 # Logger Print
 usrun.logger.print_log()
+
