@@ -78,12 +78,12 @@ def month_str2num(mstring):
 def raw2dic(file):
     filepath = file
     lines = []
-    current_time = datetime.datetime.now()
+    # current_time = datetime.datetime.now()
     with open(filepath) as fp:
         for line in fp:
             lines.append(line.rstrip())
-    valid_tags = ['INID', 'NAME', 'SEX', 'BIRT', 'DEAT', 'FAMC', 'FAMS', 'FAM', 'MARR',
-                  'HUSB', 'WIFE', 'CHIL', 'DIV', 'DATE', 'HEAD', 'TRLR', 'NOTE']
+    # valid_tags = ['INID', 'NAME', 'SEX', 'BIRT', 'DEAT', 'FAMC', 'FAMS', 'FAM', 'MARR',
+    #              'HUSB', 'WIFE', 'CHIL', 'DIV', 'DATE', 'HEAD', 'TRLR', 'NOTE']
     valid_tags_level1 = ['NAME', 'SEX', 'BIRT', 'DEAT', 'FAMC', 'FAMS', 'MARR',
                          'HUSB', 'WIFE', 'CHIL', 'DIV']
     # derived from project 2
