@@ -268,10 +268,10 @@ class parser4:
                 if 'DIV' in family:
                     if not self.compTwoDate(family['MARR'], family['DIV']):
                         self.logger.log_family_error(4,
-                                                         "{}: {} Divorce is before {} marriage."
-                                                         .format(fam_id,
-                                                                 "/".join(str(x) for x in family['DIV']),
-                                                                 "/".join(str(x) for x in family['MARR'])))
+                                                     "{}: {} Divorce is before {} marriage."
+                                                     .format(fam_id,
+                                                             "/".join(str(x) for x in family['DIV']),
+                                                             "/".join(str(x) for x in family['MARR'])))
                 if 'HUSB' in family:
                     for hid in family['HUSB']:
                         h = self.indi_dic[hid]
@@ -279,11 +279,11 @@ class parser4:
                             b = h['BIRT']
                             if not self.compTwoDate(b, family['MARR']):
                                 self.logger.log_family_error(2,
-                                                         "{}: {} Marriage Date is before husband {} 's {} birthday."
-                                                         .format(fam_id,
-                                                                 "/".join(str(x) for x in family['MARR']),
-                                                                 hid,
-                                                                 "/".join(str(x) for x in b)))
+                                                             "{}: {} Marriage Date is before husband {} 's {} birthday."
+                                                             .format(fam_id,
+                                                                     "/".join(str(x) for x in family['MARR']),
+                                                                     hid,
+                                                                     "/".join(str(x) for x in b)))
                             birthMarr_result.append((fam_id, hid))
                         if 'DEAT' in h:
                             d = h['DEAT']
@@ -301,11 +301,11 @@ class parser4:
                             b = w['BIRT']
                             if not self.compTwoDate(b, family['MARR']):
                                 self.logger.log_family_error(2,
-                                                         "{}: {} Marriage Date is before wife {} 's {} birthday."
-                                                         .format(fam_id,
-                                                                 "/".join(str(x) for x in family['MARR']),
-                                                                 wid,
-                                                                 "/".join(str(x) for x in b)))
+                                                             "{}: {} Marriage Date is before wife {} 's {} birthday."
+                                                             .format(fam_id,
+                                                                     "/".join(str(x) for x in family['MARR']),
+                                                                     wid,
+                                                                     "/".join(str(x) for x in b)))
                             birthMarr_result.append((fam_id, wid))
                         if 'DEAT' in w:
                             d = w['DEAT']

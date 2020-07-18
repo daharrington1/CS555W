@@ -41,7 +41,7 @@ for parsed_individual_id in parsed_individuals:
 
     individual["INDI"] = parsed_individual_id
     individual_database.AddObj(individual)
-    
+
     indiDatechecker.us03_birtBeforeDeat(individual)
     indiDatechecker.us38_upcomingBirt(individual)
 
@@ -205,4 +205,3 @@ usrun.us12(families_from_db, individuals_from_db)
 usrun.us19(families_from_db, individuals_from_db)
 # Logger Print
 usrun.logger.print_log()
-
