@@ -102,7 +102,7 @@ Anomaly: Individual: US13: I280 birth is less than 8 months away from a non-twin
 Warning: Family: US16: F4 has multiple last names: ['Pritchett', 'Tucker', 'Tucker-Pritchett']
 Warning: Family: US16: F130 has multiple last names: ['Hastings', 'Pritchett']
 Error: Family: US17: F9: My spouse (I19) is one of my children: Parent (I18), Children (['I19'])
-Error: Family: US18: F128 has siblings as parents: {'I10', 'I6'}
+Error: Family: US18: F128 has siblings as parents: {'I6', 'I10'}
 Error: Family: US19: Couple I23 and I31 are first cousins
 Error: Individual: US21: I28 is the wrong sex for their listed marriage role 
 Error: Individual: US23: Same Name & birthday For Name: Jay /Pritchett/ and Date: 23/05/1947 for ids I1,I128
