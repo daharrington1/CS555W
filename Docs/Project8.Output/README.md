@@ -1,4 +1,4 @@
-# CS555W Project 6 Output
+# CS555W Project 8 Output
 
 ## ModernFamily_MainOutput.txt: Output from the ModernFamilyTest.ged file
    * created: python3 Main.py
