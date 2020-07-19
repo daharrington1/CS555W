@@ -1,5 +1,5 @@
 import datetime
-from Utils.DateValidator import day_mapping_for_year
+from Utils.Utils import check_dates
 from collections import namedtuple
 
 DateTimeForID = namedtuple('DateTimeForID', 'time id')
@@ -24,52 +24,13 @@ def find_invalid_sibling_spacing(individuals, families):
         # resulting set
         for index in range(1, len(datetimes)):
             current, older_sibling = datetimes[index], datetimes[index-1]
-            if _births_in_range(1, 8, current.time, older_sibling.time):
+            if not check_dates(current.time, older_sibling.time, 1, "days") and \
+                    check_dates(current.time, older_sibling.time, 8, "months"):
                 ids.add(current.id)
                 ids.add(older_sibling.id)
 
     return ids
 
-
-def n_months_ago(from_datetime, distance):
-    """
-    Converts a date object to one that is N months in the past
-    This function is useful compared to timestamps if the date is pre 1970 as the datetime library can overflow
-    :param from_datetime: The datetime to start from
-    :param distance: The amount of months to reverse, must be non-negative
-    :raise ValueError when distance is negative
-    :return: The datetime N months in the passed, with the day moved to the last valid day of the month
-    """
-    if distance < 0:
-        raise ValueError("Distance must be non-negative")
-    year_change = distance // 12
-    distance %= 12
-
-    in_year_distance = from_datetime.month - distance
-    if in_year_distance == 0:
-        new_month = 1
-    elif in_year_distance < 0:
-        year_change += 1
-        # Subtract from 13 as months are 1 indexed and not zero
-        new_month = 13 - (distance - from_datetime.month)
-    else:
-        new_month = from_datetime.month - distance
-
-    new_year = from_datetime.year - year_change
-    day_mapping = day_mapping_for_year(new_year)
-
-    return datetime.datetime(new_year,
-                             new_month,
-                             from_datetime.day if from_datetime.day <= day_mapping[new_month]
-                             else day_mapping[new_month])
-
-
-def _births_in_range(min_days, max_months, reference_birth, older_sibling_birth):
-    this_birth = reference_birth
-    older_sibling_birth = older_sibling_birth
-    twin_cutoff = this_birth - datetime.timedelta(days=min_days)
-    normal_cutoff = n_months_ago(this_birth, max_months)
-    return normal_cutoff < older_sibling_birth < twin_cutoff
 
 
 def _from_id(targets, full_list):
