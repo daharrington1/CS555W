@@ -32,7 +32,6 @@ def find_invalid_sibling_spacing(individuals, families):
     return ids
 
 
-
 def _from_id(targets, full_list):
     # Duplicate of US21, update in refactor
     return [full_list[target] for target in targets if target != "-"]

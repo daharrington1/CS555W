@@ -3,7 +3,6 @@ from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
 from Utils.Logger import Logger
-# from Utils import UserStory14, UserStory15, UserStory17, UserStory18, UserStory30, UserStory31, UserStory16, UserStory39
 from Utils import UserStory17, UserStory18, UserStory30, UserStory31, UserStory16, UserStory39
 from Utils.Utils import normalize_family_entry
 import usrun
@@ -12,6 +11,7 @@ from Utils.DateValidator import DateValidator, format_date
 from Utils.UserStory21 import find_mistitled_spouse
 from Utils.UserStory13 import find_invalid_sibling_spacing
 from Utils.indiDateChecker import indiDateChecker
+from Utils.UserStory28 import sort_children_by_age
 
 logger = Logger()
 dateValidator = DateValidator(logger)
@@ -48,7 +48,7 @@ for parsed_individual_id in parsed_individuals:
     for key in [key for key in ["BIRT", "DEAT"] if key in individual]:
         dateValidator.validate_date(individual[key], True)
 
-# These loops can be consolidated after debugging needs are done
+
 for family_id in parsed_families:
     family = parsed_families[family_id]
     family["FAM"] = family_id
@@ -67,6 +67,14 @@ for family_id in parsed_families:
         family["HUSB"] = TablePrinter.error_output
 
     family_database.AddObj(family)
+
+    children_by_age = sort_children_by_age(family, parsed_individuals)
+    if len(children_by_age) == 0:
+        logger.log_family_info(28, "{} has no children".format(family_id))
+        continue
+    children_output = ["{} {}({})".format(child["INDI"], child["NAME"], child["AGE"]) for child in children_by_age]
+    logger.log_family_info(28, "Children of {} sorted in descending order: {}".format(family_id,
+                                                                                      "; ".join(children_output)))
 
     for key in [key for key in ["MARR", "DIV"] if key in family]:
         dateValidator.validate_date(family[key], False)
