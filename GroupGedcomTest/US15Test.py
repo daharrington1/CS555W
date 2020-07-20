@@ -4,7 +4,9 @@ from Utils.Utils import normalize_family_entry
 
 
 #
-# Test Scripts for User Story 15: Get all living singles
+# Test Scripts for User Story 15: Get all siblings greater than a given count
+# Per Customer (i.e. Prof Rowland) - only need to look at immediate families
+# and not half families.
 # Author: Debbie Harrington
 #
 # Test Scripts for verifying US15 user story
@@ -372,13 +374,13 @@ class US15Test(unittest.TestCase):
             us15_sibling_count(self.indMap)
 
     def test_US15_DefaultCount(self):
-        # should return 11 singles on the initial data
+        # should return 10 families with siblings
         ret = us15_sibling_count(self.famMap)
         self.assertEqual(len(ret), 10,
                          "Did not get the expected results")
 
     def test_US15_DefaultOneText(self):
-        # should get the following single individuals on the initial data
+        # should get the following families with siblings
         expected_ret = [('F1', ['I10']),
                         ('F2', ['I4', 'I6']),
                         ('F3', ['I9']),
@@ -414,13 +416,13 @@ class US15Test(unittest.TestCase):
                          "Did not match entry 1 length")
 
     def test_US15_TwoOrMore(self):
-        # should return 11 singles on the initial data
+        # should get 5 families with 2 or more siblings
         ret = us15_sibling_count(self.famMap, 2)
         self.assertEqual(len(ret), 5,
                          "Did not get the expected results")
 
     def test_US15_TwoOrMoreText(self):
-        # should get the following single individuals on the initial data
+        # should get 5 families with 2 or more siblings
         expected_ret = [('F2', ['I4', 'I6']),
                         ('F4', ['I14', 'I15', 'I4', 'I5']),
                         ('F5', ['I15', 'I5']),
@@ -441,13 +443,13 @@ class US15Test(unittest.TestCase):
                          "Did not match entry 1 length")
 
     def test_US15_ThreeOrMore(self):
-        # should return 11 singles on the initial data
+        # should get 2 families with 3 or more siblings
         ret = us15_sibling_count(self.famMap, 3)
         self.assertEqual(len(ret), 2,
                          "Did not get the expected results")
 
     def test_US15_ThreeOrMoreText(self):
-        # should get the following single individuals on the initial data
+        # should get 2 families with 3 or more siblings
         expected_ret = [('F4', ['I14', 'I15', 'I4', 'I5']),
                         ('F6', ['I20', 'I24', 'I25'])]
         ret = us15_sibling_count(self.famMap, 3)
@@ -459,13 +461,13 @@ class US15Test(unittest.TestCase):
                          "Did not match entry 1 length")
 
     def test_US15_FourOrMore(self):
-        # should return 11 singles on the initial data
+        # should get 1 family with 4 or more siblings
         ret = us15_sibling_count(self.famMap, 4)
         self.assertEqual(len(ret), 1,
                          "Did not get the expected results")
 
     def test_US15_FourOrMoreText(self):
-        # should get the following single individuals on the initial data
+        # should get 1 family with 4 or more siblings
         expected_ret = [('F4', ['I14', 'I15', 'I4', 'I5'])]
         ret = us15_sibling_count(self.famMap, 4)
         self.assertListEqual(expected_ret, ret,
@@ -474,20 +476,20 @@ class US15Test(unittest.TestCase):
                          "Did not match entry 1 length")
 
     def test_US15_FiveOrMore(self):
-        # should return 11 singles on the initial data
+        # should get zero family with 5 or more siblings
         ret = us15_sibling_count(self.famMap, 5)
         self.assertEqual(len(ret), 0,
                          "Did not get the expected results")
 
     def test_US15_FiveOrMoreText(self):
-        # should get the following single individuals on the initial data
+        # should get zero family with 5 or more siblings
         expected_ret = []
         ret = us15_sibling_count(self.famMap, 5)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
     def test_US15_FifteenorMore(self):
-        # add in siblings to family 4 to make 15
+        # add in siblings to family 4 to make 15 - should get one family to match
         for i in range(28, 39):
             self.indMap["I"+str(i)] = {
                 "NAME": "I" + str(i) + "/Hastings/",
@@ -504,7 +506,7 @@ class US15Test(unittest.TestCase):
                          "Did not get the expected results")
 
     def test_US15_FifteenorMoreText(self):
-        # add in siblings to family 4 to make 15
+        # add in siblings to family 4 to make 15 - should get one family to match
         for i in range(28, 39):
             self.indMap["I"+str(i)] = {
                 "NAME": "I" + str(i) + "/Hastings/",
@@ -524,7 +526,7 @@ class US15Test(unittest.TestCase):
                          "Did not match entry 1 length")
 
     def test_US15_SixteenorMore(self):
-        # add in siblings to family 4 to make 15
+        # add in siblings to family 4 to make 15 - should get one family to match 15 or greater
         for i in range(28, 40):
             self.indMap["I"+str(i)] = {
                 "NAME": "I" + str(i) + "/Hastings/",
@@ -546,7 +548,7 @@ class US15Test(unittest.TestCase):
                          "Did not match entry 1 length")
 
     def test_US15_FourteenorMore(self):
-        # add in siblings to family 4 to make 15
+        # add in siblings to family 4 to make 14 - should get zero family to match 15 or greater
         for i in range(28, 38):
             self.indMap["I"+str(i)] = {
                 "NAME": "I" + str(i) + "/Hastings/",
