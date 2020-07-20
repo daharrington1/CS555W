@@ -12,7 +12,7 @@ from Utils.UserStory21 import find_mistitled_spouse
 from Utils.UserStory13 import find_invalid_sibling_spacing
 from Utils.indiDateChecker import indiDateChecker
 from Utils.UserStory28 import sort_children_by_age
-from Utils.UserStory35 import born_within_thirty_days
+from Utils.UserStory35 import born_within_one_month
 
 logger = Logger()
 dateValidator = DateValidator(logger)
@@ -46,7 +46,7 @@ for parsed_individual_id in parsed_individuals:
     indiDatechecker.us03_birtBeforeDeat(individual)
     indiDatechecker.us38_upcomingBirt(individual)
 
-    if born_within_thirty_days(individual):
+    if born_within_one_month(individual):
         logger.log_individual_info(35, "{} Was born in the last 30 days!".format(parsed_individual_id))
 
     for key in [key for key in ["BIRT", "DEAT"] if key in individual]:

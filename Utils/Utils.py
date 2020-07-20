@@ -1,5 +1,6 @@
 from collections import namedtuple
 import datetime
+from Utils.DateValidator import day_mapping_for_year
 
 BirthDateKeyedIndividual = namedtuple('BirthdayKeyedIndividual', 'birthday name id')
 
@@ -158,12 +159,12 @@ def get_marriage_status(entry):
     :returns the marital status
     """
     # look at all the divorced, widowed and married peoplee
-    if getDateTimestamp(getLatestDate(entry["WIDOWER"])) > getDateTimestamp(getLatestDate(entry["DIV"])) and  \
-       getDateTimestamp(getLatestDate(entry["WIDOWER"])) > getDateTimestamp(getLatestDate(entry["MARR"])):
+    if getDateTimestamp(getLatestDate(entry["WIDOWER"])) > getDateTimestamp(getLatestDate(entry["DIV"])) and \
+            getDateTimestamp(getLatestDate(entry["WIDOWER"])) > getDateTimestamp(getLatestDate(entry["MARR"])):
         return "Widower"
 
-    if getDateTimestamp(getLatestDate(entry["DIV"])) > getDateTimestamp(getLatestDate(entry["WIDOWER"])) and  \
-       getDateTimestamp(getLatestDate(entry["DIV"])) > getDateTimestamp(getLatestDate(entry["MARR"])):
+    if getDateTimestamp(getLatestDate(entry["DIV"])) > getDateTimestamp(getLatestDate(entry["WIDOWER"])) and \
+            getDateTimestamp(getLatestDate(entry["DIV"])) > getDateTimestamp(getLatestDate(entry["MARR"])):
         return "Divorced"
 
     return "Married"
@@ -186,7 +187,7 @@ def update_marriage_info(fam, spouse, ind_map, Id2MarrStatus):
             # you are either married to spouse or windower
             # print("FAM ({}), ee({}), my spouse: {}".format(fam["FAM"], person, my_spouse))
             if "DEAT" in ind_map[my_spouse] and \
-               type(ind_map[my_spouse]["DEAT"]) is list:
+                    type(ind_map[my_spouse]["DEAT"]) is list:
                 Id2MarrStatus[spouse]["WIDOWER"].append(ind_map[my_spouse]["DEAT"])
             else:
                 # if you are not a widower, then you are still
@@ -273,11 +274,11 @@ def check_dates(dt1, dt2, span, units, upcoming=False):
     if units not in dtMap:
         return False
 
-    dt_diff = (dt1-dt2).days
+    dt_diff = (dt1 - dt2).days
     if upcoming is True:
-        return (dt_diff/dtMap[units] >= 0 and dt_diff/dtMap[units] <= span)
+        return (dt_diff / dtMap[units] >= 0 and dt_diff / dtMap[units] <= span)
     else:
-        return (abs(dt_diff)/dtMap[units] <= span)
+        return (abs(dt_diff) / dtMap[units] <= span)
 
 
 def normalize_spouse_ids(family):
@@ -303,13 +304,13 @@ def datetime_from_date_array(date):
     return datetime.datetime(date[2], date[1], date[0])
 
 
-def is_n_days_after(dictionary, field, days=30, from_date=datetime.datetime.today()):
+def is_n_months_after(dictionary, field, months=1, from_date=datetime.datetime.today()):
     """
     Takes a date array inside of the dictionary under a specific key, and checks if the other date is days away from
     the provided date
     :param dictionary: The dictionary to source the date form, must contain the key specified in field
     :param field: The key to read from the dictionary
-    :param days: The days to check backwards, inclusive
+    :param months: The months to check backwards, inclusive
     :param from_date: The date to start the search from, must be a date time object
     :raise TypeError if from_date is not a datetime object
     :return: True if the date is in the range, false otherwise
@@ -318,7 +319,42 @@ def is_n_days_after(dictionary, field, days=30, from_date=datetime.datetime.toda
         birthday = datetime_from_date_array(dictionary[field])
     except (KeyError, ValueError, AttributeError):
         return False
+    if type(from_date) is not datetime.datetime:
+        raise TypeError
 
-    month_ago = from_date - datetime.timedelta(days)
+    month_ago = n_months_ago(from_date, months)
     # Todo, validate the year being included is correct
     return month_ago <= birthday <= from_date
+
+
+def n_months_ago(from_datetime, distance):
+    """
+    Converts a date object to one that is N months in the past
+    This function is useful compared to timestamps if the date is pre 1970 as the datetime library can overflow
+    :param from_datetime: The datetime to start from
+    :param distance: The amount of months to reverse, must be non-negative
+    :raise ValueError when distance is negative
+    :return: The datetime N months in the passed, with the day moved to the last valid day of the month
+    """
+    if distance < 0:
+        raise ValueError("Distance must be non-negative")
+    year_change = distance // 12
+    distance %= 12
+
+    in_year_distance = from_datetime.month - distance
+    if in_year_distance == 0:
+        new_month = 1
+    elif in_year_distance < 0:
+        year_change += 1
+        # Subtract from 13 as months are 1 indexed and not zero
+        new_month = 13 - (distance - from_datetime.month)
+    else:
+        new_month = from_datetime.month - distance
+
+    new_year = from_datetime.year - year_change
+    day_mapping = day_mapping_for_year(new_year)
+
+    return datetime.datetime(new_year,
+                             new_month,
+                             from_datetime.day if from_datetime.day <= day_mapping[new_month]
+                             else day_mapping[new_month])

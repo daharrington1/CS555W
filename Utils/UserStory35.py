@@ -1,8 +1,9 @@
 from datetime import datetime
-from Utils.Utils import is_n_days_after
+
+from Utils.Utils import is_n_months_after
 
 
-def born_within_thirty_days(person, from_date=datetime.today()):
+def born_within_one_month(person, from_date=datetime.today()):
     """
     Check if a user was born within 30 days of the given datetime
     Note: For the datetime of June 15th, 2000, the value of May 20th, 2000 is true, but May 20th, 1999 is False
@@ -11,4 +12,4 @@ def born_within_thirty_days(person, from_date=datetime.today()):
     :param from_date: The datetime to check from, defaults to .today()
     :return: True if the person was born in the last 30 days, false otherwise.
     """
-    return is_n_days_after(person, "BIRT", 30, from_date)
+    return is_n_months_after(person, "BIRT", 1, from_date)
