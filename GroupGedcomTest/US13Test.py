@@ -1,6 +1,5 @@
 import unittest
-import datetime
-from Utils.UserStory13 import n_months_ago, find_invalid_sibling_spacing
+from Utils.UserStory13 import find_invalid_sibling_spacing
 
 
 class US13Test(unittest.TestCase):
@@ -17,23 +16,7 @@ class US13Test(unittest.TestCase):
         self.assertEqual({"I1", "I2", "I5", "I6"}, set(find_invalid_sibling_spacing(test_individuals, test_families)))
         self.assertEqual(4, len(result), "Wrong length, might contain dupes or missing data")
 
-    def test_n_months_ago(self):
-        test_date = datetime.datetime(2020, 7, 6)
-        self.assertEqual(datetime.datetime(2020, 7, 6), n_months_ago(test_date, 0))
-        self.assertEqual(datetime.datetime(2020, 5, 6), n_months_ago(test_date, 2))
-        self.assertEqual(datetime.datetime(2020, 1, 6), n_months_ago(test_date, 7))
-        self.assertEqual(datetime.datetime(2019, 12, 6), n_months_ago(test_date, 8))
-        self.assertEqual(datetime.datetime(2019, 7, 6), n_months_ago(test_date, 12))
-        self.assertEqual(datetime.datetime(2010, 5, 6), n_months_ago(test_date, 122))
-
-        test_date = datetime.datetime(2020, 7, 31)
-        self.assertEqual(datetime.datetime(2020, 6, 30), n_months_ago(test_date, 1))
-        self.assertEqual(datetime.datetime(2020, 5, 31), n_months_ago(test_date, 2))
-        self.assertEqual(datetime.datetime(2020, 2, 29), n_months_ago(test_date, 5))
-        self.assertEqual(datetime.datetime(2019, 2, 28), n_months_ago(test_date, 17))
-
-        with self.assertRaises(ValueError):
-            datetime.datetime(2020, 8, 6), n_months_ago(test_date, -1)
+        self.assertEqual(set(), find_invalid_sibling_spacing(test_individuals, {}))
 
 
 if __name__ == '__main__':

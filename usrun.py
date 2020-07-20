@@ -2,7 +2,6 @@
 from collections import defaultdict, Counter
 from Utils.Logger import Logger
 import datetime
-from typing import List
 
 logger = Logger()
 
@@ -236,7 +235,7 @@ def first_cousin_not_marry(families_from_db, individuals_from_db):
     id_fam = IDinFam(families_from_db)
     for fam in families_from_db:
         if "CHIL" in fam and len(fam["CHIL"]) > 1:
-            cousins: List[List[str]] = []
+            cousins = []
             for one in fam['CHIL']:
                 children = []
                 if one in id_fam:

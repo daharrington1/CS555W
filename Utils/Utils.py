@@ -292,3 +292,33 @@ def normalize_spouse_ids(family):
             continue
         ids += family[key] if type(family[key]) is list else [family[key]]
     return ids
+
+
+def datetime_from_date_array(date):
+    """
+    Converts the GEDCOM array of [day, month, year] to a date time
+    :param date: Array of integers in format [day, month, year]
+    :return: The datetime object of that array
+    """
+    return datetime.datetime(date[2], date[1], date[0])
+
+
+def is_n_days_after(dictionary, field, days=30, from_date=datetime.datetime.today()):
+    """
+    Takes a date array inside of the dictionary under a specific key, and checks if the other date is days away from
+    the provided date
+    :param dictionary: The dictionary to source the date form, must contain the key specified in field
+    :param field: The key to read from the dictionary
+    :param days: The days to check backwards, inclusive
+    :param from_date: The date to start the search from, must be a date time object
+    :raise TypeError if from_date is not a datetime object
+    :return: True if the date is in the range, false otherwise
+    """
+    try:
+        birthday = datetime_from_date_array(dictionary[field])
+    except (KeyError, ValueError, AttributeError):
+        return False
+
+    month_ago = from_date - datetime.timedelta(days)
+    # Todo, validate the year being included is correct
+    return month_ago <= birthday <= from_date
