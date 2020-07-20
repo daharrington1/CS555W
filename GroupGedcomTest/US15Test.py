@@ -518,7 +518,8 @@ class US15Test(unittest.TestCase):
             }
             self.famMap["F4"]["CHIL"].append("I" + str(i))
 
-        expected_ret = [('F4', ['I14', 'I15', 'I28', 'I29', 'I30', 'I31', 'I32', 'I33', 'I34', 'I35', 'I36', 'I37', 'I38', 'I4', 'I5'])]
+        expected_ret = [('F4', ['I14', 'I15', 'I28', 'I29', 'I30', 'I31', 'I32', 'I33', 'I34', 
+                         'I35', 'I36', 'I37', 'I38', 'I4', 'I5'])]
         ret = us15_sibling_count(self.famMap, 15)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
@@ -538,7 +539,8 @@ class US15Test(unittest.TestCase):
             }
             self.famMap["F4"]["CHIL"].append("I" + str(i))
 
-        expected_ret = [('F4', ['I14', 'I15', 'I28', 'I29', 'I30', 'I31', 'I32', 'I33', 'I34', 'I35', 'I36', 'I37', 'I38', 'I39', 'I4', 'I5'])]
+        expected_ret = [('F4', ['I14', 'I15', 'I28', 'I29', 'I30', 'I31', 'I32', 'I33', 'I34', 
+                         'I35', 'I36', 'I37', 'I38', 'I39', 'I4', 'I5'])]
         ret = us15_sibling_count(self.famMap, 15)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
