@@ -19,7 +19,7 @@ def us14_mult_births(ind_map=None, fam_map=None, count=2):
         birthdays = {}
         for child in fam["CHIL"]:
             dt_list = ind_map[child]['BIRT']
-            dt=str(dt_list[1]) + "/" + str(dt_list[0]) + "/" + str(dt_list[2])
+            dt = str(dt_list[1]) + "/" + str(dt_list[0]) + "/" + str(dt_list[2])
             birthdays.setdefault(dt, []).append(child)
 
         for bday, ids in birthdays.items():
