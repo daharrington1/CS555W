@@ -3,7 +3,7 @@ from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
 from Utils.Logger import Logger
-from Utils import UserStory17, UserStory18, UserStory30, UserStory31, UserStory16, UserStory39
+from Utils import UserStory14, UserStory15, UserStory17, UserStory18, UserStory30, UserStory31, UserStory16, UserStory39
 from Utils.Utils import normalize_family_entry
 import usrun
 from Utils.UserStory33 import find_all_orphans
@@ -11,6 +11,7 @@ from Utils.DateValidator import DateValidator, format_date
 from Utils.UserStory21 import find_mistitled_spouse
 from Utils.UserStory13 import find_invalid_sibling_spacing
 from Utils.indiDateChecker import indiDateChecker
+from Utils.spouseCrossChecker import spouseCrossChecker
 from Utils.UserStory28 import sort_children_by_age
 from Utils.UserStory35 import born_within_one_month
 
@@ -72,6 +73,10 @@ for family_id in parsed_families:
 
     family_database.AddObj(family)
 
+    spousecheck = spouseCrossChecker(logger, family, parsed_individuals)
+    spousecheck.us06_divBeforeDeat()
+    spousecheck.us10_marrAfter14()
+    
     children_by_age = sort_children_by_age(family, parsed_individuals)
     if len(children_by_age) == 0:
         logger.log_family_info(28, "{} has no children".format(family_id))
@@ -187,23 +192,23 @@ else:
         logger.log_family_info(39, "FAMILY ({}) has an upcoming anniversary: {}"
                                .format(fam[0], str(fam[1][1])+'/'+str(fam[1][0])+'/'+str(fam[1][2])))
 
-# Check for any parents married to children
-# ret = UserStory15.us15_sibling_count(ind_map, fam_map, 15)
-# if len(ret) == 0:
-#     logger.log_family_info(15, "No sibling count greater than 15")
-# else:
-#     for siblings in ret:
-#         logger.log_family_info(15, "{}: {}".format(
-#                                "15 or more siblings/half-siblings with the same birthday",
-#                                ", ".join(siblings)))
+# siblings more than 15
+ret = UserStory15.us15_sibling_count(fam_map, 15)
+if len(ret) == 0:
+    logger.log_family_info(15, "No sibling count greater than 15 in the same family")
+else:
+    for id, siblings in ret:
+        logger.log_family_warning(15, "Family {}: as more than 15 children {}".format(
+                               id,
+                               ", ".join(siblings)))
 
-# Check for any parents married to children
-# ret = UserStory14.us14_mult_births(ind_map, fam_map, 2)
-# if len(ret) == 0:
-#     logger.log_family_info(14, "There are no siblings with multiple birthdays of 2 or greater")
-# else:
-#     for siblings, bday in ret:
-#         logger.log_family_info(14, "Siblings ({}) have the same birthday: {}".format(", ".join(siblings), bday))
+# Multiple births more than 5
+ret = UserStory14.us14_mult_births(ind_map, fam_map, 5)
+if len(ret) == 0:
+    logger.log_family_info(14, "No siblings with multiple birthdays of {} or greater".format(5))
+else:
+    for siblings, bday in ret:
+        logger.log_family_warning(14, "Siblings ({}) have the same birthday: {}".format(", ".join(siblings), bday))
 
 # Chengyi Zhang
 # Sprint 1
