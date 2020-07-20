@@ -1,5 +1,3 @@
-from Utils.Utils import getParent2ChildrenMap
-
 
 def us15_sibling_count(fam_map=None, count=1):
     """
