@@ -18,5 +18,6 @@ class US13Test(unittest.TestCase):
 
         self.assertEqual(set(), find_invalid_sibling_spacing(test_individuals, {}))
 
+
 if __name__ == '__main__':
     unittest.main()

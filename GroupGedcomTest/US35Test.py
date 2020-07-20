@@ -28,6 +28,5 @@ class US35Test(unittest.TestCase):
             born_within_thirty_days({"BIRT": [1, 7, 2000]}, "Some invalid type")
 
 
-
 if __name__ == '__main__':
     unittest.main()
