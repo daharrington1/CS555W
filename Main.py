@@ -11,6 +11,7 @@ from Utils.DateValidator import DateValidator, format_date
 from Utils.UserStory21 import find_mistitled_spouse
 from Utils.UserStory13 import find_invalid_sibling_spacing
 from Utils.indiDateChecker import indiDateChecker
+from Utils.spouseCrossChecker import spouseCrossChecker
 from Utils.UserStory28 import sort_children_by_age
 from Utils.UserStory35 import born_within_thirty_days
 
@@ -72,6 +73,10 @@ for family_id in parsed_families:
 
     family_database.AddObj(family)
 
+    spousecheck = spouseCrossChecker(logger, family, parsed_individuals)
+    spousecheck.us06_divBeforeDeat()
+    spousecheck.us10_marrAfter14()
+    
     children_by_age = sort_children_by_age(family, parsed_individuals)
     if len(children_by_age) == 0:
         logger.log_family_info(28, "{} has no children".format(family_id))
