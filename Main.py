@@ -80,10 +80,10 @@ for family_id in parsed_families:
     children_by_age = sort_children_by_age(family, parsed_individuals)
     if len(children_by_age) == 0:
         logger.log_family_info(28, "{} has no children".format(family_id))
-        continue
-    children_output = ["{} {}({})".format(child["INDI"], child["NAME"], child["AGE"]) for child in children_by_age]
-    logger.log_family_info(28, "Children of {} sorted in descending order: {}".format(family_id,
-                                                                                      "; ".join(children_output)))
+    else:
+        children_output = ["{} {}({})".format(child["INDI"], child["NAME"], child["AGE"]) for child in children_by_age]
+        logger.log_family_info(28, "Children of {} sorted in descending order: {}".format(family_id,
+                                                                                          "; ".join(children_output)))
 
     for key in [key for key in ["MARR", "DIV"] if key in family]:
         dateValidator.validate_date(family[key], False)
