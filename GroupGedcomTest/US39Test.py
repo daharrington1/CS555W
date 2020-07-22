@@ -159,9 +159,6 @@ class US39Test(unittest.TestCase):
         for id, fam in self.famMap.items():
             # overwrite all Marriages as one day ago
             dt = datetime.date.today()-datetime.timedelta(days=1)
-            #self.famMap[id]["MARR"] = []
-            #self.famMap[id]["MARR"] = [dt.day, dt.month, dt.year]
-            #us39_upcoming_anniversaries(self.indMap, fam, self.logger)
             fam["MARR"] = [dt.day, dt.month, dt.year]
             spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
             spousecheck.us39_upcoming_anniversaries()
