@@ -216,11 +216,10 @@ class US39Test(unittest.TestCase):
 
             us39_upcoming_anniversaries(self.indMap, fam, self.logger)
 
-
         # should find 1 match and the following expected result
         ret = self.logger.get_logs()
-        dtstr='FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
-        expected_ret=[('Info', 'Family', 39, dtstr)]
+        dtstr = 'FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
+        expected_ret = [('Info', 'Family', 39, dtstr)]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
@@ -259,11 +258,10 @@ class US39Test(unittest.TestCase):
 
             us39_upcoming_anniversaries(self.indMap, fam, self.logger)
 
-
         # should find 1 match and the following expected result
         ret = self.logger.get_logs()
-        dtstr='FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
-        expected_ret=[('Info', 'Family', 39, dtstr)]
+        dtstr = 'FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
+        expected_ret = [('Info', 'Family', 39, dtstr)]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
@@ -311,18 +309,18 @@ class US39Test(unittest.TestCase):
     def test_US39_2DatesUpcomingLen(self):
         # should get 2 matches
         self.logger.clear_logs()
-        expected_ret=[]
+        expected_ret = []
         for id, fam in self.famMap.items():
 
             if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
                 self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
-                dtstr='FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
+                dtstr = 'FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
             elif id == "F4":
                 dt = datetime.date.today()+datetime.timedelta(days=1)
                 self.famMap["F4"]["MARR"] = [dt.day, dt.month, dt.year]
-                dtstr='FAMILY (F4) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
+                dtstr = 'FAMILY (F4) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
             else:
                 # overwrite all Marriages as one day ago
@@ -337,18 +335,18 @@ class US39Test(unittest.TestCase):
     def test_US39_2DatesUpcoming(self):
         # should get 2 matches
         self.logger.clear_logs()
-        expected_ret=[]
+        expected_ret = []
         for id, fam in self.famMap.items():
 
             if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
                 self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
-                dtstr='FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
+                dtstr = 'FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
             elif id == "F4":
                 dt = datetime.date.today()+datetime.timedelta(days=1)
                 self.famMap["F4"]["MARR"] = [dt.day, dt.month, dt.year]
-                dtstr='FAMILY (F4) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
+                dtstr = 'FAMILY (F4) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
             else:
                 # overwrite all Marriages as one day ago
@@ -356,7 +354,6 @@ class US39Test(unittest.TestCase):
                 self.famMap[id]["MARR"] = [dt.day, dt.month, dt.year]
 
             us39_upcoming_anniversaries(self.indMap, fam, self.logger)
-
 
         # should find 1 match and the following expected result
         ret = self.logger.get_logs()
@@ -366,13 +363,13 @@ class US39Test(unittest.TestCase):
     def test_US39_2DatesUpcoming1WidowerLen(self):
         # should no matches
         self.logger.clear_logs()
-        expected_ret=[]
+        expected_ret = []
         for id, fam in self.famMap.items():
 
             if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
                 self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
-                dtstr='FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
+                dtstr = 'FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
             elif id == "F8":
                 # widower in the family
@@ -390,13 +387,13 @@ class US39Test(unittest.TestCase):
 
     def test_US39_2DatesUpcoming1Widower(self):
         self.logger.clear_logs()
-        expected_ret=[]
+        expected_ret = []
         for id, fam in self.famMap.items():
 
             if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
                 self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
-                dtstr='FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
+                dtstr = 'FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
             elif id == "F8":
                 # widower in the family
