@@ -94,3 +94,10 @@ class Logger:
         self._outputMessages.sort(key=itemgetter(2, 0))
         for log_entry in self._outputMessages:
             print("{}".format(Logger.Log(log_entry[0], log_entry[1], log_entry[2], log_entry[3])))
+
+    def get_logs(self):
+        self._outputMessages.sort(key=itemgetter(2, 0))
+        return self._outputMessages
+
+    def clear_logs(self):
+        self._outputMessages=[]
