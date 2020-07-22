@@ -1,6 +1,6 @@
 import unittest
-from Utils.UserStory16 import us16_male_last_names
 from Utils.Logger import Logger
+from Utils.spouseCrossChecker import spouseCrossChecker
 
 
 #
@@ -16,6 +16,7 @@ class US16Test(unittest.TestCase):
     indMap = None
     famMap = None
     logger = None
+    spousecheck = None
 
     def setUp(self):
         self.families = []
@@ -24,6 +25,7 @@ class US16Test(unittest.TestCase):
         self.famMap = {}
         self.logger = Logger()
         self.seed_data()
+        self.spousecheck = None
 
     def tearDown(self):
         self.families = None
@@ -31,6 +33,7 @@ class US16Test(unittest.TestCase):
         self.indMap = None
         self.famMap = None
         self.logger = None
+        self.spousecheck = None
 
     def seed_data(self):
         # seed family data - don't need individual data for this test suite
@@ -366,14 +369,6 @@ class US16Test(unittest.TestCase):
         for fam in self.families:
             self.famMap[fam["FAM"]] = fam
 
-    def test_US16_noinputs(self):
-        # bad inputs
-        with self.assertRaises(Exception):
-            us16_male_last_names(None, None, None)
-
-        with self.assertRaises(Exception):
-            us16_male_last_names(self.indMap)
-
     def test_US16_1family(self):
         # should to get 1 match
         self.famMap["F10"] = {
@@ -387,7 +382,8 @@ class US16Test(unittest.TestCase):
 
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
-            us16_male_last_names(self.indMap, fam, self.logger)
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us16_male_last_names()
 
         ret = self.logger.get_logs()
         self.assertEqual(len(ret), 1, "Did not get the expected results")
@@ -405,7 +401,8 @@ class US16Test(unittest.TestCase):
 
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
-            us16_male_last_names(self.indMap, fam, self.logger)
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us16_male_last_names()
 
         ret = self.logger.get_logs()
 
@@ -418,7 +415,8 @@ class US16Test(unittest.TestCase):
         # should get 1 match
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
-            us16_male_last_names(self.indMap, fam, self.logger)
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us16_male_last_names()
 
         ret = self.logger.get_logs()
         self.assertEqual(len(ret), 2, "Did not get the expected results")
@@ -427,7 +425,8 @@ class US16Test(unittest.TestCase):
         # should find 1 match and the following expected result
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
-            us16_male_last_names(self.indMap, fam, self.logger)
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us16_male_last_names()
 
         ret = self.logger.get_logs()
         expected_ret = [
@@ -493,7 +492,8 @@ class US16Test(unittest.TestCase):
 
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
-            us16_male_last_names(self.indMap, fam, self.logger)
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us16_male_last_names()
 
         ret = self.logger.get_logs()
         self.assertEqual(len(ret), 0, "Did not get the expected results")
@@ -542,7 +542,8 @@ class US16Test(unittest.TestCase):
 
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
-            us16_male_last_names(self.indMap, fam, self.logger)
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us16_male_last_names()
 
         ret = self.logger.get_logs()
         expected_ret = []
