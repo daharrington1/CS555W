@@ -175,17 +175,17 @@ class US39Test(unittest.TestCase):
             self.famMap[id]["MARR"] = [dt.day, dt.month, dt.year]
             us39_upcoming_anniversaries(self.indMap, fam, self.logger)
 
-        ret=self.logger.get_logs()
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 0, "Did not get the expected results")
 
     def test_US39_1dayLaterLen(self):
         # should no matches
 
         self.logger.clear_logs()
-        ret=self.logger.get_logs()
+        ret = self.logger.get_logs()
         for id, fam in self.famMap.items():
 
-            if id=="F10":
+            if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=1)
                 # overwrite Haley/Dylan marriage to be the next day
                 self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
@@ -196,16 +196,16 @@ class US39Test(unittest.TestCase):
 
             us39_upcoming_anniversaries(self.indMap, fam, self.logger)
 
-        ret=self.logger.get_logs()
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 1, "Did not get the expected results")
 
     def test_US39_1dayLater(self):
         # should no matches
         self.logger.clear_logs()
-        ret=self.logger.get_logs()
+        ret = self.logger.get_logs()
         for id, fam in self.famMap.items():
 
-            if id=="F10":
+            if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=1)
                 # overwrite Haley/Dylan marriage to be the next day
                 self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
@@ -229,7 +229,7 @@ class US39Test(unittest.TestCase):
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
 
-            if id=="F10":
+            if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
                 # overwrite Haley/Dylan marriage to be the next day
                 self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
@@ -248,7 +248,7 @@ class US39Test(unittest.TestCase):
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
 
-            if id=="F10":
+            if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
                 # overwrite Haley/Dylan marriage to be the next day
                 self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
@@ -272,7 +272,7 @@ class US39Test(unittest.TestCase):
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
 
-            if id=="F10":
+            if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=31)
                 # overwrite Haley/Dylan marriage to be the next day
                 self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
@@ -291,7 +291,7 @@ class US39Test(unittest.TestCase):
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
 
-            if id=="F10":
+            if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=31)
                 # overwrite Haley/Dylan marriage to be the next day
                 self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
@@ -314,12 +314,12 @@ class US39Test(unittest.TestCase):
         expected_ret=[]
         for id, fam in self.famMap.items():
 
-            if id=="F10":
+            if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
                 self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
                 dtstr='FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
-            elif id=="F4":
+            elif id == "F4":
                 dt = datetime.date.today()+datetime.timedelta(days=1)
                 self.famMap["F4"]["MARR"] = [dt.day, dt.month, dt.year]
                 dtstr='FAMILY (F4) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
@@ -340,12 +340,12 @@ class US39Test(unittest.TestCase):
         expected_ret=[]
         for id, fam in self.famMap.items():
 
-            if id=="F10":
+            if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
                 self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
                 dtstr='FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
-            elif id=="F4":
+            elif id == "F4":
                 dt = datetime.date.today()+datetime.timedelta(days=1)
                 self.famMap["F4"]["MARR"] = [dt.day, dt.month, dt.year]
                 dtstr='FAMILY (F4) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
@@ -369,12 +369,12 @@ class US39Test(unittest.TestCase):
         expected_ret=[]
         for id, fam in self.famMap.items():
 
-            if id=="F10":
+            if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
                 self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
                 dtstr='FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
-            elif id=="F8":
+            elif id == "F8":
                 # widower in the family
                 dt = datetime.date.today()+datetime.timedelta(days=1)
                 self.famMap["F8"]["MARR"] = [dt.day, dt.month, dt.year]
@@ -393,12 +393,12 @@ class US39Test(unittest.TestCase):
         expected_ret=[]
         for id, fam in self.famMap.items():
 
-            if id=="F10":
+            if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
                 self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
                 dtstr='FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
-            elif id=="F8":
+            elif id == "F8":
                 # widower in the family
                 dt = datetime.date.today()+datetime.timedelta(days=1)
                 self.famMap["F8"]["MARR"] = [dt.day, dt.month, dt.year]

@@ -14,7 +14,6 @@ def us39_upcoming_anniversaries(ind_map, fam, logger):
     # check non-divorced couples and non-widowers
     # print("\nfam: {}".format(fam))
     if len(fam["DIV"]) > 0:
-        print("Family {} is divorced".format(fam["FAM"]))
         return
 
     Widower = False
@@ -27,12 +26,7 @@ def us39_upcoming_anniversaries(ind_map, fam, logger):
         try:
             if check_dates(datetime.date(datetime.date.today().year, fam['MARR'][1],
                            fam['MARR'][0]), datetime.date.today(), 30, 'days', upcoming=True):
-                # print("Family {} has upcoming anniversary: {}".format(fam["FAM"], fam["MARR"]))
                 logger.log_family_info(39, "FAMILY ({}) has an upcoming anniversary: {}".format(
                                        fam["FAM"], str(fam['MARR'][1])+'/'+str(fam['MARR'][0])+'/'+str(fam['MARR'][2])))
         except Exception:
-            return # problem with dates - skip this entry
-    return
-
-
-
+            return  # problem with dates - just return without logging anything
