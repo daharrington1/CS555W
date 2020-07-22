@@ -56,6 +56,7 @@ for parsed_individual_id in parsed_individuals:
 
 for family_id in parsed_families:
     family = parsed_families[family_id]
+    #print("looking at family: {}".format(family_id))
     family["FAM"] = family_id
 
     # Error handling to fill in required fields which are not present in one or more families
@@ -76,6 +77,9 @@ for family_id in parsed_families:
     spousecheck = spouseCrossChecker(logger, family, parsed_individuals)
     spousecheck.us06_divBeforeDeat()
     spousecheck.us10_marrAfter14()
+
+    # add upcoming anniversaries to the logger
+    UserStory39.us39_upcoming_anniversaries(parsed_individuals, normalize_family_entry(family), logger)
     
     children_by_age = sort_children_by_age(family, parsed_individuals)
     if len(children_by_age) == 0:
@@ -84,7 +88,6 @@ for family_id in parsed_families:
     children_output = ["{} {}({})".format(child["INDI"], child["NAME"], child["AGE"]) for child in children_by_age]
     logger.log_family_info(28, "Children of {} sorted in descending order: {}".format(family_id,
                                                                                       "; ".join(children_output)))
-
     for key in [key for key in ["MARR", "DIV"] if key in family]:
         dateValidator.validate_date(family[key], False)
 
@@ -182,15 +185,6 @@ if len(ret) == 0:
 else:
     for fam in ret:
         logger.log_family_warning(16, "{} has multiple last names: {}".format(fam["FAM"], fam["LNAMES"]))
-
-# User Story 39: list upcoming anniversaries
-ret = UserStory39.us39_upcoming_anniversaries(ind_map, fam_map)
-if len(ret) == 0:
-    print("No famililes have upcoming anniversaries in the next 30 days")
-else:
-    for fam in ret:
-        logger.log_family_info(39, "FAMILY ({}) has an upcoming anniversary: {}"
-                               .format(fam[0], str(fam[1][1])+'/'+str(fam[1][0])+'/'+str(fam[1][2])))
 
 # siblings more than 15
 ret = UserStory15.us15_sibling_count(fam_map, 15)
