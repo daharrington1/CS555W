@@ -56,7 +56,6 @@ for parsed_individual_id in parsed_individuals:
 
 for family_id in parsed_families:
     family = parsed_families[family_id]
-    #print("looking at family: {}".format(family_id))
     family["FAM"] = family_id
 
     # Error handling to fill in required fields which are not present in one or more families
@@ -80,7 +79,7 @@ for family_id in parsed_families:
 
     # add upcoming anniversaries to the logger
     UserStory39.us39_upcoming_anniversaries(parsed_individuals, normalize_family_entry(family), logger)
-    
+
     children_by_age = sort_children_by_age(family, parsed_individuals)
     if len(children_by_age) == 0:
         logger.log_family_info(28, "{} has no children".format(family_id))
@@ -88,7 +87,7 @@ for family_id in parsed_families:
         children_output = ["{} {}({})".format(child["INDI"], child["NAME"], child["AGE"]) for child in children_by_age]
         logger.log_family_info(28, "Children of {} sorted in descending order: {}".format(family_id,
                                                                                           "; ".join(children_output)))
-        
+
     for key in [key for key in ["MARR", "DIV"] if key in family]:
         dateValidator.validate_date(family[key], False)
 

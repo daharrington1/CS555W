@@ -100,4 +100,4 @@ class Logger:
         return self._outputMessages
 
     def clear_logs(self):
-        self._outputMessages=[]
+        self._outputMessages = []
