@@ -1,7 +1,7 @@
 from Utils.Utils import normalize_family_entry, getSpouses
 
 
-def us16_male_last_names(individuals, families):
+def us16_male_last_names(indMap, famMap):
     """
     User Story 16: Checks for Male Last Names
 
@@ -9,35 +9,28 @@ def us16_male_last_names(individuals, families):
     :returns List of Familes where the males don't all have the same last name in their family
     """
     male_lastnames = []  # list of suspect families
-    id2Name = {}  # mapping of male ids to last name
 
-    if (individuals is None) or (families is None):
+    if (indMap is None) or (famMap is None):
         raise Exception(ValueError, "Missing Inputs")
 
-    # build map of id to mail last names
-    for ind in individuals:
-        if ind["SEX"] == "M":  # only store male names
-            # print("Adding Id({}), Name({}), sex({}) to in2Name: ".format(ind["INDI"], ind["NAME"], ind["SEX"]))
-            id2Name[ind["INDI"]] = ind["NAME"].split("/")[1]
-
-    for fam in families:
-        lastNames = []
+    for id, fam in famMap.items():
+        lastNames = set()
 
         # assume it is a bad family at first
-        badFam = {"FAM": fam["FAM"]}
+        badFam = {"FAM": id}
 
         # look at all spouses in case information is backwards
         spouses = getSpouses(fam)
         for male in spouses:
             # skip over anyone not identified as a male
-            if male in id2Name and id2Name[male] not in lastNames:
-                lastNames.append(id2Name[male])
+            if indMap[male]["SEX"] == 'M':
+                lastNames.add(indMap[male]["NAME"].split("/")[1])
 
         # look at male children last names
-        fam = normalize_family_entry(fam)
         for child in fam["CHIL"]:
             # only look at males and non-unique last names
-            lastNames.append(id2Name[child]) if child in id2Name and id2Name[child] not in lastNames else lastNames
+            if indMap[child]["SEX"] == 'M':
+                lastNames.add(indMap[child]["NAME"].split("/")[1])
 
         # check for unique male last names in families
         if len(lastNames) > 1:
