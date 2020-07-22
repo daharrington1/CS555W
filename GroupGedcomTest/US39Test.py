@@ -1,6 +1,6 @@
 import unittest
-from Utils.UserStory39 import us39_upcoming_anniversaries
 from Utils.Logger import Logger
+from Utils.spouseCrossChecker import spouseCrossChecker
 import datetime
 
 
@@ -18,6 +18,7 @@ class US39Test(unittest.TestCase):
     famMap = None
     indMap = None
     logger = None
+    spousecheck = None
 
     def setUp(self):
         self.families = []
@@ -26,6 +27,7 @@ class US39Test(unittest.TestCase):
         self.indMap = {}
         self.logger = Logger()
         self.seed_data()
+        self.spousecheck = None
 
     def tearDown(self):
         self.families = None
@@ -33,6 +35,7 @@ class US39Test(unittest.TestCase):
         self.famMap = None
         self.indMap = None
         self.logger = None
+        self.spousecheck = None
 
     def seed_data(self):
         # seed initial testing data
@@ -150,29 +153,15 @@ class US39Test(unittest.TestCase):
         for fam in self.families:
             self.famMap[fam["FAM"]] = fam
 
-    def test_US39_noinputs(self):
-        # bad inputs
-        with self.assertRaises(Exception):
-            us39_upcoming_anniversaries(None, None)
-
-        with self.assertRaises(Exception):
-            us39_upcoming_anniversaries(self.families[0])
-
-        with self.assertRaises(Exception):
-            us39_upcoming_anniversaries(self.individuals[0])
-
-        with self.assertRaises(Exception):
-            us39_upcoming_anniversaries(self.indMap, self.families[0])
-
     def test_US39_noMatches(self):
         # should no matches
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
             # overwrite all Marriages as one day ago
             dt = datetime.date.today()-datetime.timedelta(days=1)
-            self.famMap[id]["MARR"] = []
-            self.famMap[id]["MARR"] = [dt.day, dt.month, dt.year]
-            us39_upcoming_anniversaries(self.indMap, fam, self.logger)
+            fam["MARR"] = [dt.day, dt.month, dt.year]
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us39_upcoming_anniversaries()
 
         ret = self.logger.get_logs()
         self.assertEqual(len(ret), 0, "Did not get the expected results")
@@ -185,14 +174,12 @@ class US39Test(unittest.TestCase):
 
             if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=1)
-                # overwrite Haley/Dylan marriage to be the next day
-                self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
             else:
-                # overwrite all Marriages as one day ago
                 dt = datetime.date.today()-datetime.timedelta(days=1)
-                self.famMap[id]["MARR"] = [dt.day, dt.month, dt.year]
 
-            us39_upcoming_anniversaries(self.indMap, fam, self.logger)
+            fam["MARR"] = [dt.day, dt.month, dt.year]
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us39_upcoming_anniversaries()
 
         ret = self.logger.get_logs()
         self.assertEqual(len(ret), 1, "Did not get the expected results")
@@ -204,14 +191,12 @@ class US39Test(unittest.TestCase):
 
             if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=1)
-                # overwrite Haley/Dylan marriage to be the next day
-                self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
             else:
-                # overwrite all Marriages as one day ago
                 dt = datetime.date.today()-datetime.timedelta(days=1)
-                self.famMap[id]["MARR"] = [dt.day, dt.month, dt.year]
 
-            us39_upcoming_anniversaries(self.indMap, fam, self.logger)
+            fam["MARR"] = [dt.day, dt.month, dt.year]
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us39_upcoming_anniversaries()
 
         # should find 1 match and the following expected result
         ret = self.logger.get_logs()
@@ -227,14 +212,12 @@ class US39Test(unittest.TestCase):
 
             if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
-                # overwrite Haley/Dylan marriage to be the next day
-                self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
             else:
-                # overwrite all Marriages as one day ago
                 dt = datetime.date.today()-datetime.timedelta(days=1)
-                self.famMap[id]["MARR"] = [dt.day, dt.month, dt.year]
 
-            us39_upcoming_anniversaries(self.indMap, fam, self.logger)
+            fam["MARR"] = [dt.day, dt.month, dt.year]
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us39_upcoming_anniversaries()
 
         ret = self.logger.get_logs()
         self.assertEqual(len(ret), 1, "Did not get the expected results")
@@ -246,14 +229,12 @@ class US39Test(unittest.TestCase):
 
             if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
-                # overwrite Haley/Dylan marriage to be the next day
-                self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
             else:
-                # overwrite all Marriages as one day ago
                 dt = datetime.date.today()-datetime.timedelta(days=1)
-                self.famMap[id]["MARR"] = [dt.day, dt.month, dt.year]
 
-            us39_upcoming_anniversaries(self.indMap, fam, self.logger)
+            fam["MARR"] = [dt.day, dt.month, dt.year]
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us39_upcoming_anniversaries()
 
         # should find 1 match and the following expected result
         ret = self.logger.get_logs()
@@ -269,14 +250,12 @@ class US39Test(unittest.TestCase):
 
             if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=31)
-                # overwrite Haley/Dylan marriage to be the next day
-                self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
             else:
-                # overwrite all Marriages as one day ago
                 dt = datetime.date.today()-datetime.timedelta(days=1)
-                self.famMap[id]["MARR"] = [dt.day, dt.month, dt.year]
 
-            us39_upcoming_anniversaries(self.indMap, fam, self.logger)
+            fam["MARR"] = [dt.day, dt.month, dt.year]
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us39_upcoming_anniversaries()
 
         ret = self.logger.get_logs()
         self.assertEqual(len(ret), 0, "Did not get the expected results")
@@ -288,14 +267,12 @@ class US39Test(unittest.TestCase):
 
             if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=31)
-                # overwrite Haley/Dylan marriage to be the next day
-                self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
             else:
-                # overwrite all Marriages as one day ago
                 dt = datetime.date.today()-datetime.timedelta(days=1)
-                self.famMap[id]["MARR"] = [dt.day, dt.month, dt.year]
 
-            us39_upcoming_anniversaries(self.indMap, fam, self.logger)
+            fam["MARR"] = [dt.day, dt.month, dt.year]
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us39_upcoming_anniversaries()
 
         # should find 1 match and the following expected result
         ret = self.logger.get_logs()
@@ -311,20 +288,19 @@ class US39Test(unittest.TestCase):
 
             if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
-                self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
                 dtstr = 'FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
             elif id == "F4":
                 dt = datetime.date.today()+datetime.timedelta(days=1)
-                self.famMap["F4"]["MARR"] = [dt.day, dt.month, dt.year]
                 dtstr = 'FAMILY (F4) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
             else:
                 # overwrite all Marriages as one day ago
                 dt = datetime.date.today()-datetime.timedelta(days=1)
-                self.famMap[id]["MARR"] = [dt.day, dt.month, dt.year]
 
-            us39_upcoming_anniversaries(self.indMap, fam, self.logger)
+            fam["MARR"] = [dt.day, dt.month, dt.year]
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us39_upcoming_anniversaries()
 
         ret = self.logger.get_logs()
         self.assertEqual(len(ret), 2, "Did not get the expected results")
@@ -337,20 +313,18 @@ class US39Test(unittest.TestCase):
 
             if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
-                self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
                 dtstr = 'FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
             elif id == "F4":
                 dt = datetime.date.today()+datetime.timedelta(days=1)
-                self.famMap["F4"]["MARR"] = [dt.day, dt.month, dt.year]
                 dtstr = 'FAMILY (F4) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
             else:
-                # overwrite all Marriages as one day ago
                 dt = datetime.date.today()-datetime.timedelta(days=1)
-                self.famMap[id]["MARR"] = [dt.day, dt.month, dt.year]
 
-            us39_upcoming_anniversaries(self.indMap, fam, self.logger)
+            fam["MARR"] = [dt.day, dt.month, dt.year]
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us39_upcoming_anniversaries()
 
         # should find 1 match and the following expected result
         ret = self.logger.get_logs()
@@ -365,19 +339,16 @@ class US39Test(unittest.TestCase):
 
             if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
-                self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
                 dtstr = 'FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
             elif id == "F8":
-                # widower in the family
                 dt = datetime.date.today()+datetime.timedelta(days=1)
-                self.famMap["F8"]["MARR"] = [dt.day, dt.month, dt.year]
             else:
-                # overwrite all Marriages as one day ago
                 dt = datetime.date.today()-datetime.timedelta(days=1)
-                self.famMap[id]["MARR"] = [dt.day, dt.month, dt.year]
 
-            us39_upcoming_anniversaries(self.indMap, fam, self.logger)
+            fam["MARR"] = [dt.day, dt.month, dt.year]
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us39_upcoming_anniversaries()
 
         ret = self.logger.get_logs()
         self.assertEqual(len(ret), 1, "Did not get the expected results")
@@ -389,19 +360,16 @@ class US39Test(unittest.TestCase):
 
             if id == "F10":
                 dt = datetime.date.today()+datetime.timedelta(days=30)
-                self.famMap["F10"]["MARR"] = [dt.day, dt.month, dt.year]
                 dtstr = 'FAMILY (F10) has an upcoming anniversary: '+str(dt.month)+'/'+str(dt.day)+'/'+str(dt.year)
                 expected_ret.append(('Info', 'Family', 39, dtstr))
             elif id == "F8":
-                # widower in the family
                 dt = datetime.date.today()+datetime.timedelta(days=1)
-                self.famMap["F8"]["MARR"] = [dt.day, dt.month, dt.year]
             else:
-                # overwrite all Marriages as one day ago
                 dt = datetime.date.today()-datetime.timedelta(days=1)
-                self.famMap[id]["MARR"] = [dt.day, dt.month, dt.year]
 
-            us39_upcoming_anniversaries(self.indMap, fam, self.logger)
+            fam["MARR"] = [dt.day, dt.month, dt.year]
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us39_upcoming_anniversaries()
 
         ret = self.logger.get_logs()
         self.assertListEqual(expected_ret, ret,

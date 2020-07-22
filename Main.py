@@ -3,7 +3,7 @@ from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
 from Utils.Logger import Logger
-from Utils import UserStory14, UserStory15, UserStory17, UserStory18, UserStory30, UserStory31, UserStory16, UserStory39
+from Utils import UserStory14, UserStory15, UserStory17, UserStory18, UserStory30, UserStory31
 from Utils.Utils import normalize_family_entry
 import usrun
 from Utils.UserStory33 import find_all_orphans
@@ -76,12 +76,8 @@ for family_id in parsed_families:
     spousecheck = spouseCrossChecker(logger, family, parsed_individuals)
     spousecheck.us06_divBeforeDeat()
     spousecheck.us10_marrAfter14()
-
-    # add upcoming anniversaries to the logger
-    UserStory39.us39_upcoming_anniversaries(parsed_individuals, family, logger)
-
-    # User Story 16 - get families where the males don't all have the same last name
-    UserStory16.us16_male_last_names(parsed_individuals, family, logger)
+    spousecheck.us16_male_last_names()
+    spousecheck.us39_upcoming_anniversaries()
 
     children_by_age = sort_children_by_age(family, parsed_individuals)
     if len(children_by_age) == 0:
