@@ -179,7 +179,7 @@ else:
     logger.log_family_info(13, "All siblings in all families are twins or spaced more than 8 months apart")
 
 # User Story 16 - get families where the males don't all have the same last name
-ret = UserStory16.us16_male_last_names(individuals_from_db, families_from_db)
+ret = UserStory16.us16_male_last_names(ind_map, fam_map)
 if len(ret) == 0:
     print("All males in families have the same last name")
 else:
