@@ -1,5 +1,5 @@
 import unittest
-from Utils.UserStory16 import us16_male_last_names
+from Utils.UserStory16 import us16_male_last_names, normalize_family_entry
 
 
 #
@@ -12,15 +12,21 @@ from Utils.UserStory16 import us16_male_last_names
 class US16Test(unittest.TestCase):
     families = None
     individuals = None
+    indMap = None
+    famMap = None
 
     def setUp(self):
         self.families = []
         self.individuals = []
+        self.indMap = {}
+        self.famMap = {}
         self.seed_data()
 
     def tearDown(self):
         self.families = None
         self.individuals = None
+        self.indMap = None
+        self.famMap = None
 
     def seed_data(self):
         # seed family data - don't need individual data for this test suite
@@ -351,20 +357,25 @@ class US16Test(unittest.TestCase):
             "INDI": "I27"
          })
 
+        for ind in self.individuals:
+            self.indMap[ind["INDI"]] = ind
+        for fam in self.families:
+            self.famMap[fam["FAM"]] = normalize_family_entry(fam)
+
     def test_US16_noinputs(self):
         # bad inputs
         with self.assertRaises(Exception):
             us16_male_last_names(None, None)
 
         with self.assertRaises(Exception):
-            us16_male_last_names(self.families)
+            us16_male_last_names(self.famMap)
 
         with self.assertRaises(Exception):
-            us16_male_last_names(self.individuals)
+            us16_male_last_names(self.indMap)
 
     def test_US16_1family(self):
         # should to get 1 match
-        self.families[9] = {
+        self.famMap["F10"] = {
             "HUSB": ["I21"],
             "WIFE": ["I20"],
             "CHIL": ["I22", "I21"],
@@ -372,12 +383,12 @@ class US16Test(unittest.TestCase):
             "FAM": "F10",
             "NOTE": "MARSHALL/DUNPHY FAMILY"
          }
-        ret = us16_male_last_names(self.individuals, self.families)
+        ret = us16_male_last_names(self.indMap, self.famMap)
         self.assertEqual(len(ret), 1, "Did not get the expected results")
 
     def test_US16_1family_text(self):
         # should find 1 match and the following expected result
-        self.families[9] = {
+        self.famMap["F10"] = {
             "HUSB": ["I21"],
             "WIFE": ["I20"],
             "CHIL": ["I22", "I21"],
@@ -385,17 +396,15 @@ class US16Test(unittest.TestCase):
             "FAM": "F10",
             "NOTE": "MARSHALL/DUNPHY FAMILY"
          }
-        expected_ret = [{
-            'FAM': 'F4',
-            'LNAMES': ['Pritchett', 'Tucker', 'Tucker-Pritchett']
-         }]
-        ret = us16_male_last_names(self.individuals, self.families)
+        expected_ret = [{'FAM': 'F4', 
+                         'LNAMES': {'Tucker', 'Pritchett', 'Tucker-Pritchett'}}]
+        ret = us16_male_last_names(self.indMap, self.famMap)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
     def test_US16_2family(self):
         # should get 1 match
-        ret = us16_male_last_names(self.individuals, self.families)
+        ret = us16_male_last_names(self.indMap, self.famMap)
         self.assertEqual(len(ret), 2, "Did not get the expected results")
 
     def test_US16_2family_text(self):
@@ -404,21 +413,21 @@ class US16Test(unittest.TestCase):
         expected_ret = [
             {
                 'FAM': 'F4',
-                'LNAMES': ['Pritchett', 'Tucker', 'Tucker-Pritchett']
+                'LNAMES': {'Tucker', 'Pritchett', 'Tucker-Pritchett'}
              },
             {
                 'FAM': 'F10',
-                'LNAMES': ['Marshall', 'Hastings']
+                'LNAMES': {'Marshall', 'Hastings'}
              }
          ]
 
-        ret = us16_male_last_names(self.individuals, self.families)
+        ret = us16_male_last_names(self.indMap, self.famMap)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
     def test_US16_nomatches(self):
         # Remove the family where parent is married to a child
-        self.families[9] = {
+        self.famMap["F10"] = {
             "HUSB": ["I21"],
             "WIFE": ["I20"],
             "CHIL": ["I22", "I21"],
@@ -426,7 +435,7 @@ class US16Test(unittest.TestCase):
             "FAM": "F10",
             "NOTE": "MARSHALL/DUNPHY FAMILY"
          }
-        self.individuals[4] = {
+        self.indMap["I5"] = {
             "NAME": "Cameron/Pritchett/",
             "SEX": "M",
             "BIRT": [29, 2, 1972],
@@ -435,7 +444,7 @@ class US16Test(unittest.TestCase):
             "AGE": 48,
             "INDI": "I5"
          }
-        self.individuals[14] = {
+        self.indMap["I14"] = {
             "NAME": "Lily/Pritchett/",
             "SEX": "F",
             "BIRT": [19, 2, 2008],
@@ -443,7 +452,7 @@ class US16Test(unittest.TestCase):
             "AGE": 12,
             "INDI": "I14"
          }
-        self.individuals[15] = {
+        self.indMap["I15"] = {
             "NAME": "Rexford/Pritchett/",
             "SEX": "M",
             "BIRT": [1, 4, 2020],
@@ -451,7 +460,7 @@ class US16Test(unittest.TestCase):
             "AGE": 0,
             "INDI": "I15"
          }
-        self.individuals[16] = {
+        self.indMap["I16"] = {
             "NAME": "Merle/Pritchett/",
             "SEX": "M",
             "BIRT": [1, 1, 1943],
@@ -460,12 +469,12 @@ class US16Test(unittest.TestCase):
             "INDI": "I16"
          }
 
-        ret = us16_male_last_names(self.individuals, self.families)
+        ret = us16_male_last_names(self.indMap, self.famMap)
         self.assertEqual(len(ret), 0, "Did not get the expected results")
 
     def test_US16_nomatches_text(self):
         # Remove the family where parent is married to a child
-        self.families[9] = {
+        self.famMap["F10"] = {
             "HUSB": ["I21"],
             "WIFE": ["I20"],
             "CHIL": ["I22", "I21"],
@@ -473,7 +482,7 @@ class US16Test(unittest.TestCase):
             "FAM": "F10",
             "NOTE": "MARSHALL/DUNPHY FAMILY"
          }
-        self.individuals[4] = {
+        self.indMap["I5"] = {
             "NAME": "Cameron/Pritchett/",
             "SEX": "M",
             "BIRT": [29, 2, 1972],
@@ -482,14 +491,14 @@ class US16Test(unittest.TestCase):
             "AGE": 48,
             "INDI": "I5"
          }
-        self.individuals[14] = {
+        self.indMap["I14"] = {
             "NAME": "Lily/Pritchett/",
             "SEX": "F",
             "BIRT": [19, 2, 2008],
             "FAMC": ["F4"], "AGE": 12,
             "INDI": "I14"
          }
-        self.individuals[15] = {
+        self.indMap["I15"] = {
             "NAME": "Rexford/Pritchett/",
             "SEX": "M",
             "BIRT": [1, 4, 2020],
@@ -497,7 +506,7 @@ class US16Test(unittest.TestCase):
             "AGE": 0,
             "INDI": "I15"
          }
-        self.individuals[16] = {
+        self.indMap["I16"] = {
             "NAME": "Merle/Pritchett/",
             "SEX": "M",
             "BIRT": [1, 1, 1943],
@@ -506,7 +515,7 @@ class US16Test(unittest.TestCase):
          }
 
         expected_ret = []
-        ret = us16_male_last_names(self.individuals, self.families)
+        ret = us16_male_last_names(self.indMap, self.famMap)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
