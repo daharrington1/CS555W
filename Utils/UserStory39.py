@@ -10,6 +10,9 @@ def us39_upcoming_anniversaries(ind_map, fam, logger):
     :param Individuals and Family lists
     :returns List of all living couples with upcoming anniversaries
     """
+    if (ind_map is None) or (fam is None) or (logger is None):
+        raise Exception(ValueError, "Missing Inputs")
+
     # build map of id to mail last names
     # check non-divorced couples and non-widowers
     # print("\nfam: {}".format(fam))

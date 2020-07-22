@@ -182,7 +182,6 @@ class US39Test(unittest.TestCase):
         # should no matches
 
         self.logger.clear_logs()
-        ret = self.logger.get_logs()
         for id, fam in self.famMap.items():
 
             if id == "F10":
@@ -202,7 +201,6 @@ class US39Test(unittest.TestCase):
     def test_US39_1dayLater(self):
         # should no matches
         self.logger.clear_logs()
-        ret = self.logger.get_logs()
         for id, fam in self.famMap.items():
 
             if id == "F10":

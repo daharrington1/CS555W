@@ -1,5 +1,7 @@
 import unittest
-from Utils.UserStory16 import us16_male_last_names, normalize_family_entry
+from Utils.UserStory16 import us16_male_last_names
+from Utils.Utils import normalize_family_entry
+from Utils.Logger import Logger
 
 
 #
@@ -14,12 +16,14 @@ class US16Test(unittest.TestCase):
     individuals = None
     indMap = None
     famMap = None
+    logger = None
 
     def setUp(self):
         self.families = []
         self.individuals = []
         self.indMap = {}
         self.famMap = {}
+        self.logger = Logger()
         self.seed_data()
 
     def tearDown(self):
@@ -27,6 +31,7 @@ class US16Test(unittest.TestCase):
         self.individuals = None
         self.indMap = None
         self.famMap = None
+        self.logger = None
 
     def seed_data(self):
         # seed family data - don't need individual data for this test suite
@@ -365,10 +370,7 @@ class US16Test(unittest.TestCase):
     def test_US16_noinputs(self):
         # bad inputs
         with self.assertRaises(Exception):
-            us16_male_last_names(None, None)
-
-        with self.assertRaises(Exception):
-            us16_male_last_names(self.famMap)
+            us16_male_last_names(None, None, None)
 
         with self.assertRaises(Exception):
             us16_male_last_names(self.indMap)
@@ -383,7 +385,12 @@ class US16Test(unittest.TestCase):
             "FAM": "F10",
             "NOTE": "MARSHALL/DUNPHY FAMILY"
          }
-        ret = us16_male_last_names(self.indMap, self.famMap)
+
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            us16_male_last_names(self.indMap, normalize_family_entry(fam), self.logger)
+
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 1, "Did not get the expected results")
 
     def test_US16_1family_text(self):
@@ -396,32 +403,48 @@ class US16Test(unittest.TestCase):
             "FAM": "F10",
             "NOTE": "MARSHALL/DUNPHY FAMILY"
          }
-        expected_ret = [{'FAM': 'F4', 
-                         'LNAMES': {'Tucker', 'Pritchett', 'Tucker-Pritchett'}}]
-        ret = us16_male_last_names(self.indMap, self.famMap)
+
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            us16_male_last_names(self.indMap, normalize_family_entry(fam), self.logger)
+
+        ret = self.logger.get_logs()
+
+        expected_ret = [('Warning', 'Family', 16,
+                         "F4 has multiple last names: ['Pritchett', 'Tucker', 'Tucker-Pritchett']")]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
     def test_US16_2family(self):
         # should get 1 match
-        ret = us16_male_last_names(self.indMap, self.famMap)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            us16_male_last_names(self.indMap, normalize_family_entry(fam), self.logger)
+
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 2, "Did not get the expected results")
 
     def test_US16_2family_text(self):
         # should find 1 match and the following expected result
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            us16_male_last_names(self.indMap, normalize_family_entry(fam), self.logger)
 
+        ret = self.logger.get_logs()
         expected_ret = [
-            {
-                'FAM': 'F4',
-                'LNAMES': {'Tucker', 'Pritchett', 'Tucker-Pritchett'}
-             },
-            {
-                'FAM': 'F10',
-                'LNAMES': {'Marshall', 'Hastings'}
-             }
+            (
+                'Warning',
+                'Family',
+                16,
+                "F4 has multiple last names: ['Pritchett', 'Tucker', 'Tucker-Pritchett']"
+            ),
+            (
+                'Warning',
+                'Family',
+                16,
+                "F10 has multiple last names: ['Hastings', 'Marshall']"
+            )
          ]
-
-        ret = us16_male_last_names(self.indMap, self.famMap)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
@@ -469,7 +492,11 @@ class US16Test(unittest.TestCase):
             "INDI": "I16"
          }
 
-        ret = us16_male_last_names(self.indMap, self.famMap)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            us16_male_last_names(self.indMap, normalize_family_entry(fam), self.logger)
+
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 0, "Did not get the expected results")
 
     def test_US16_nomatches_text(self):
@@ -514,8 +541,12 @@ class US16Test(unittest.TestCase):
             "INDI": "I16"
          }
 
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            us16_male_last_names(self.indMap, normalize_family_entry(fam), self.logger)
+
+        ret = self.logger.get_logs()
         expected_ret = []
-        ret = us16_male_last_names(self.indMap, self.famMap)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
