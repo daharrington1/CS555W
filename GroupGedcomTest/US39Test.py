@@ -1,6 +1,5 @@
 import unittest
 from Utils.UserStory39 import us39_upcoming_anniversaries
-from Utils.Utils import normalize_family_entry
 from Utils.Logger import Logger
 import datetime
 
@@ -149,7 +148,7 @@ class US39Test(unittest.TestCase):
             self.indMap[ind["INDI"]] = ind
 
         for fam in self.families:
-            self.famMap[fam["FAM"]] = normalize_family_entry(fam)
+            self.famMap[fam["FAM"]] = fam
 
     def test_US39_noinputs(self):
         # bad inputs

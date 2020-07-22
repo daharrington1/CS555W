@@ -1,6 +1,5 @@
 import unittest
 from Utils.UserStory16 import us16_male_last_names
-from Utils.Utils import normalize_family_entry
 from Utils.Logger import Logger
 
 
@@ -365,7 +364,7 @@ class US16Test(unittest.TestCase):
         for ind in self.individuals:
             self.indMap[ind["INDI"]] = ind
         for fam in self.families:
-            self.famMap[fam["FAM"]] = normalize_family_entry(fam)
+            self.famMap[fam["FAM"]] = fam
 
     def test_US16_noinputs(self):
         # bad inputs
@@ -388,7 +387,7 @@ class US16Test(unittest.TestCase):
 
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
-            us16_male_last_names(self.indMap, normalize_family_entry(fam), self.logger)
+            us16_male_last_names(self.indMap, fam, self.logger)
 
         ret = self.logger.get_logs()
         self.assertEqual(len(ret), 1, "Did not get the expected results")
@@ -406,7 +405,7 @@ class US16Test(unittest.TestCase):
 
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
-            us16_male_last_names(self.indMap, normalize_family_entry(fam), self.logger)
+            us16_male_last_names(self.indMap, fam, self.logger)
 
         ret = self.logger.get_logs()
 
@@ -419,7 +418,7 @@ class US16Test(unittest.TestCase):
         # should get 1 match
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
-            us16_male_last_names(self.indMap, normalize_family_entry(fam), self.logger)
+            us16_male_last_names(self.indMap, fam, self.logger)
 
         ret = self.logger.get_logs()
         self.assertEqual(len(ret), 2, "Did not get the expected results")
@@ -428,7 +427,7 @@ class US16Test(unittest.TestCase):
         # should find 1 match and the following expected result
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
-            us16_male_last_names(self.indMap, normalize_family_entry(fam), self.logger)
+            us16_male_last_names(self.indMap, fam, self.logger)
 
         ret = self.logger.get_logs()
         expected_ret = [
@@ -494,7 +493,7 @@ class US16Test(unittest.TestCase):
 
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
-            us16_male_last_names(self.indMap, normalize_family_entry(fam), self.logger)
+            us16_male_last_names(self.indMap, fam, self.logger)
 
         ret = self.logger.get_logs()
         self.assertEqual(len(ret), 0, "Did not get the expected results")
@@ -543,7 +542,7 @@ class US16Test(unittest.TestCase):
 
         self.logger.clear_logs()
         for id, fam in self.famMap.items():
-            us16_male_last_names(self.indMap, normalize_family_entry(fam), self.logger)
+            us16_male_last_names(self.indMap, fam, self.logger)
 
         ret = self.logger.get_logs()
         expected_ret = []

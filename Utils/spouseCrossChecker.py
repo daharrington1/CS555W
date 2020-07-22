@@ -32,7 +32,7 @@ class spouseCrossChecker:
                 for w in ws:
                     result.append(individuals[w])
         return result
-    
+
     def us06_divBeforeDeat(self):
         if 'DIV' not in self.fam:
             return

@@ -78,10 +78,10 @@ for family_id in parsed_families:
     spousecheck.us10_marrAfter14()
 
     # add upcoming anniversaries to the logger
-    UserStory39.us39_upcoming_anniversaries(parsed_individuals, normalize_family_entry(family), logger)
+    UserStory39.us39_upcoming_anniversaries(parsed_individuals, family, logger)
 
     # User Story 16 - get families where the males don't all have the same last name
-    UserStory16.us16_male_last_names(parsed_individuals, normalize_family_entry(family), logger)
+    UserStory16.us16_male_last_names(parsed_individuals, family, logger)
 
     children_by_age = sort_children_by_age(family, parsed_individuals)
     if len(children_by_age) == 0:

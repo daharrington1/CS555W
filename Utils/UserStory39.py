@@ -1,4 +1,4 @@
-from Utils.Utils import getSpouses, check_dates
+from Utils.Utils import getSpouses, check_dates, normalize_family_entry
 import datetime
 
 
@@ -16,6 +16,8 @@ def us39_upcoming_anniversaries(ind_map, fam, logger):
     # build map of id to mail last names
     # check non-divorced couples and non-widowers
     # print("\nfam: {}".format(fam))
+    fam = normalize_family_entry(fam)
+
     if len(fam["DIV"]) > 0:
         return
 

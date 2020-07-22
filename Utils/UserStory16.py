@@ -11,6 +11,7 @@ def us16_male_last_names(indMap, fam, logger):
     if (indMap is None) or (fam is None) or (logger is None):
         raise Exception(ValueError, "Missing Inputs")
 
+    fam = normalize_family_entry(fam)
     lastNames = set()   # define as set to be unique names
 
     # look at all mail spouses
