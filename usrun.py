@@ -120,12 +120,12 @@ def upcoming_birthdays(individuals_from_db):
         if current_date.month == 12 and current_date.day > 1:
             try:
                 date = datetime.datetime(current_date.year + 1, one['BIRT'][1], one['BIRT'][0])
-            except:
+            except Exception:
                 continue
         else:
             try:
                 date = datetime.datetime(current_date.year, one['BIRT'][1], one['BIRT'][0])
-            except:
+            except Exception:
                 continue
         if datetime.timedelta(days=0) < date - current_date < datetime.timedelta(days=30):
             ret.append((one['INDI'], months[one['BIRT'][1]] + ' ' + str(one['BIRT'][0])))

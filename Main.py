@@ -78,7 +78,10 @@ for family_id in parsed_families:
     spousecheck.us10_marrAfter14()
 
     # add upcoming anniversaries to the logger
-    UserStory39.us39_upcoming_anniversaries(parsed_individuals, normalize_family_entry(family), logger)
+    UserStory39.us39_upcoming_anniversaries(parsed_individuals, family, logger)
+
+    # User Story 16 - get families where the males don't all have the same last name
+    UserStory16.us16_male_last_names(parsed_individuals, family, logger)
 
     children_by_age = sort_children_by_age(family, parsed_individuals)
     if len(children_by_age) == 0:
@@ -178,13 +181,6 @@ if len(invalid_spaced_siblings) > 0:
 else:
     logger.log_family_info(13, "All siblings in all families are twins or spaced more than 8 months apart")
 
-# User Story 16 - get families where the males don't all have the same last name
-ret = UserStory16.us16_male_last_names(ind_map, fam_map)
-if len(ret) == 0:
-    print("All males in families have the same last name")
-else:
-    for fam in ret:
-        logger.log_family_warning(16, "{} has multiple last names: {}".format(fam["FAM"], fam["LNAMES"]))
 
 # siblings more than 15
 ret = UserStory15.us15_sibling_count(fam_map, 15)
