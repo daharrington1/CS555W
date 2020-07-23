@@ -3,7 +3,7 @@ from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
 from Utils.Logger import Logger
-from Utils import UserStory14, UserStory15, UserStory30, UserStory31
+from Utils import UserStory14, UserStory30, UserStory31
 from Utils.Utils import normalize_family_entry, getParent2ChildrenMap
 import usrun
 from Utils.UserStory33 import find_all_orphans
@@ -78,6 +78,7 @@ for family_id in parsed_families:
     spousecheck = spouseCrossChecker(logger, family, parsed_individuals)
     spousecheck.us06_divBeforeDeat()
     spousecheck.us10_marrAfter14()
+    spousecheck.us15_sibling_count()
     spousecheck.us16_male_last_names()
     spousecheck.us17_no_marr2child(parentId2Children)
     spousecheck.us18_no_siblingmarriages(parentId2Children)
@@ -164,17 +165,6 @@ if len(invalid_spaced_siblings) > 0:
                                       .format(invalid_sibling_id))
 else:
     logger.log_family_info(13, "All siblings in all families are twins or spaced more than 8 months apart")
-
-
-# siblings more than 15
-ret = UserStory15.us15_sibling_count(fam_map, 15)
-if len(ret) == 0:
-    logger.log_family_info(15, "No sibling count greater than 15 in the same family")
-else:
-    for id, siblings in ret:
-        logger.log_family_warning(15, "Family {}: as more than 15 children {}".format(
-                               id,
-                               ", ".join(siblings)))
 
 # Multiple births more than 5
 ret = UserStory14.us14_mult_births(ind_map, fam_map, 5)

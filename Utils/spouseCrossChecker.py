@@ -103,6 +103,19 @@ class spouseCrossChecker:
 
         return mySpouses
 
+    def _sibling_count(self, count=1):
+        """
+        Logs families with siblings greating than a given count
+
+        :param object parameters and a count value (i.e. 15)
+        :returns None
+        """
+        fam = self._normalize_family()
+        # can't have more than 15 siblings in a family - includes half-siblings
+        if len(fam["CHIL"]) >= count:
+            self.logger.log_family_warning(15, "Family {} has {} or more children ({})".format(
+                                           fam["FAM"], count, len(fam["CHIL"])))
+
     def us16_male_last_names(self):
         """
         User Story 16: Logs Males in the same family with different  Last Names
@@ -214,3 +227,14 @@ class spouseCrossChecker:
             if len(set(siblings).intersection(set(spouses))) > 1:
                 self.logger.log_family_error(18, "{} has siblings as parents: {}".format(fam["FAM"], sorted(spouses)))
                 return
+
+    def us15_sibling_count(self):
+        """
+        User Story 15: Log families with 15 or more siblings
+        Per Customer (i.e. Prof Rowland) - only need to look at immediate families
+           and not include half-siblings
+
+        :param object parameters and a count value (i.e. 15)
+        :returns List of Siblings greater than the count
+        """
+        self._sibling_count(15)
