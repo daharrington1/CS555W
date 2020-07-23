@@ -77,7 +77,7 @@ def getParent2ChildrenMap(fam_map):
 
     # build parent to child mapping
     for fam_id, fam in fam_map.items():
-        fam=normalize_family_entry(fam)
+        fam = normalize_family_entry(fam)
         for child in fam["CHIL"]:
             for spouse in getSpouses(fam):
                 if spouse in parentId2Children and child not in parentId2Children[spouse]:
