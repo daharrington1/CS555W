@@ -1,6 +1,7 @@
 import unittest
-from Utils.UserStory17 import us17_no_marr2child
-from Utils.Utils import normalize_family_entry
+from Utils.Logger import Logger
+from Utils.spouseCrossChecker import spouseCrossChecker
+from Utils.Utils import getParent2ChildrenMap, normalize_family_entry
 
 
 #
@@ -15,19 +16,28 @@ class US17Test(unittest.TestCase):
     individuals = None
     famMap = None
     indMap = None
+    logger = None
+    spousecheck = None
+    parentId2Children = None
 
     def setUp(self):
         self.families = []
         self.individuals = []
         self.famMap = {}
         self.indMap = {}
+        self.logger = Logger()
         self.seed_data()
+        self.spousecheck = None
+        parentId2Children = None
 
     def tearDown(self):
         self.families = None
         self.individuals = None
         self.famMap = None
         self.indMap = None
+        self.logger = None
+        self.spousecheck = None
+        parentId2Children = None
 
     def seed_data(self):
         # seed initial testing data
@@ -363,31 +373,29 @@ class US17Test(unittest.TestCase):
         for fam in self.families:
             self.famMap[fam["FAM"]] = normalize_family_entry(fam)
 
-    def test_US17_noinputs(self):
-        # bad inputs
-        with self.assertRaises(Exception):
-            us17_no_marr2child(None, None)
-
-        with self.assertRaises(Exception):
-            us17_no_marr2child(self.families)
-
-        with self.assertRaises(Exception):
-            us17_no_marr2child(self.individuals)
-
     def test_US17_1family(self):
         # should to get 1 match
-        ret = us17_no_marr2child(self.indMap, self.famMap)
+        self.logger.clear_logs()
+        self.parentId2Children = getParent2ChildrenMap(self.famMap)
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us17_no_marr2child(self.parentId2Children)
+
+        ret=self.logger.get_logs()
         self.assertEqual(len(ret), 1, "Did not get the expected results")
 
     def test_US17_1family_text(self):
         # should find 1 match and the following expected result
-        expected_ret = [{
-            'Spouse': 'I27',
-            'MySpouse': 'I26',
-            'FAM': 'F11',
-            'MyChildren': ['I26']
-         }]
-        ret = us17_no_marr2child(self.indMap, self.famMap)
+        self.logger.clear_logs()
+        self.parentId2Children = getParent2ChildrenMap(self.famMap)
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us17_no_marr2child(self.parentId2Children)
+
+
+        ret=self.logger.get_logs()
+        dtstr = "F11: My spouse (I26) is one of my children: Parent (I27), Children (['I26'])";
+        expected_ret = [('Error', 'Family', 17, dtstr)]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
@@ -410,7 +418,13 @@ class US17Test(unittest.TestCase):
             "FAM": "F7"
          }
 
-        ret = us17_no_marr2child(self.indMap, self.famMap)
+        self.logger.clear_logs()
+        self.parentId2Children = getParent2ChildrenMap(self.famMap)
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us17_no_marr2child(self.parentId2Children)
+
+        ret=self.logger.get_logs()
         self.assertEqual(len(ret), 2, "Did not get the expected results")
 
     def test_US17_2family_text(self):
@@ -432,22 +446,16 @@ class US17Test(unittest.TestCase):
             "NOTE": "FRANK/GRACE FAMILY",
             "FAM": "F7"
          }
+        self.logger.clear_logs()
+        self.parentId2Children = getParent2ChildrenMap(self.famMap)
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us17_no_marr2child(self.parentId2Children)
 
-        expected_ret = [
-           {
-                'Spouse': 'I11',
-                'MySpouse': 'I12',
-                'FAM': 'F8',
-                'MyChildren': ['I7', 'I12']
-            },
-           {
-                'Spouse': 'I27',
-                'MySpouse': 'I26',
-                'FAM': 'F11',
-                'MyChildren': ['I26']
-            }
-         ]
-        ret = us17_no_marr2child(self.indMap, self.famMap)
+        ret=self.logger.get_logs()
+        str1 = "F8: My spouse (I12) is one of my children: Parent (I11), Children (['I7', 'I12'])"
+        str2 = "F11: My spouse (I26) is one of my children: Parent (I27), Children (['I26'])"
+        expected_ret = [('Error', 'Family', 17, str1), ('Error', 'Family', 17, str2)]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
@@ -479,27 +487,17 @@ class US17Test(unittest.TestCase):
             "WIFE": []
          }
 
-        expected_ret = [
-            {
-                'Spouse': 'I4',
-                'MySpouse': 'I5',
-                'FAM': 'F4',
-                'MyChildren': ['I14', 'I15', 'I5']
-             },
-            {
-                'Spouse': 'I11',
-                'MySpouse': 'I12',
-                'FAM': 'F8',
-                'MyChildren': ['I7', 'I12']
-             },
-            {
-                'Spouse': 'I27',
-                'MySpouse': 'I26',
-                'FAM': 'F11',
-                'MyChildren': ['I26']
-             }
-         ]
-        ret = us17_no_marr2child(self.indMap, self.famMap)
+        self.logger.clear_logs()
+        self.parentId2Children = getParent2ChildrenMap(self.famMap)
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us17_no_marr2child(self.parentId2Children)
+
+        ret=self.logger.get_logs()
+        str1 = "F4: My spouse (I5) is one of my children: Parent (I4), Children (['I14', 'I15', 'I5'])"
+        str2 = "F8: My spouse (I12) is one of my children: Parent (I11), Children (['I7', 'I12'])"
+        str3 = "F11: My spouse (I26) is one of my children: Parent (I27), Children (['I26'])"
+        expected_ret = [('Error', 'Family', 17, str1), ('Error', 'Family', 17, str2), ('Error', 'Family', 17, str3)]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
@@ -514,7 +512,13 @@ class US17Test(unittest.TestCase):
             "FAM": "F11"
          }
 
-        ret = us17_no_marr2child(self.indMap, self.famMap)
+        self.logger.clear_logs()
+        self.parentId2Children = getParent2ChildrenMap(self.famMap)
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us17_no_marr2child(self.parentId2Children)
+
+        ret=self.logger.get_logs()
         self.assertEqual(len(ret), 0, "Did not get the expected results")
 
     def test_US17_nomatches_text(self):
@@ -528,8 +532,14 @@ class US17Test(unittest.TestCase):
             "FAM": "F11"
          }
 
+        self.logger.clear_logs()
+        self.parentId2Children = getParent2ChildrenMap(self.famMap)
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us17_no_marr2child(self.parentId2Children)
+
         expected_ret = []
-        ret = us17_no_marr2child(self.indMap, self.famMap)
+        ret=self.logger.get_logs()
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
