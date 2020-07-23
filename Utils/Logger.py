@@ -48,6 +48,8 @@ class Logger:
     _family_collection = "Family"
 
     _outputMessages = []
+    _backlog = [1, 7, 17, 18, 29, 23, 24, 32, 2, 3, 30, 31, 42, 33, 38, 11, 4, 5, 16, 39, 21, 13, 12, 19, 6, 10, 14, 15, 35, 28, 34, 36]
+    _catched = []
 
     def _log(self, level, collection, use_case, error_message):
         """
@@ -59,7 +61,13 @@ class Logger:
         :return: None
         """
         self._outputMessages.append((level, collection, use_case, error_message))
-
+        self._catched.append(use_case)
+   
+    def team_use(self):
+        for case in self._backlog:
+            if case not in self._catched:
+                print("US ", case, " unfinished")
+        
     # Public Wrapper functions to increase readability from calling code
 
     def log_individual_error(self, use_case, error_message):
