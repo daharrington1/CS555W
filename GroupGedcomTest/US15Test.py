@@ -1,5 +1,6 @@
 import unittest
-from Utils.UserStory15 import us15_sibling_count
+from Utils.Logger import Logger
+from Utils.spouseCrossChecker import spouseCrossChecker
 from Utils.Utils import normalize_family_entry
 
 
@@ -17,19 +18,28 @@ class US15Test(unittest.TestCase):
     individuals = None
     famMap = None
     indMap = None
+    logger = None
+    spousecheck = None
+    parentId2Children = None
 
     def setUp(self):
         self.families = []
         self.individuals = []
         self.famMap = {}
         self.indMap = {}
+        self.logger = Logger()
         self.seed_data()
+        self.spousecheck = None
+        self.parentId2Children = None
 
     def tearDown(self):
         self.families = None
         self.individuals = None
         self.famMap = None
         self.indMap = None
+        self.logger = None
+        self.spousecheck = None
+        self.parentId2Children = None
 
     def seed_data(self):
         # seed initial testing data
@@ -365,126 +375,140 @@ class US15Test(unittest.TestCase):
         for fam in self.families:
             self.famMap[fam["FAM"]] = normalize_family_entry(fam)
 
-    def test_US15_noinputs(self):
-        # bad inputs
-        with self.assertRaises(Exception):
-            us15_sibling_count(None, None)
-
-        with self.assertRaises(Exception):
-            us15_sibling_count(self.indMap)
-
     def test_US15_DefaultCount(self):
         # should return 10 families with siblings
-        ret = us15_sibling_count(self.famMap)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._sibling_count()
+
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 10,
                          "Did not get the expected results")
 
     def test_US15_DefaultOneText(self):
         # should get the following families with siblings
-        expected_ret = [('F1', ['I10']),
-                        ('F2', ['I4', 'I6']),
-                        ('F3', ['I9']),
-                        ('F4', ['I14', 'I15', 'I4', 'I5']),
-                        ('F5', ['I15', 'I5']),
-                        ('F6', ['I20', 'I24', 'I25']),
-                        ('F7', ['I7']),
-                        ('F9', ['I19']),
-                        ('F10', ['I22', 'I23']),
-                        ('F11', ['I26'])]
-        ret = us15_sibling_count(self.famMap)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._sibling_count()
+
+        expected_ret = [
+            ('Warning', 'Family', 15, 'Family F1 has 1 or more children (1)'),
+            ('Warning', 'Family', 15, 'Family F2 has 1 or more children (2)'),
+            ('Warning', 'Family', 15, 'Family F3 has 1 or more children (1)'),
+            ('Warning', 'Family', 15, 'Family F4 has 1 or more children (4)'),
+            ('Warning', 'Family', 15, 'Family F5 has 1 or more children (2)'),
+            ('Warning', 'Family', 15, 'Family F6 has 1 or more children (3)'),
+            ('Warning', 'Family', 15, 'Family F7 has 1 or more children (1)'),
+            ('Warning', 'Family', 15, 'Family F9 has 1 or more children (1)'),
+            ('Warning', 'Family', 15, 'Family F10 has 1 or more children (2)'),
+            ('Warning', 'Family', 15, 'Family F11 has 1 or more children (1)')
+        ]
+
+        ret = self.logger.get_logs()
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
-        self.assertEqual(len(ret[0][1]), 1,
-                         "Did not match entry 1 length")
-        self.assertEqual(len(ret[1][1]), 2,
-                         "Did not match entry 1 length")
-        self.assertEqual(len(ret[2][1]), 1,
-                         "Did not match entry 1 length")
-        self.assertEqual(len(ret[3][1]), 4,
-                         "Did not match entry 1 length")
-        self.assertEqual(len(ret[4][1]), 2,
-                         "Did not match entry 1 length")
-        self.assertEqual(len(ret[5][1]), 3,
-                         "Did not match entry 1 length")
-        self.assertEqual(len(ret[6][1]), 1,
-                         "Did not match entry 1 length")
-        self.assertEqual(len(ret[7][1]), 1,
-                         "Did not match entry 1 length")
-        self.assertEqual(len(ret[8][1]), 2,
-                         "Did not match entry 1 length")
-        self.assertEqual(len(ret[9][1]), 1,
-                         "Did not match entry 1 length")
 
     def test_US15_TwoOrMore(self):
         # should get 5 families with 2 or more siblings
-        ret = us15_sibling_count(self.famMap, 2)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._sibling_count(2)
+
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 5,
                          "Did not get the expected results")
 
     def test_US15_TwoOrMoreText(self):
         # should get 5 families with 2 or more siblings
-        expected_ret = [('F2', ['I4', 'I6']),
-                        ('F4', ['I14', 'I15', 'I4', 'I5']),
-                        ('F5', ['I15', 'I5']),
-                        ('F6', ['I20', 'I24', 'I25']),
-                        ('F10', ['I22', 'I23'])]
-        ret = us15_sibling_count(self.famMap, 2)
+        expected_ret = [
+            ('Warning', 'Family', 15, 'Family F2 has 2 or more children (2)'),
+            ('Warning', 'Family', 15, 'Family F4 has 2 or more children (4)'),
+            ('Warning', 'Family', 15, 'Family F5 has 2 or more children (2)'),
+            ('Warning', 'Family', 15, 'Family F6 has 2 or more children (3)'),
+            ('Warning', 'Family', 15, 'Family F10 has 2 or more children (2)')
+        ]
+
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._sibling_count(2)
+
+        ret = self.logger.get_logs()
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
-        self.assertEqual(len(ret[0][1]), 2,
-                         "Did not match entry 1 length")
-        self.assertEqual(len(ret[1][1]), 4,
-                         "Did not match entry 1 length")
-        self.assertEqual(len(ret[2][1]), 2,
-                         "Did not match entry 1 length")
-        self.assertEqual(len(ret[3][1]), 3,
-                         "Did not match entry 1 length")
-        self.assertEqual(len(ret[4][1]), 2,
-                         "Did not match entry 1 length")
 
     def test_US15_ThreeOrMore(self):
         # should get 2 families with 3 or more siblings
-        ret = us15_sibling_count(self.famMap, 3)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._sibling_count(3)
+
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 2,
                          "Did not get the expected results")
 
     def test_US15_ThreeOrMoreText(self):
         # should get 2 families with 3 or more siblings
-        expected_ret = [('F4', ['I14', 'I15', 'I4', 'I5']),
-                        ('F6', ['I20', 'I24', 'I25'])]
-        ret = us15_sibling_count(self.famMap, 3)
+        expected_ret = [
+            ('Warning', 'Family', 15, 'Family F4 has 3 or more children (4)'),
+            ('Warning', 'Family', 15, 'Family F6 has 3 or more children (3)')
+        ]
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._sibling_count(3)
+
+        ret = self.logger.get_logs()
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
-        self.assertEqual(len(ret[0][1]), 4,
-                         "Did not match entry 1 length")
-        self.assertEqual(len(ret[1][1]), 3,
-                         "Did not match entry 1 length")
 
     def test_US15_FourOrMore(self):
         # should get 1 family with 4 or more siblings
-        ret = us15_sibling_count(self.famMap, 4)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._sibling_count(4)
+
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 1,
                          "Did not get the expected results")
 
     def test_US15_FourOrMoreText(self):
         # should get 1 family with 4 or more siblings
-        expected_ret = [('F4', ['I14', 'I15', 'I4', 'I5'])]
-        ret = us15_sibling_count(self.famMap, 4)
+        expected_ret = [('Warning', 'Family', 15, 'Family F4 has 4 or more children (4)')]
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._sibling_count(4)
+
+        ret = self.logger.get_logs()
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
-        self.assertEqual(len(ret[0][1]), 4,
-                         "Did not match entry 1 length")
 
     def test_US15_FiveOrMore(self):
         # should get zero family with 5 or more siblings
-        ret = us15_sibling_count(self.famMap, 5)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._sibling_count(5)
+
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 0,
                          "Did not get the expected results")
 
     def test_US15_FiveOrMoreText(self):
         # should get zero family with 5 or more siblings
         expected_ret = []
-        ret = us15_sibling_count(self.famMap, 5)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._sibling_count(5)
+
+        ret = self.logger.get_logs()
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
@@ -501,7 +525,12 @@ class US15Test(unittest.TestCase):
             }
             self.famMap["F4"]["CHIL"].append("I" + str(i))
 
-        ret = us15_sibling_count(self.famMap, 15)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us15_sibling_count()
+
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 1,
                          "Did not get the expected results")
 
@@ -518,13 +547,15 @@ class US15Test(unittest.TestCase):
             }
             self.famMap["F4"]["CHIL"].append("I" + str(i))
 
-        expected_ret = [('F4', ['I14', 'I15', 'I28', 'I29', 'I30', 'I31', 'I32', 'I33', 'I34',
-                         'I35', 'I36', 'I37', 'I38', 'I4', 'I5'])]
-        ret = us15_sibling_count(self.famMap, 15)
+        expected_ret = [('Warning', 'Family', 15, 'Family F4 has 15 or more children (15)')]
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us15_sibling_count()
+
+        ret = self.logger.get_logs()
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
-        self.assertEqual(len(ret[0][1]), 15,
-                         "Did not match entry 1 length")
 
     def test_US15_SixteenorMore(self):
         # add in siblings to family 4 to make 15 - should get one family to match 15 or greater
@@ -539,15 +570,15 @@ class US15Test(unittest.TestCase):
             }
             self.famMap["F4"]["CHIL"].append("I" + str(i))
 
-        expected_ret = [('F4', ['I14', 'I15', 'I28', 'I29', 'I30', 'I31', 'I32', 'I33', 'I34',
-                         'I35', 'I36', 'I37', 'I38', 'I39', 'I4', 'I5'])]
-        ret = us15_sibling_count(self.famMap, 15)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us15_sibling_count()
+
+        expected_ret = [('Warning', 'Family', 15, 'Family F4 has 15 or more children (16)')]
+        ret = self.logger.get_logs()
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
-        self.assertEqual(len(ret), 1,
-                         "Did not match entry 1 length")
-        self.assertEqual(len(ret[0][1]), 16,
-                         "Did not match entry 1 length")
 
     def test_US15_FourteenorMore(self):
         # add in siblings to family 4 to make 14 - should get zero family to match 15 or greater
@@ -563,11 +594,14 @@ class US15Test(unittest.TestCase):
             self.famMap["F4"]["CHIL"].append("I" + str(i))
 
         expected_ret = []
-        ret = us15_sibling_count(self.famMap, 15)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us15_sibling_count()
+
+        ret = self.logger.get_logs()
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
-        self.assertEqual(len(ret), 0,
-                         "Did not match entry 1 length")
 
 
 if __name__ == '__main__':
