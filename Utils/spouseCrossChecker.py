@@ -105,10 +105,10 @@ class spouseCrossChecker:
 
     def us16_male_last_names(self):
         """
-        User Story 16: Checks for Male Last Names
+        User Story 16: Logs Males in the same family with different  Last Names
 
-        :param Individuals and Family lists
-        :returns List of Familes where the males don't all have the same last name in their family
+        :param object parameters
+        :returns None
         """
         fam = self._normalize_family()
         lastNames = set()   # define as set to be unique names
@@ -130,11 +130,11 @@ class spouseCrossChecker:
 
     def us39_upcoming_anniversaries(self):
         """
-        User Story 39: List all living couples in a GEDCOM file whose marriage
+        User Story 39: Logs all living couples in a GEDCOM file whose marriage
                        anniversaries occur in the next 30 days
 
-        :param Individuals and Family lists
-        :returns List of all living couples with upcoming anniversaries
+        :param object parameters
+        :returns None
         """
         fam = self._normalize_family()
 
@@ -179,10 +179,10 @@ class spouseCrossChecker:
 
     def us17_no_marr2child(self, parentId2Children):
         """
-        User Story 17: Checks for Families where a spouse is married to a child
+        User Story 17: Logs families where a spouse is married to a child
 
-        :param Families and Individual lists
-        :returns List of Familes that have a spouse married to a child
+        :param FparentId2Children and object parameters
+        :returns None
         """
         fam = self._normalize_family()
 
@@ -194,3 +194,21 @@ class spouseCrossChecker:
                     if myspouse in parentId2Children[spouse]:
                         # my spouse is married to my child
                         self.logger.log_family_error(17, "{}: My spouse ({}) is one of my children: Parent ({}), Children ({})".format(fam["FAM"], myspouse, spouse, parentId2Children[spouse]))
+
+    def us18_no_siblingmarriages(self, parentId2Children):
+        """
+        User Story 18: logs families where spouses are siblings
+                       Siblings include half siblings also
+
+        :param parentId2Children and object parameters
+        :returns None
+        """
+        fam = self._normalize_family()
+
+        # get all husband/wives in the family and check to see if their spouse is their child
+        # loop thru parentId2Children and see if there is an intersection of spouses and children
+        spouses = self._getSpouses(fam)
+        for id, siblings in parentId2Children.items():
+            if len(set(siblings).intersection(set(spouses))) > 1:
+                self.logger.log_family_error(18, "{} has siblings as parents: {}".format(fam["FAM"], sorted(spouses)))
+                return

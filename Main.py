@@ -3,7 +3,7 @@ from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
 from Utils.Logger import Logger
-from Utils import UserStory14, UserStory15, UserStory18, UserStory30, UserStory31
+from Utils import UserStory14, UserStory15, UserStory30, UserStory31
 from Utils.Utils import normalize_family_entry, getParent2ChildrenMap
 import usrun
 from Utils.UserStory33 import find_all_orphans
@@ -80,6 +80,7 @@ for family_id in parsed_families:
     spousecheck.us10_marrAfter14()
     spousecheck.us16_male_last_names()
     spousecheck.us17_no_marr2child(parentId2Children)
+    spousecheck.us18_no_siblingmarriages(parentId2Children)
     spousecheck.us39_upcoming_anniversaries()
 
     children_by_age = sort_children_by_age(family, parsed_individuals)
@@ -127,13 +128,6 @@ if len(non_uniques) > 0:
         logger.log_individual_error(23, formatted)
 else:
     logger.log_individual_info(23, "All individuals are unique in the file, by name and birth date")
-
-ret = UserStory18.us18_no_siblingmarriages(ind_map, fam_map)
-if len(ret) == 0:
-    logger.log_family_info(18, "There are no marriages with siblings")
-else:
-    for fam in ret:
-        logger.log_family_error(18, "{} has siblings as parents: {}".format(fam["FAM"], fam["Parents"]))
 
 ret = UserStory30.us30_get_married_individuals(ind_map, fam_map)
 if len(ret) == 0:
