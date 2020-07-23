@@ -43,6 +43,7 @@ class SpouseTest(unittest.TestCase):
         fam3 = {"FAM": "F1", "HUSB": ["I1"], "WIFE": ["I2"], "DIV": [1,1,2020]}
         fam4 = {"FAM": "F1", "HUSB": ["I1"], "WIFE": ["I2"], "DIV": [1,1,2008]}
         
+        self.record.clear_logs()
         checker1 = spouseCrossChecker(self.record, fam1, self.individuals)
         checker1.us06_divBeforeDeat()
         self.assertEqual(len(self.record.get_logs()), 1)
