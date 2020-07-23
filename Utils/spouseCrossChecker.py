@@ -152,8 +152,9 @@ class spouseCrossChecker:
             try:
                 if self._check_dates(datetime.date(datetime.date.today().year, fam['MARR'][1],
                                      fam['MARR'][0]), datetime.date.today(), 30, 'days', upcoming=True):
-                    self.logger.log_family_info(39, "FAMILY ({}) has an upcoming anniversary: {}".format(
-                                                fam["FAM"], str(fam['MARR'][1])+'/'+str(fam['MARR'][0])+'/'+str(fam['MARR'][2])))
+                    self.logger.log_family_info(39, 'FAMILY ({}) has an upcoming anniversary: {}'.format(
+                                                fam["FAM"], str(fam['MARR'][1]) +
+                                                '/' + str(fam['MARR'][0]) + '/' + str(fam['MARR'][2])))
             except Exception:
                 return  # problem with dates - just return without logging anything
 
@@ -190,10 +191,11 @@ class spouseCrossChecker:
         for spouse in self._getSpouses(fam):
             for myspouse in self._getMySpouses(spouse, fam):
                 # get all my children and check if spouse is in them
-                if spouse in parentId2Children:
-                    if myspouse in parentId2Children[spouse]:
-                        # my spouse is married to my child
-                        self.logger.log_family_error(17, "{}: My spouse ({}) is one of my children: Parent ({}), Children ({})".format(fam["FAM"], myspouse, spouse, parentId2Children[spouse]))
+                if spouse in parentId2Children and myspouse in parentId2Children[spouse]:
+                    # my spouse is married to my child
+                    self.logger.log_family_error(17,
+                                                 "{}: My spouse ({}) is one of my children: Parent ({}), Children ({})".format
+                                                 (fam["FAM"], myspouse, spouse, parentId2Children[spouse]))
 
     def us18_no_siblingmarriages(self, parentId2Children):
         """
