@@ -53,8 +53,8 @@ for parsed_individual_id in parsed_individuals:
     for key in [key for key in ["BIRT", "DEAT"] if key in individual]:
         dateValidator.validate_date(individual[key], True)
 
-# get the map of siblings 
-parentId2Children=getParent2ChildrenMap(parsed_families)
+# get the map of siblings
+parentId2Children = getParent2ChildrenMap(parsed_families)
 
 for family_id in parsed_families:
     family = parsed_families[family_id]
