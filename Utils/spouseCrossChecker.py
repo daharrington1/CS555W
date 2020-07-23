@@ -176,3 +176,21 @@ class spouseCrossChecker:
                     self.logger.log_family_error(10, "{}: {} marriage is less 14 years than spouse' birthday {} ."
                                                  .format(self.fam['FAM'], "/".join(str(x) for x in self.fam['MARR']),
                                                                           "/".join(str(x) for x in person['BIRT'])))
+
+    def us17_no_marr2child(self, parentId2Children):
+        """
+        User Story 17: Checks for Families where a spouse is married to a child
+
+        :param Families and Individual lists
+        :returns List of Familes that have a spouse married to a child
+        """
+        fam = self._normalize_family()
+
+        # get all husband/wives in the family and check to see if their spouse is their child
+        for spouse in self._getSpouses(fam):
+            for myspouse in self._getMySpouses(spouse, fam):
+                # get all my children and check if spouse is in them
+                if spouse in parentId2Children:
+                    if myspouse in parentId2Children[spouse]:
+                        # my spouse is married to my child
+                        self.logger.log_family_error(17, "{}: My spouse ({}) is one of my children: Parent ({}), Children ({})".format(fam["FAM"], myspouse, spouse, parentId2Children[spouse]))

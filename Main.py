@@ -3,8 +3,8 @@ from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
 from Utils.Logger import Logger
-from Utils import UserStory14, UserStory15, UserStory17, UserStory18, UserStory30, UserStory31
-from Utils.Utils import normalize_family_entry
+from Utils import UserStory14, UserStory15, UserStory18, UserStory30, UserStory31
+from Utils.Utils import normalize_family_entry, getParent2ChildrenMap
 import usrun
 from Utils.UserStory33 import find_all_orphans
 from Utils.DateValidator import DateValidator, format_date
@@ -53,6 +53,8 @@ for parsed_individual_id in parsed_individuals:
     for key in [key for key in ["BIRT", "DEAT"] if key in individual]:
         dateValidator.validate_date(individual[key], True)
 
+# get the map of siblings 
+parentId2Children=getParent2ChildrenMap(parsed_families)
 
 for family_id in parsed_families:
     family = parsed_families[family_id]
@@ -77,6 +79,7 @@ for family_id in parsed_families:
     spousecheck.us06_divBeforeDeat()
     spousecheck.us10_marrAfter14()
     spousecheck.us16_male_last_names()
+    spousecheck.us17_no_marr2child(parentId2Children)
     spousecheck.us39_upcoming_anniversaries()
 
     children_by_age = sort_children_by_age(family, parsed_individuals)
@@ -124,15 +127,6 @@ if len(non_uniques) > 0:
         logger.log_individual_error(23, formatted)
 else:
     logger.log_individual_info(23, "All individuals are unique in the file, by name and birth date")
-
-# Check for any parents married to children
-ret = UserStory17.us17_no_marr2child(ind_map, fam_map)
-if len(ret) == 0:
-    logger.log_family_info(17, "No spouses in families are married to children")
-else:
-    for item in ret:
-        logger.log_family_error(17, "{}: My spouse ({}) is one of my children: Parent ({}), Children ({})".format(
-            item["FAM"], item["MySpouse"], item["Spouse"], item["MyChildren"]))
 
 ret = UserStory18.us18_no_siblingmarriages(ind_map, fam_map)
 if len(ret) == 0:
