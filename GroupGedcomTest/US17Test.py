@@ -381,7 +381,7 @@ class US17Test(unittest.TestCase):
             spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
             spousecheck.us17_no_marr2child(self.parentId2Children)
 
-        ret=self.logger.get_logs()
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 1, "Did not get the expected results")
 
     def test_US17_1family_text(self):
@@ -392,10 +392,9 @@ class US17Test(unittest.TestCase):
             spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
             spousecheck.us17_no_marr2child(self.parentId2Children)
 
-
-        ret=self.logger.get_logs()
-        dtstr = "F11: My spouse (I26) is one of my children: Parent (I27), Children (['I26'])";
-        expected_ret = [('Error', 'Family', 17, dtstr)]
+        ret = self.logger.get_logs()
+        str1 = "F11: My spouse (I26) is one of my children: Parent (I27), Children (['I26'])"
+        expected_ret = [('Error', 'Family', 17, str1)]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
@@ -424,7 +423,7 @@ class US17Test(unittest.TestCase):
             spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
             spousecheck.us17_no_marr2child(self.parentId2Children)
 
-        ret=self.logger.get_logs()
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 2, "Did not get the expected results")
 
     def test_US17_2family_text(self):
@@ -452,7 +451,7 @@ class US17Test(unittest.TestCase):
             spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
             spousecheck.us17_no_marr2child(self.parentId2Children)
 
-        ret=self.logger.get_logs()
+        ret = self.logger.get_logs()
         str1 = "F8: My spouse (I12) is one of my children: Parent (I11), Children (['I7', 'I12'])"
         str2 = "F11: My spouse (I26) is one of my children: Parent (I27), Children (['I26'])"
         expected_ret = [('Error', 'Family', 17, str1), ('Error', 'Family', 17, str2)]
@@ -493,7 +492,7 @@ class US17Test(unittest.TestCase):
             spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
             spousecheck.us17_no_marr2child(self.parentId2Children)
 
-        ret=self.logger.get_logs()
+        ret = self.logger.get_logs()
         str1 = "F4: My spouse (I5) is one of my children: Parent (I4), Children (['I14', 'I15', 'I5'])"
         str2 = "F8: My spouse (I12) is one of my children: Parent (I11), Children (['I7', 'I12'])"
         str3 = "F11: My spouse (I26) is one of my children: Parent (I27), Children (['I26'])"
@@ -518,7 +517,7 @@ class US17Test(unittest.TestCase):
             spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
             spousecheck.us17_no_marr2child(self.parentId2Children)
 
-        ret=self.logger.get_logs()
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 0, "Did not get the expected results")
 
     def test_US17_nomatches_text(self):
@@ -539,7 +538,7 @@ class US17Test(unittest.TestCase):
             spousecheck.us17_no_marr2child(self.parentId2Children)
 
         expected_ret = []
-        ret=self.logger.get_logs()
+        ret = self.logger.get_logs()
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
