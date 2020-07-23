@@ -113,7 +113,8 @@ class spouseCrossChecker:
         fam = self._normalize_family()
         # can't have more than 15 siblings in a family - includes half-siblings
         if len(fam["CHIL"]) >= count:
-            self.logger.log_family_warning(15, "Family {} has {} or more children ({})".format(fam["FAM"], count, len(fam["CHIL"])))
+            self.logger.log_family_warning(15, "Family {} has {} or more children ({})".format(
+                                           fam["FAM"], count, len(fam["CHIL"])))
 
     def us16_male_last_names(self):
         """
