@@ -28,7 +28,7 @@ class US17Test(unittest.TestCase):
         self.logger = Logger()
         self.seed_data()
         self.spousecheck = None
-        parentId2Children = None
+        self.parentId2Children = None
 
     def tearDown(self):
         self.families = None
@@ -37,7 +37,7 @@ class US17Test(unittest.TestCase):
         self.indMap = None
         self.logger = None
         self.spousecheck = None
-        parentId2Children = None
+        self.parentId2Children = None
 
     def seed_data(self):
         # seed initial testing data
