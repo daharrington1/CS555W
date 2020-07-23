@@ -196,3 +196,4 @@ usrun.us12(families_from_db, individuals_from_db)
 usrun.us19(families_from_db, individuals_from_db)
 # Logger Print
 usrun.logger.print_log()
+usrun.logger.team_use()
