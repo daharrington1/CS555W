@@ -406,8 +406,8 @@ class US14Test(unittest.TestCase):
 
     def test_US14_DefaultOneText(self):
         # should get the following families with multiple births of 2 or more
-        expected_ret = [(['I28', 'I29', 'I30'], '4/1/2020'),
-                        (['I22', 'I23'], '5/8/2019')]
+        expected_ret = [('F4', ['I28', 'I29', 'I30'], '4/1/2020'),
+                        ('F10', ['I22', 'I23'], '5/8/2019')]
         ret = us14_mult_births(self.indMap, self.famMap)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
@@ -420,12 +420,10 @@ class US14Test(unittest.TestCase):
 
     def test_US14_ThreeOrMoreText(self):
         # should get the following families with multiple births of 3 or more
-        expected_ret = [(['I28', 'I29', 'I30'], '4/1/2020')]
+        expected_ret = [('F4', ['I28', 'I29', 'I30'], '4/1/2020')]
         ret = us14_mult_births(self.indMap, self.famMap, 3)
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
-        self.assertEqual(len(ret[0][0]), 3,
-                         "Did not match entry 1 length")
 
     def test_US14_TwoorMoreMultBirthsinOneFamiy(self):
         # add in a set of sixtuplets to family 4 - so they have triplets and twins
@@ -444,17 +442,11 @@ class US14Test(unittest.TestCase):
         self.assertEqual(len(ret), 3,
                          "Did not get the expected results")
 
-        expected_ret = [(['I28', 'I29', 'I30'], '4/1/2020'),
-                        (['I31', 'I32', 'I33', 'I34', 'I35', 'I36'], '5/1/2019'),
-                        (['I22', 'I23'], '5/8/2019')]
+        expected_ret = [('F4', ['I28', 'I29', 'I30'], '4/1/2020'),
+                        ('F4', ['I31', 'I32', 'I33', 'I34', 'I35', 'I36'], '5/1/2019'),
+                        ('F10', ['I22', 'I23'], '5/8/2019')]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
-        self.assertEqual(len(ret[0][0]), 3,
-                         "Did not get the expected results")
-        self.assertEqual(len(ret[1][0]), 6,
-                         "Did not get the expected results")
-        self.assertEqual(len(ret[2][0]), 2,
-                         "Did not get the expected results")
 
     def test_US14_FiveorMoreMultBirthsinOneFamiy(self):
         # add in a set of sixtuplets to family 4 - so they have triplets and twins
@@ -473,11 +465,9 @@ class US14Test(unittest.TestCase):
         self.assertEqual(len(ret), 1,
                          "Did not get the expected results")
 
-        expected_ret = [(['I31', 'I32', 'I33', 'I34', 'I35', 'I36'], '5/1/2019')]
+        expected_ret = [('F4', ['I31', 'I32', 'I33', 'I34', 'I35', 'I36'], '5/1/2019')]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
-        self.assertEqual(len(ret[0][0]), 6,
-                         "Did not get the expected results")
 
     def test_US14_SixorMoreMultBirthsinOneFamiy(self):
         # add in a set of sixtuplets to family 4 - so they have triplets and twins
@@ -496,11 +486,9 @@ class US14Test(unittest.TestCase):
         self.assertEqual(len(ret), 1,
                          "Did not get the expected results")
 
-        expected_ret = [(['I31', 'I32', 'I33', 'I34', 'I35', 'I36'], '5/1/2019')]
+        expected_ret = [('F4', ['I31', 'I32', 'I33', 'I34', 'I35', 'I36'], '5/1/2019')]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
-        self.assertEqual(len(ret[0][0]), 6,
-                         "Did not get the expected results")
 
     def test_US14_SevenorMoreMultBirthsinOneFamiy(self):
         # add in a set of sixtuplets to family 4 - so they have triplets and twins

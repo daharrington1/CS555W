@@ -24,7 +24,7 @@ def us14_mult_births(ind_map=None, fam_map=None, count=2):
 
         for bday, ids in birthdays.items():
             if len(ids) >= count:
-                ret.append((sorted(ids), bday))
+                ret.append((fam["FAM"], sorted(ids), bday))
 
     # return all matches
     return ret

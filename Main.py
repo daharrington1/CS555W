@@ -135,14 +135,14 @@ if len(ret) == 0:
     logger.log_individual_info(30, "There are no Living Marriage Individuals")
 else:
     ret.sort()
-    logger.log_individual_info(30, "Living Married Individuals: {}".format(",".join(ret)))
+    logger.log_individual_info(30, "Living Married: {}".format(",".join(ret)))
 
 ret = UserStory31.us31_get_single_individuals(ind_map, fam_map)
 if len(ret) == 0:
     logger.log_individual_info(31, "There are no living single (i.e. non-divorced, non-married) individuals")
 else:
     ret.sort()
-    logger.log_individual_info(31, "Living Single Individuals (never married or divorced): {}".format(",".join(ret)))
+    logger.log_individual_info(31, "Living Single: {}".format(",".join(ret)))
 
 orphans = find_all_orphans(individuals_from_db, families_from_db)
 if len(orphans) > 0:
@@ -171,8 +171,9 @@ ret = UserStory14.us14_mult_births(ind_map, fam_map, 5)
 if len(ret) == 0:
     logger.log_family_info(14, "No siblings with multiple birthdays of {} or greater".format(5))
 else:
-    for siblings, bday in ret:
-        logger.log_family_warning(14, "Siblings ({}) have the same birthday: {}".format(", ".join(siblings), bday))
+    for id, siblings, bday in ret:
+        logger.log_family_warning(14, "Family {} has more than 5 children ({}) with the same birthday: {}".format(
+                                  id, len(siblings), bday))
 
 # Chengyi Zhang
 # Sprint 1
