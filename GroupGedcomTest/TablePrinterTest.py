@@ -66,12 +66,18 @@ class TablePrinterTest(unittest.TestCase):
 
         # Ugly table formatting, but unable to hide line to long warnings on multi line literals
         expected = \
-            "Families\n+----+------------+------------+------------+-----------------+---------+------------------+" \
-            "--------------+\n| Id |  Married   |  Divorced  | Husband Id |  Husband Name   | Wife Id |    Wife Name" \
-            "     | Children Ids |\n+----+------------+------------+------------+-----------------+---------+--------" \
-            "----------+--------------+\n| F2 | 01/01/1968 | 01/01/2003 |     I1     | Joe /Pritchett/ |   I3    | " \
-            "DeDe /Pritchett/ |    I4,I6     |\n+----+------------+------------+------------+-----------------+------" \
-            "---+------------------+--------------+"
+            "Families\n" \
+            "+----+------------+------------+------------+-----------------+---------+------------------+--------"\
+            "----------------------------------+\n" \
+            "| Id |  Married   |  Divorced  | Husband Id |  Husband Name   | Wife Id |    Wife Name     " \
+            "| US28: Children Ids, Descending Age Order |\n" \
+            "+----+------------+------------+------------+-----------------+---------+------------------+--------" \
+            "----------------------------------+\n" \
+            "| F2 | 01/01/1968 | 01/01/2003 |     I1     | Joe /Pritchett/ |   I3    | DeDe /Pritchett/ " \
+            "|                  I4,I6                   |\n"\
+            "+----+------------+------------+------------+-----------------+---------+------------------+--------" \
+            "----------------------------------+"
+
         self.assertEqual(expected, formatted, "Family output did not expected ")
 
     def testMissingFamIdRaises(self):
