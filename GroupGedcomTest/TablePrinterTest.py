@@ -58,18 +58,26 @@ class TablePrinterTest(unittest.TestCase):
     def testFormatOfFamilyTable(self):
         when(self._mockDatabase).getName('I1').thenReturn("Joe /Pritchett/")
         when(self._mockDatabase).getName('I3').thenReturn("DeDe /Pritchett/")
+        when(self._mockDatabase).getDocMatch("INDI", 'I4').thenReturn([{"INDI": 'I4', "AGE": 20}])
+        when(self._mockDatabase).getDocMatch("INDI", 'I6').thenReturn([{"INDI": 'I6', "AGE": 18}])
         formatted = self._testPrinter.format_families([{'HUSB': ['I1'],
                                                         'MARR': [1, 1, 1968], 'CHIL': ['I4', 'I6'], 'WIFE': ['I3'],
                                                         'FAM': 'F2', 'DIV': [1, 1, 2003]}])
 
         # Ugly table formatting, but unable to hide line to long warnings on multi line literals
         expected = \
-            "Families\n+----+------------+------------+------------+-----------------+---------+------------------+" \
-            "--------------+\n| Id |  Married   |  Divorced  | Husband Id |  Husband Name   | Wife Id |    Wife Name" \
-            "     | Children Ids |\n+----+------------+------------+------------+-----------------+---------+--------" \
-            "----------+--------------+\n| F2 | 01/01/1968 | 01/01/2003 |     I1     | Joe /Pritchett/ |   I3    | " \
-            "DeDe /Pritchett/ |    I4,I6     |\n+----+------------+------------+------------+-----------------+------" \
-            "---+------------------+--------------+"
+            "Families\n" \
+            "+----+------------+------------+------------+-----------------+---------+------------------+--------"\
+            "----------------------------------+\n" \
+            "| Id |  Married   |  Divorced  | Husband Id |  Husband Name   | Wife Id |    Wife Name     " \
+            "| US28: Children Ids, Descending Age Order |\n" \
+            "+----+------------+------------+------------+-----------------+---------+------------------+--------" \
+            "----------------------------------+\n" \
+            "| F2 | 01/01/1968 | 01/01/2003 |     I1     | Joe /Pritchett/ |   I3    | DeDe /Pritchett/ " \
+            "|                  I4,I6                   |\n"\
+            "+----+------------+------------+------------+-----------------+---------+------------------+--------" \
+            "----------------------------------+"
+
         self.assertEqual(expected, formatted, "Family output did not expected ")
 
     def testMissingFamIdRaises(self):

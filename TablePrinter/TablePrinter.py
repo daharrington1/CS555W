@@ -1,6 +1,6 @@
 from tabulate import tabulate
 from Utils.DateValidator import format_date
-
+from Utils.UserStory28 import sort_children_by_age
 
 """
 Class which contains the logic to print out individuals or families into a formatted table
@@ -80,27 +80,35 @@ class TablePrinter:
     """
 
     def format_families(self, families):
-        headers = ["Id", "Married", "Divorced", "Husband Id", "Husband Name", "Wife Id", "Wife Name", "Children Ids"]
+        headers = ["Id", "Married", "Divorced", "Husband Id",
+                   "Husband Name", "Wife Id", "Wife Name", "US28: Children Ids, Descending Age Order"]
         return self._format_sorted_mapped_table(self._table_label_family, families, headers, self._family_mapper)
 
-    """
-    Internal function to format a family object from the database to a printable form
-    """
-
     def _family_mapper(self, fam):
-        if "HUSB" not in fam or "WIFE" not in fam:
+        """
+        Internal function to map a family
+        :param fam: The family to map, must have HUSB, WIFE, FAM and MARR fields
+        :raises KeyError When a required key is missing from the dictionary
+        :raises TypeError When the database does not have an id
+        :return: The formatted object for printing
+        """
+        if "HUSB" not in fam or "WIFE" not in fam or "FAM" not in fam or "MARR" not in fam:
             raise KeyError
 
+        child_str = "None"
+        if "CHIL" in fam:
+            children = sort_children_by_age(fam, self._look_up_individuals(fam["CHIL"]))
+            child_str = ",".join([child["INDI"] for child in children])
         # Map 1:1, except replace divorced with self._not_applicable if there was no divorce
         # If children is None or size 0, map to string "None", otherwise sorted in ascending order
         return (fam["FAM"],
                 format_date(fam["MARR"], self.error_output),
                 format_date(fam["DIV"], self.error_output) if "DIV" in fam else self._not_applicable,
                 ",".join(fam["HUSB"]),
-                self._look_up_name_by_id(fam["HUSB"]),
+                " & ".join(self._look_up_name_by_id(fam["HUSB"])),
                 ",".join(fam["WIFE"]),
-                self._look_up_name_by_id(fam["WIFE"]),
-                ",".join(sorted(fam["CHIL"])) if "CHIL" in fam and len(fam["CHIL"]) > 0 else "None")
+                " & ".join(self._look_up_name_by_id(fam["WIFE"])),
+                child_str)
 
     """
     Prints the formatted table with ids in ascending order
@@ -119,17 +127,21 @@ class TablePrinter:
         mapped_data = sorted(list(map(data_map_lambda, data)), key=lambda it: it[0])
         return "{}\n{}".format(printed_label, tabulate(mapped_data, headers, self._table_format_type))
 
-    """
-    Looks up all individual ids in the list, separated by ampersands
-    :param individual_ids, the list of all ids to
-    :return A string in the form "name0 & name1 & name2 ... & nameN" with no trailing " & "
-    """
-
     def _look_up_name_by_id(self, individual_ids):
+        """
+        Looks up only the names of individual ids in the list
+        :param individual_ids, the list of all ids to query for
+        :return A list of all names for the given ids"
+        """
         if individual_ids is None or individual_ids == self.error_output:
             return self.error_output
         individual_ids = [individual_ids] if type(individual_ids) is not list else individual_ids
-        all_names = []
-        for individual in individual_ids:
-            all_names.append(self.individual_database.getName(individual.replace("@", "").strip()))
-        return " & ".join(all_names)
+        return [self.individual_database.getName(individual.strip()) for individual in individual_ids]
+
+    def _look_up_individuals(self, individual_ids):
+        """
+        Looks up full information for an individual from the database
+        :param individual_ids: All ides to query for
+        :return: A dictionary of all information, keyed by the INDI field
+        """
+        return {indi: self.individual_database.getDocMatch("INDI", indi)[0] for indi in individual_ids}

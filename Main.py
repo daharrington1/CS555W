@@ -84,17 +84,10 @@ for family_id in parsed_families:
     spousecheck.us18_no_siblingmarriages(parentId2Children)
     spousecheck.us39_upcoming_anniversaries()
 
-    children_by_age = sort_children_by_age(family, parsed_individuals)
-    if len(children_by_age) == 0:
-        logger.log_family_info(28, "{} has no children".format(family_id))
-    else:
-        children_output = ["{} {}({})".format(child["INDI"], child["NAME"], child["AGE"]) for child in children_by_age]
-        logger.log_family_info(28, "Children of {} sorted in descending order: {}".format(family_id,
-                                                                                          "; ".join(children_output)))
-
     for key in [key for key in ["MARR", "DIV"] if key in family]:
         dateValidator.validate_date(family[key], False)
 
+logger.log_family_info(28, "Children are sorted in order in the Family Table")
 # Read the data back out from the DB
 individuals_from_db = []
 ind_map = {}
@@ -144,12 +137,15 @@ else:
     ret.sort()
     logger.log_individual_info(31, "Living Single: {}".format(",".join(ret)))
 
-orphans = find_all_orphans(individuals_from_db, families_from_db)
-if len(orphans) > 0:
-    for orphan in orphans:
-        logger.log_individual_anomaly(33, "{} is an orphan".format(" & ".join(orphan)))
+orphans_by_family = find_all_orphans(individuals_from_db, families_from_db)
+if len(orphans_by_family) > 0:
+    for family_orphan in orphans_by_family:
+        # Use the ID to pull the FAMC field, as FAMC will always be a list of size one, and every family will
+        # have at least one orphan at if it was included
+        family_id = parsed_individuals[family_orphan[0]]["FAMC"][0]
+        logger.log_family_anomaly(33, "{} are an orphans in family {}".format(" & ".join(family_orphan), family_id))
 else:
-    logger.log_individual_info(33, "No orphans in file")
+    logger.log_family_info(33, "No orphans in file")
 
 mismatched_marriage_roles = find_mistitled_spouse(parsed_individuals, families_from_db)
 if len(mismatched_marriage_roles) > 0:
