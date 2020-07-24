@@ -140,9 +140,9 @@ else:
 orphans = find_all_orphans(individuals_from_db, families_from_db)
 if len(orphans) > 0:
     for orphan in orphans:
-        logger.log_individual_anomaly(33, "{} is an orphan".format(" & ".join(orphan)))
+        logger.log_family_anomaly(33, "{} is an orphan".format(" & ".join(orphan)))
 else:
-    logger.log_individual_info(33, "No orphans in file")
+    logger.log_family_info(33, "No orphans in file")
 
 mismatched_marriage_roles = find_mistitled_spouse(parsed_individuals, families_from_db)
 if len(mismatched_marriage_roles) > 0:
