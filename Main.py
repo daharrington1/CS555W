@@ -172,7 +172,8 @@ if len(ret) == 0:
     logger.log_family_info(14, "No siblings with multiple birthdays of {} or greater".format(5))
 else:
     for id, siblings, bday in ret:
-        logger.log_family_warning(14, "Family {} has more than 5 children ({}) with the same birthday: {}".format(id, len(siblings), bday))
+        logger.log_family_warning(14, "Family {} has more than 5 children ({}) with the same birthday: {}".format(
+                                  id, len(siblings), bday))
 
 # Chengyi Zhang
 # Sprint 1
