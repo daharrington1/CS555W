@@ -58,6 +58,8 @@ class TablePrinterTest(unittest.TestCase):
     def testFormatOfFamilyTable(self):
         when(self._mockDatabase).getName('I1').thenReturn("Joe /Pritchett/")
         when(self._mockDatabase).getName('I3').thenReturn("DeDe /Pritchett/")
+        when(self._mockDatabase).getDocMatch("INDI", 'I4').thenReturn([{"INDI": 'I4', "AGE": 20}])
+        when(self._mockDatabase).getDocMatch("INDI", 'I6').thenReturn([{"INDI": 'I6', "AGE": 18}])
         formatted = self._testPrinter.format_families([{'HUSB': ['I1'],
                                                         'MARR': [1, 1, 1968], 'CHIL': ['I4', 'I6'], 'WIFE': ['I3'],
                                                         'FAM': 'F2', 'DIV': [1, 1, 2003]}])

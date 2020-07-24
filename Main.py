@@ -84,17 +84,10 @@ for family_id in parsed_families:
     spousecheck.us18_no_siblingmarriages(parentId2Children)
     spousecheck.us39_upcoming_anniversaries()
 
-    children_by_age = sort_children_by_age(family, parsed_individuals)
-    if len(children_by_age) == 0:
-        logger.log_family_info(28, "{} has no children".format(family_id))
-    else:
-        children_output = ["{} {}({})".format(child["INDI"], child["NAME"], child["AGE"]) for child in children_by_age]
-        logger.log_family_info(28, "Children of {} sorted in descending order: {}".format(family_id,
-                                                                                          "; ".join(children_output)))
-
     for key in [key for key in ["MARR", "DIV"] if key in family]:
         dateValidator.validate_date(family[key], False)
 
+logger.log_family_info(28, "Children are sorted in order in the Family Table")
 # Read the data back out from the DB
 individuals_from_db = []
 ind_map = {}
