@@ -171,6 +171,25 @@ class spouseCrossChecker:
             except Exception:
                 return  # problem with dates - just return without logging anything
 
+    def us02_marrBeforeBirt(self):
+        if 'MARR' not in self.fam:
+            return
+        for person in self.spouse:
+            if 'BIRT' in person:
+                if not self.__compTwoDate(person['BIRT'], self.fam['MARR']):
+                    self.logger.log_family_error(2, "{}: {} marry day is before {} birthday."
+                                                 .format(self.fam['FAM'], "/".join(str(x) for x in self.fam['MARR']),
+                                                                          "/".join(str(x) for x in person['BIRT'])))
+                    
+    def us05_marrBeforeDeat(self):
+        if 'MARR' not in self.fam:
+            return
+        for person in self.spouse:
+            if 'DEAT' in person:
+                if not self.__compTwoDate(self.fam['MARR'], person['DEAT']):
+                    self.logger.log_family_error(5, "{}: {} Death is before {} marry day."
+                                                 .format(self.fam['FAM'], "/".join(str(x) for x in person['DEAT']),
+                                                                          "/".join(str(x) for x in self.fam['MARR'])))
     def us06_divBeforeDeat(self):
         if 'DIV' not in self.fam:
             return
