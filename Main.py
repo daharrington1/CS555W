@@ -76,6 +76,8 @@ for family_id in parsed_families:
     family_database.AddObj(family)
 
     spousecheck = spouseCrossChecker(logger, family, parsed_individuals)
+    spousecheck.us02_marrBeforeBirt()
+    spousecheck.us05_marrBeforeDeat()
     spousecheck.us06_divBeforeDeat()
     spousecheck.us10_marrAfter14()
     spousecheck.us15_sibling_count()
