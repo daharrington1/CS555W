@@ -74,16 +74,16 @@ def unique_families(families_from_db, individuals_from_db):
     return ret
 
 
-# US32 Move to spouseCrossChecker.py as part of refactoing 
+# US32 Move to spouseCrossChecker.py as part of refactoing
 # US32 Multiple Births
-#def us32(families_from_db, individuals_from_db):
+# def us32(families_from_db, individuals_from_db):
 #    ret = multiple_births(families_from_db, individuals_from_db)
 #    for birth, famid, indiid in ret:
 #        logger.log_family_info(32, "Family {} has children {} with the same birthday {}"
 #                                  .format(famid, ', '.join(indiid[:-1]) + ' and ' + indiid[-1], birth))
 #
 #
-#def multiple_births(families_from_db, individuals_from_db):
+# def multiple_births(families_from_db, individuals_from_db):
 #    ret = []
 #    id_indi = IDtoINDI(individuals_from_db)
 #    for fam in families_from_db:
