@@ -2,6 +2,7 @@
 from collections import defaultdict, Counter
 from Utils.Logger import Logger
 import datetime
+from typing import List
 
 logger = Logger()
 
@@ -47,14 +48,14 @@ def unique_families(families_from_db, individuals_from_db):
     # the dict of families keyword by marriage date
     df = dict()
     for fam in families_from_db:
-        if ("MARR" in fam and type(fam["MARR"] is list) and type(fam["MARR"]) is not str):
+        if "MARR" in fam and type(fam["MARR"] is list) and type(fam["MARR"]) is not str:
             date = str(fam['MARR'][0]) + '/' + str(fam['MARR'][1]) + '/' + str(fam['MARR'][2])
             df.setdefault(date, [])
             spouses = set()
-            if ('HUSB' in fam and type(fam['HUSB']) is list):
+            if 'HUSB' in fam and type(fam['HUSB']) is list:
                 for one in fam['HUSB']:
                     spouses.add(id_indi[one]["NAME"])
-            if ('WIFE' in fam and type(fam['WIFE']) is list):
+            if 'WIFE' in fam and type(fam['WIFE']) is list:
                 for one in fam['WIFE']:
                     spouses.add(id_indi[one]["NAME"])
             df[date].append((spouses, fam["FAM"]))
@@ -65,10 +66,10 @@ def unique_families(families_from_db, individuals_from_db):
             spouss.append(f)
             famids.append(s)
         l = len(spouss)
-        if (l > 1):
+        if l > 1:
             for i in range(l - 1):
                 for j in range(i + 1, l):
-                    if (len(spouss[i].intersection(spouss[j])) == len(spouss[i])):
+                    if len(spouss[i].intersection(spouss[j])) == len(spouss[i]):
                         ret.append((date, famids[i], famids[j]))
     return ret
 
@@ -77,7 +78,7 @@ def unique_families(families_from_db, individuals_from_db):
 def us32(families_from_db, individuals_from_db):
     ret = multiple_births(families_from_db, individuals_from_db)
     for birth, famid, indiid in ret:
-        logger.log_family_warning(32, "Family {} has children {} with the same birthday {}"
+        logger.log_family_info(32, "Family {} has children {} with the same birthday {}"
                                   .format(famid, ', '.join(indiid[:-1]) + ' and ' + indiid[-1], birth))
 
 
@@ -120,12 +121,12 @@ def upcoming_birthdays(individuals_from_db):
         if current_date.month == 12 and current_date.day > 1:
             try:
                 date = datetime.datetime(current_date.year + 1, one['BIRT'][1], one['BIRT'][0])
-            except Exception:
+            except ValueError:
                 continue
         else:
             try:
                 date = datetime.datetime(current_date.year, one['BIRT'][1], one['BIRT'][0])
-            except Exception:
+            except ValueError:
                 continue
         if datetime.timedelta(days=0) < date - current_date < datetime.timedelta(days=30):
             ret.append((one['INDI'], months[one['BIRT'][1]] + ' ' + str(one['BIRT'][0])))
@@ -235,7 +236,7 @@ def first_cousin_not_marry(families_from_db, individuals_from_db):
     id_fam = IDinFam(families_from_db)
     for fam in families_from_db:
         if "CHIL" in fam and len(fam["CHIL"]) > 1:
-            cousins = []
+            cousins: List[List[str]] = []
             for one in fam['CHIL']:
                 children = []
                 if one in id_fam:
@@ -254,3 +255,65 @@ def first_cousin_not_marry(families_from_db, individuals_from_db):
     return ret
 
 # End of Sprint 3
+
+# Sprint 4
+
+
+def us34(families_from_db, individuals_from_db):
+    ret = large_age_difference(families_from_db, individuals_from_db)
+    for famid, younger, older in ret:
+        logger.log_family_anomaly(34, f"In family {famid}, {older} is more than twice as old as {younger}")
+
+
+def large_age_difference(families_from_db, individuals_from_db):
+    ret = []
+    id_Indi = IDtoINDI(individuals_from_db)
+    for fam in families_from_db:
+        nh = len(fam['HUSB']) if fam['HUSB'][0] != '-' else 0
+        nw = len(fam['WIFE']) if fam['WIFE'][0] != '-' else 0
+        if nh + nw > 2 or nh + nw == 1:
+            continue
+        couple = []
+        if nh == 1 and nw == 1:
+            couple.append(fam['HUSB'][0])
+            couple.append(fam['WIFE'][0])
+        if nh == 0:
+            couple = fam['WIFE'].copy()
+        if nw == 0:
+            couple = fam['HUSB'].copy()
+        younger = id_Indi[couple[0]]['AGE']
+        older = id_Indi[couple[1]]['AGE']
+        if younger > older:
+            temp = younger
+            younger = older
+            older = temp
+            temp2 = couple[0]
+            couple[0] = couple[1]
+            couple[1] = temp2
+        if older > younger * 2:
+            ret.append((fam['FAM'], couple[0], couple[1]))
+    return ret
+
+
+def us36(families_from_db, individuals_from_db):
+    ret = recent_deaths(families_from_db, individuals_from_db)
+    for id in ret:
+        logger.log_individual_info(36, f'{id} just passed away less than 30 days ago')
+
+
+def recent_deaths(families_from_db, individuals_from_db):
+    ret = []
+    for one in individuals_from_db:
+        if 'DEAT' not in one or one['DEAT'] == '-':
+            continue
+        current_date = datetime.datetime.today()
+        try:
+            datediff = current_date - datetime.datetime(one['DEAT'][2], one['DEAT'][1], one['DEAT'][0])
+        except ValueError:
+            continue
+        if datetime.timedelta(days=0) < datediff < datetime.timedelta(days=30):
+            ret.append(one['INDI'])
+    return ret
+
+
+# End of Sprint 4
