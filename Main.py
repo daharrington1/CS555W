@@ -183,6 +183,8 @@ usrun.us11(families_from_db, individuals_from_db)
 # Sprint 3
 usrun.us12(families_from_db, individuals_from_db)
 usrun.us19(families_from_db, individuals_from_db)
+# Sprint 4
+usrun.us34(families_from_db, individuals_from_db)
+usrun.us36(families_from_db, individuals_from_db)
 # Logger Print
 usrun.logger.print_log()
-usrun.logger.team_use()
