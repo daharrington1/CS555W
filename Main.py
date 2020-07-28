@@ -163,6 +163,7 @@ else:
 # Chengyi Zhang
 # Sprint 1
 usrun.us24(families_from_db, individuals_from_db)
+# us32 moved to spouseCrossChecker
 # usrun.us32(families_from_db, individuals_from_db)
 # Sprint 2
 # usrun.us38(families_from_db, individuals_from_db) # refactored by Yikun

@@ -5,14 +5,14 @@ from Utils.Utils import normalize_family_entry
 
 
 #
-# Test Scripts for User Story 14 & 32: Get all families with multiple births greater 
+# Test Scripts for User Story 14 & 32: Get all families with multiple births greater
 # than a given count
 # Author: Debbie Harrington/Chengyi Zhang
 #
 # Test Scripts for verifying US14 & US32 user stories
 #
 
-class US14Test(unittest.TestCase):
+class US14_32Test(unittest.TestCase):
     families = None
     individuals = None
     famMap = None
