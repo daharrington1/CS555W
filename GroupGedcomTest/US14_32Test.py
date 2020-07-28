@@ -5,7 +5,7 @@ from Utils.Utils import normalize_family_entry
 
 
 #
-# Test Scripts for User Story 14 & 32: Get all families with multiple births greater 
+# Test Scripts for User Story 14 & 32: Get all families with multiple births greater
 # than a given count
 # Author: Debbie Harrington/Chengyi Zhang
 #
