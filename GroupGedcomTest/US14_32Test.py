@@ -12,7 +12,7 @@ from Utils.Utils import normalize_family_entry
 # Test Scripts for verifying US14 & US32 user stories
 #
 
-class US14Test(unittest.TestCase):
+class US14_32Test(unittest.TestCase):
     families = None
     individuals = None
     famMap = None
