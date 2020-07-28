@@ -1,5 +1,7 @@
 import unittest
-from usrun import *
+from usrun import IDtoINDI, IDinFam, months, unique_families, multiple_births, first_cousin_not_marry,\
+    upcoming_birthdays, no_bigamy_sev_fam, no_bigamy_one_fam, large_age_difference, recent_deaths,\
+    parents_not_too_old
 import copy
 
 
@@ -18,8 +20,8 @@ class usruntest(unittest.TestCase):
         self.seed_data()
 
     def tearDown(self):
-        self.families = None
-        self.individuals = None
+        families = None
+        individuals = None
 
     def seed_data(self):
         # seed family data - don't need individual data for this test suite
@@ -232,6 +234,29 @@ class usruntest(unittest.TestCase):
             {"HUSB": ["I15"], "WIFE": ["I10"], "MARR": [8, 3, 2019], "FAM": "F55",
              "NOTE": "Test"})
         self.assertEqual(len(first_cousin_not_marry(tmpfam, self.individuals)), 2)
+
+    # Test US34
+
+    def test_lad(self):
+        # test large_age_difference
+        tmpfam = copy.deepcopy(self.families)
+        tmpind = copy.deepcopy(self.individuals)
+        self.assertEqual(len(large_age_difference(tmpfam, self.individuals)), 3)
+        tmpind[0]['BIRT'][2] = 1975
+        tmpind[0]['AGE'] = 45
+        self.assertEqual(len(large_age_difference(tmpfam, tmpind)), 1)
+
+    # Test US36
+
+    def test_rd(self):
+        # test recent_deaths
+        tmpind = copy.deepcopy(self.individuals)
+        self.assertEqual(len(recent_deaths(self.families, tmpind)), 0)
+        tmpind.append(
+            {"NAME": "Jay/Pritchett/", "SEX": "M", "BIRT": [28, 12, 2000], 'DEAT': [20, 7, 2020], "FAMS": ["F1", "F2"], "AGE": -1,
+             "INDI": "I333"}
+        )
+        self.assertEqual(len(recent_deaths(self.families, tmpind)), 1)
 
 
 if __name__ == '__main__':
