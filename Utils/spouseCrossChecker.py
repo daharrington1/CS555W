@@ -116,6 +116,30 @@ class spouseCrossChecker:
             self.logger.log_family_warning(15, "Family {} has {} or more children ({})".format(
                                            fam["FAM"], count, len(fam["CHIL"])))
 
+    def _mult_births(self, user_story, count=2):
+        """
+        Logs families with multiple births of count or more
+
+        :param object parameters, count (default is 2), user story number
+        :returns None
+        """
+        fam = self._normalize_family()
+
+        birthdays = {}
+        for child in fam["CHIL"]:
+            dt_list = self.individuals[child]['BIRT']
+            dt = str(dt_list[1]) + "/" + str(dt_list[0]) + "/" + str(dt_list[2])
+            birthdays.setdefault(dt, []).append(child)
+
+        for bday, ids in birthdays.items():
+            if len(ids) >= count:
+                self.logger.log_family_warning(
+                    user_story,
+                    "{} has {} children with the same birthday ({}): {}".format(fam["FAM"],
+                                                                                len(ids),
+                                                                                bday,
+                                                                                ", ".join(sorted(ids))))
+
     def us16_male_last_names(self):
         """
         User Story 16: Logs Males in the same family with different  Last Names
@@ -180,7 +204,7 @@ class spouseCrossChecker:
                     self.logger.log_family_error(2, "{}: {} marry day is before {} birthday."
                                                  .format(self.fam['FAM'], "/".join(str(x) for x in self.fam['MARR']),
                                                                           "/".join(str(x) for x in person['BIRT'])))
-                    
+
     def us05_marrBeforeDeat(self):
         if 'MARR' not in self.fam:
             return
@@ -190,6 +214,7 @@ class spouseCrossChecker:
                     self.logger.log_family_error(5, "{}: {} Death is before {} marry day."
                                                  .format(self.fam['FAM'], "/".join(str(x) for x in person['DEAT']),
                                                                           "/".join(str(x) for x in self.fam['MARR'])))
+
     def us06_divBeforeDeat(self):
         if 'DIV' not in self.fam:
             return
@@ -206,7 +231,7 @@ class spouseCrossChecker:
         for person in self.spouse:
             if 'BIRT' in person:
                 if not self.__compTwoDate([person['BIRT'][0], person['BIRT'][1], person['BIRT'][2]+14], self.fam['MARR']):
-                    self.logger.log_family_error(10, "{}: {} marriage is less 14 years than spouse' birthday {} ."
+                    self.logger.log_family_error(10, "{}: {} marriage is less 14 years than spouse' birthday {}."
                                                  .format(self.fam['FAM'], "/".join(str(x) for x in self.fam['MARR']),
                                                                           "/".join(str(x) for x in person['BIRT'])))
 
@@ -254,6 +279,26 @@ class spouseCrossChecker:
            and not include half-siblings
 
         :param object parameters and a count value (i.e. 15)
-        :returns List of Siblings greater than the count
+        :returns None
         """
         self._sibling_count(15)
+
+    def us14_mult_births(self):
+        """
+        User Story 14: Logs families with multiple births of 5
+                       or more children in the same family
+
+        :param object parameters
+        :returns None
+        """
+        self._mult_births(14, 5)
+
+    def us32_mult_births(self):
+        """
+        User Story 32: Logs families with multiple births of 2
+                       or more children in the same family
+
+        :param object parameters
+        :returns None
+        """
+        self._mult_births(32)

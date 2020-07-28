@@ -3,7 +3,7 @@ from db.db_interface import GenComDb
 from TablePrinter.TablePrinter import TablePrinter
 from Utils import Utils
 from Utils.Logger import Logger
-from Utils import UserStory14, UserStory30, UserStory31
+from Utils import UserStory30, UserStory31
 from Utils.Utils import normalize_family_entry, getParent2ChildrenMap
 import usrun
 from Utils.UserStory33 import find_all_orphans
@@ -85,6 +85,8 @@ for family_id in parsed_families:
     spousecheck.us17_no_marr2child(parentId2Children)
     spousecheck.us18_no_siblingmarriages(parentId2Children)
     spousecheck.us39_upcoming_anniversaries()
+    spousecheck.us14_mult_births()
+    spousecheck.us32_mult_births()
 
     for key in [key for key in ["MARR", "DIV"] if key in family]:
         dateValidator.validate_date(family[key], False)
@@ -126,18 +128,12 @@ else:
     logger.log_individual_info(23, "All individuals are unique in the file, by name and birth date")
 
 ret = UserStory30.us30_get_married_individuals(ind_map, fam_map)
-if len(ret) == 0:
-    logger.log_individual_info(30, "There are no Living Marriage Individuals")
-else:
-    ret.sort()
-    logger.log_individual_info(30, "Living Married: {}".format(",".join(ret)))
+if len(ret) > 0:
+    logger.log_individual_info(30, "Living Married: {}".format(",".join(sorted(ret))))
 
 ret = UserStory31.us31_get_single_individuals(ind_map, fam_map)
-if len(ret) == 0:
-    logger.log_individual_info(31, "There are no living single (i.e. non-divorced, non-married) individuals")
-else:
-    ret.sort()
-    logger.log_individual_info(31, "Living Single: {}".format(",".join(ret)))
+if len(ret) > 0:
+    logger.log_individual_info(31, "Living Single: {}".format(",".join(sorted(ret))))
 
 orphans_by_family = find_all_orphans(individuals_from_db, families_from_db)
 if len(orphans_by_family) > 0:
@@ -164,19 +160,10 @@ if len(invalid_spaced_siblings) > 0:
 else:
     logger.log_family_info(13, "All siblings in all families are twins or spaced more than 8 months apart")
 
-# Multiple births more than 5
-ret = UserStory14.us14_mult_births(ind_map, fam_map, 5)
-if len(ret) == 0:
-    logger.log_family_info(14, "No siblings with multiple birthdays of {} or greater".format(5))
-else:
-    for id, siblings, bday in ret:
-        logger.log_family_warning(14, "Family {} has more than 5 children ({}) with the same birthday: {}".format(
-                                  id, len(siblings), bday))
-
 # Chengyi Zhang
 # Sprint 1
 usrun.us24(families_from_db, individuals_from_db)
-usrun.us32(families_from_db, individuals_from_db)
+# usrun.us32(families_from_db, individuals_from_db)
 # Sprint 2
 # usrun.us38(families_from_db, individuals_from_db) # refactored by Yikun
 usrun.us11(families_from_db, individuals_from_db)
