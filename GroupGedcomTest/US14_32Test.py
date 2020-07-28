@@ -1,5 +1,6 @@
 import unittest
-from Utils.UserStory14 import us14_mult_births
+from Utils.Logger import Logger
+from Utils.spouseCrossChecker import spouseCrossChecker
 from Utils.Utils import normalize_family_entry
 
 
@@ -15,19 +16,25 @@ class US14Test(unittest.TestCase):
     individuals = None
     famMap = None
     indMap = None
+    logger = None
+    spousecheck = None
 
     def setUp(self):
         self.families = []
         self.individuals = []
         self.famMap = {}
         self.indMap = {}
+        self.logger = Logger()
         self.seed_data()
+        self.spousecheck = None
 
     def tearDown(self):
         self.families = None
         self.individuals = None
         self.famMap = None
         self.indMap = None
+        self.logger = None
+        self.spousecheck = None
 
     def seed_data(self):
         # seed initial testing data
@@ -387,45 +394,64 @@ class US14Test(unittest.TestCase):
         for fam in self.families:
             self.famMap[fam["FAM"]] = normalize_family_entry(fam)
 
-    def test_US14_noinputs(self):
-        # bad inputs
-        with self.assertRaises(Exception):
-            us14_mult_births(None, None)
+    def test_US32_DefaultCount(self):
+        # should return F4 & F10 family with twins
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._mult_births(32, 2)
 
-        with self.assertRaises(Exception):
-            us14_mult_births(self.indMap)
-
-        with self.assertRaises(Exception):
-            us14_mult_births(self.famMap)
-
-    def test_US14_DefaultCount(self):
-        # should return F10 family with twins
-        ret = us14_mult_births(self.indMap, self.famMap)
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 2,
                          "Did not get the expected results")
 
-    def test_US14_DefaultOneText(self):
-        # should get the following families with multiple births of 2 or more
-        expected_ret = [('F4', ['I28', 'I29', 'I30'], '4/1/2020'),
-                        ('F10', ['I22', 'I23'], '5/8/2019')]
-        ret = us14_mult_births(self.indMap, self.famMap)
-        self.assertListEqual(expected_ret, ret,
-                             "Expected Return does not match")
+        expected_ret = [
+            ('Warning', 'Family', 32, 'F4 has 3 children with the same birthday (4/1/2020): I28, I29, I30'),
+            ('Warning', 'Family', 32, 'F10 has 2 children with the same birthday (5/8/2019): I22, I23')
+         ]
+        self.assertListEqual(expected_ret, ret, "Expected Return does not match")
 
-    def test_US14_ThreeOrMore(self):
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us32_mult_births()
+
+        ret = self.logger.get_logs()
+        self.assertEqual(len(ret), 2,
+                         "Did not get the expected results")
+
+        expected_ret = [
+            ('Warning', 'Family', 32, 'F4 has 3 children with the same birthday (4/1/2020): I28, I29, I30'),
+            ('Warning', 'Family', 32, 'F10 has 2 children with the same birthday (5/8/2019): I22, I23')
+         ]
+        self.assertListEqual(expected_ret, ret, "Expected Return does not match")
+
+    def test_ThreeOrMore(self):
         # should get the following families with multiple births of 3 or more
-        ret = us14_mult_births(self.indMap, self.famMap, 3)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._mult_births(14, 3)
+
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 1,
                          "Did not get the expected results")
 
-    def test_US14_ThreeOrMoreText(self):
+    def test_ThreeOrMoreText(self):
         # should get the following families with multiple births of 3 or more
-        expected_ret = [('F4', ['I28', 'I29', 'I30'], '4/1/2020')]
-        ret = us14_mult_births(self.indMap, self.famMap, 3)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._mult_births(14, 3)
+
+        ret = self.logger.get_logs()
+        expected_ret = [
+            ('Warning', 'Family', 14, 'F4 has 3 children with the same birthday (4/1/2020): I28, I29, I30')
+         ]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
-    def test_US14_TwoorMoreMultBirthsinOneFamiy(self):
+    def test_TwoorMoreMultBirthsinOneFamiy(self):
         # add in a set of sixtuplets to family 4 - so they have triplets and twins
         for i in range(31, 37):
             self.indMap["I"+str(i)] = {
@@ -438,17 +464,106 @@ class US14Test(unittest.TestCase):
             }
             self.famMap["F4"]["CHIL"].append("I" + str(i))
 
-        ret = us14_mult_births(self.indMap, self.famMap, 2)
+        # private routine
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._mult_births(33, 2)
+
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 3,
                          "Did not get the expected results")
 
-        expected_ret = [('F4', ['I28', 'I29', 'I30'], '4/1/2020'),
-                        ('F4', ['I31', 'I32', 'I33', 'I34', 'I35', 'I36'], '5/1/2019'),
-                        ('F10', ['I22', 'I23'], '5/8/2019')]
+        expected_ret = [
+            ('Warning', 'Family', 33, 'F4 has 3 children with the same birthday (4/1/2020): I28, I29, I30'),
+            ('Warning', 'Family', 33, 'F4 has 6 children with the same birthday (5/1/2019): I31, I32, I33, I34, I35, I36'),
+            ('Warning', 'Family', 33, 'F10 has 2 children with the same birthday (5/8/2019): I22, I23')
+         ]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
-    def test_US14_FiveorMoreMultBirthsinOneFamiy(self):
+        # user story 32
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us32_mult_births()
+
+        ret = self.logger.get_logs()
+        self.assertEqual(len(ret), 3,
+                         "Did not get the expected results")
+
+        expected_ret = [
+            ('Warning', 'Family', 32, 'F4 has 3 children with the same birthday (4/1/2020): I28, I29, I30'),
+            ('Warning', 'Family', 32, 'F4 has 6 children with the same birthday (5/1/2019): I31, I32, I33, I34, I35, I36'),
+            ('Warning', 'Family', 32, 'F10 has 2 children with the same birthday (5/8/2019): I22, I23')
+         ]
+        self.assertListEqual(expected_ret, ret,
+                             "Expected Return does not match")
+
+        # user story 14
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us14_mult_births()
+
+        ret = self.logger.get_logs()
+        self.assertEqual(len(ret), 1,
+                         "Did not get the expected results")
+
+        expected_ret = [
+            ('Warning', 'Family', 14, 'F4 has 6 children with the same birthday (5/1/2019): I31, I32, I33, I34, I35, I36')
+         ]
+        self.assertListEqual(expected_ret, ret,
+                             "Expected Return does not match")
+
+    def test_FiveorMoreMultBirthsinOneFamiy(self):
+        # add in a set of sixtuplets to family 4 - so they have triplets and twins
+        for i in range(31, 36):
+            self.indMap["I"+str(i)] = {
+                "NAME": "I" + str(i) + "/Tucker-Pritchett/",
+                "SEX": "F",
+                "BIRT": [1, 5, 2019],
+                "FAMC": ["F4"],
+                "NOTE": "Adding Multiple Birth Child to Family F4",
+                "INDI": "I" + str(i)
+            }
+            self.famMap["F4"]["CHIL"].append("I" + str(i))
+
+        # user story 14
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us14_mult_births()
+
+        ret = self.logger.get_logs()
+        self.assertEqual(len(ret), 1,
+                         "Did not get the expected results")
+
+        expected_ret = [
+            ('Warning', 'Family', 14, 'F4 has 5 children with the same birthday (5/1/2019): I31, I32, I33, I34, I35')
+         ]
+        self.assertListEqual(expected_ret, ret,
+                             "Expected Return does not match")
+
+        # user story 32
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us32_mult_births()
+
+        ret = self.logger.get_logs()
+        self.assertEqual(len(ret), 3,
+                         "Did not get the expected results")
+
+        expected_ret = [
+            ('Warning', 'Family', 32, 'F4 has 3 children with the same birthday (4/1/2020): I28, I29, I30'),
+            ('Warning', 'Family', 32, 'F4 has 5 children with the same birthday (5/1/2019): I31, I32, I33, I34, I35'),
+            ('Warning', 'Family', 32, 'F10 has 2 children with the same birthday (5/8/2019): I22, I23')
+         ]
+        self.assertListEqual(expected_ret, ret,
+                             "Expected Return does not match")
+
+    def test_SixorMoreMultBirthsinOneFamiy(self):
         # add in a set of sixtuplets to family 4 - so they have triplets and twins
         for i in range(31, 37):
             self.indMap["I"+str(i)] = {
@@ -461,36 +576,54 @@ class US14Test(unittest.TestCase):
             }
             self.famMap["F4"]["CHIL"].append("I" + str(i))
 
-        ret = us14_mult_births(self.indMap, self.famMap, 5)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._mult_births(14, 6)
+
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 1,
                          "Did not get the expected results")
 
-        expected_ret = [('F4', ['I31', 'I32', 'I33', 'I34', 'I35', 'I36'], '5/1/2019')]
+        expected_ret = [
+            ('Warning', 'Family', 14, 'F4 has 6 children with the same birthday (5/1/2019): I31, I32, I33, I34, I35, I36')
+         ]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
-    def test_US14_SixorMoreMultBirthsinOneFamiy(self):
-        # add in a set of sixtuplets to family 4 - so they have triplets and twins
-        for i in range(31, 37):
-            self.indMap["I"+str(i)] = {
-                "NAME": "I" + str(i) + "/Tucker-Pritchett/",
-                "SEX": "F",
-                "BIRT": [1, 5, 2019],
-                "FAMC": ["F4"],
-                "NOTE": "Adding Multiple Birth Child to Family F4",
-                "INDI": "I" + str(i)
-            }
-            self.famMap["F4"]["CHIL"].append("I" + str(i))
-
-        ret = us14_mult_births(self.indMap, self.famMap, 6)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us14_mult_births()
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 1,
                          "Did not get the expected results")
 
-        expected_ret = [('F4', ['I31', 'I32', 'I33', 'I34', 'I35', 'I36'], '5/1/2019')]
+        expected_ret = [
+                ('Warning', 'Family', 14, 'F4 has 6 children with the same birthday (5/1/2019): I31, I32, I33, I34, I35, I36')
+         ]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
-    def test_US14_SevenorMoreMultBirthsinOneFamiy(self):
+        # user story 32
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us32_mult_births()
+
+        ret = self.logger.get_logs()
+        self.assertEqual(len(ret), 3,
+                         "Did not get the expected results")
+
+        expected_ret = [
+            ('Warning', 'Family', 32, 'F4 has 3 children with the same birthday (4/1/2020): I28, I29, I30'),
+            ('Warning', 'Family', 32, 'F4 has 6 children with the same birthday (5/1/2019): I31, I32, I33, I34, I35, I36'),
+            ('Warning', 'Family', 32, 'F10 has 2 children with the same birthday (5/8/2019): I22, I23')
+         ]
+        self.assertListEqual(expected_ret, ret,
+                             "Expected Return does not match")
+
+    def test_SevenorMoreMultBirthsinOneFamiy(self):
         # add in a set of sixtuplets to family 4 - so they have triplets and twins
         # won't find a match on 7
         for i in range(31, 37):
@@ -504,11 +637,50 @@ class US14Test(unittest.TestCase):
             }
             self.famMap["F4"]["CHIL"].append("I" + str(i))
 
-        ret = us14_mult_births(self.indMap, self.famMap, 7)
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck._mult_births(14, 7)
+
+        ret = self.logger.get_logs()
         self.assertEqual(len(ret), 0,
                          "Did not get the expected results")
 
         expected_ret = []
+        self.assertListEqual(expected_ret, ret,
+                             "Expected Return does not match")
+
+        # user story 14
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us14_mult_births()
+
+        ret = self.logger.get_logs()
+        self.assertEqual(len(ret), 1,
+                         "Did not get the expected results")
+
+        expected_ret = [
+            ('Warning', 'Family', 14, 'F4 has 6 children with the same birthday (5/1/2019): I31, I32, I33, I34, I35, I36'),
+         ]
+        self.assertListEqual(expected_ret, ret,
+                             "Expected Return does not match")
+
+        # user story 32
+        self.logger.clear_logs()
+        for id, fam in self.famMap.items():
+            spousecheck = spouseCrossChecker(self.logger, fam, self.indMap)
+            spousecheck.us32_mult_births()
+
+        ret = self.logger.get_logs()
+        self.assertEqual(len(ret), 3,
+                         "Did not get the expected results")
+
+        expected_ret = [
+            ('Warning', 'Family', 32, 'F4 has 3 children with the same birthday (4/1/2020): I28, I29, I30'),
+            ('Warning', 'Family', 32, 'F4 has 6 children with the same birthday (5/1/2019): I31, I32, I33, I34, I35, I36'),
+            ('Warning', 'Family', 32, 'F10 has 2 children with the same birthday (5/8/2019): I22, I23')
+         ]
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 

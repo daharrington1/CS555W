@@ -74,31 +74,32 @@ def unique_families(families_from_db, individuals_from_db):
     return ret
 
 
+# US32 Move to spouseCrossChecker.py as part of refactoing 
 # US32 Multiple Births
-def us32(families_from_db, individuals_from_db):
-    ret = multiple_births(families_from_db, individuals_from_db)
-    for birth, famid, indiid in ret:
-        logger.log_family_info(32, "Family {} has children {} with the same birthday {}"
-                                  .format(famid, ', '.join(indiid[:-1]) + ' and ' + indiid[-1], birth))
-
-
-def multiple_births(families_from_db, individuals_from_db):
-    ret = []
-    id_indi = IDtoINDI(individuals_from_db)
-    for fam in families_from_db:
-        # individual_birthday
-        ib = dict()
-        if 'CHIL' in fam and type(fam['CHIL']) is not str:
-            for id in fam['CHIL']:
-                one = id_indi[id]
-                if ('BIRT' in one):
-                    date = str(one['BIRT'][0]) + '/' + str(one['BIRT'][1]) + '/' + str(one['BIRT'][2])
-                    ib.setdefault(date, [])
-                    ib[date].append(one['INDI'])
-        for birth, ids in ib.items():
-            if (len(ids) > 1):
-                ret.append((birth, fam['FAM'], ids))
-    return ret
+#def us32(families_from_db, individuals_from_db):
+#    ret = multiple_births(families_from_db, individuals_from_db)
+#    for birth, famid, indiid in ret:
+#        logger.log_family_info(32, "Family {} has children {} with the same birthday {}"
+#                                  .format(famid, ', '.join(indiid[:-1]) + ' and ' + indiid[-1], birth))
+#
+#
+#def multiple_births(families_from_db, individuals_from_db):
+#    ret = []
+#    id_indi = IDtoINDI(individuals_from_db)
+#    for fam in families_from_db:
+#        # individual_birthday
+#        ib = dict()
+#        if 'CHIL' in fam and type(fam['CHIL']) is not str:
+#            for id in fam['CHIL']:
+#                one = id_indi[id]
+#                if ('BIRT' in one):
+#                    date = str(one['BIRT'][0]) + '/' + str(one['BIRT'][1]) + '/' + str(one['BIRT'][2])
+#                    ib.setdefault(date, [])
+#                    ib[date].append(one['INDI'])
+#        for birth, ids in ib.items():
+#            if (len(ids) > 1):
+#                ret.append((birth, fam['FAM'], ids))
+#    return ret
 
 
 # End of Sprint 1

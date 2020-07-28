@@ -1,5 +1,5 @@
 import unittest
-from usrun import IDtoINDI, IDinFam, months, unique_families, multiple_births, first_cousin_not_marry,\
+from usrun import IDtoINDI, IDinFam, months, unique_families, first_cousin_not_marry,\
     upcoming_birthdays, no_bigamy_sev_fam, no_bigamy_one_fam, large_age_difference, recent_deaths,\
     parents_not_too_old
 import copy
@@ -162,26 +162,6 @@ class usruntest(unittest.TestCase):
              "FAM": "F12"})
         self.assertEqual(unique_families(tmpfam, self.individuals),
                          [('1/1/2009', 'F1', 'F12'), ('1/1/2009', 'F1', 'F12'), ('1/1/2009', 'F12', 'F12')])
-
-    # Test US32
-
-    def test_mb(self):
-        # test multiple_births()
-        self.assertEqual(multiple_births(self.families, self.individuals), [('8/5/2019', 'F10', ['I22', 'I23'])])
-        self.assertEqual(len(multiple_births(self.families, self.individuals)), 1)
-        tmpfam = copy.deepcopy(self.families)
-        tmpfam[0]['CHIL'].append('I10')
-        self.assertEqual(multiple_births(tmpfam, self.individuals),
-                         [('4/1/2013', 'F1', ['I10', 'I10']), ('8/5/2019', 'F10', ['I22', 'I23'])])
-        tmpfam[9]['CHIL'].remove('I22')
-        self.assertEqual(multiple_births(tmpfam, self.individuals), [('4/1/2013', 'F1', ['I10', 'I10'])])
-        tmpfam[0]['CHIL'].append('I1')
-        tmpfam[0]['CHIL'].append('I1')
-        self.assertEqual(multiple_births(tmpfam, self.individuals),
-                         [('4/1/2013', 'F1', ['I10', 'I10']), ('28/12/2021', 'F1', ['I1', 'I1'])])
-        tmpfam[0]['CHIL'].append('I1')
-        self.assertEqual(multiple_births(tmpfam, self.individuals),
-                         [('4/1/2013', 'F1', ['I10', 'I10']), ('28/12/2021', 'F1', ['I1', 'I1', 'I1'])])
 
     # Test US38
 
