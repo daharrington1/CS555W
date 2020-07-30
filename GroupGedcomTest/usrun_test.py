@@ -20,8 +20,8 @@ class usruntest(unittest.TestCase):
         self.seed_data()
 
     def tearDown(self):
-        families = None
-        individuals = None
+        self.families = None
+        self.individuals = None
 
     def seed_data(self):
         # seed family data - don't need individual data for this test suite
@@ -168,9 +168,9 @@ class usruntest(unittest.TestCase):
     def test_ub(self):
         # test upcoming_birthdays()
         tmpind = self.individuals.copy()
-        tmpind.append({"NAME": "Luke/Hastings/", "SEX": "M", "BIRT": [29, 7, 1998], "FAMS": ["F11"], "FAMC": ["F11"],
+        tmpind.append({"NAME": "Luke/Hastings/", "SEX": "M", "BIRT": [29, 8, 1998], "FAMS": ["F11"], "FAMC": ["F11"],
                        "NOTE": "MarryToChildFAMILY", "AGE": 22, "INDI": "I30"})
-        self.assertEqual(upcoming_birthdays(tmpind), [("I30", "JUL 29")])
+        self.assertEqual(upcoming_birthdays(tmpind), [("I30", "AUG 29")])
 
     # Test US11
 
@@ -233,7 +233,8 @@ class usruntest(unittest.TestCase):
         tmpind = copy.deepcopy(self.individuals)
         self.assertEqual(len(recent_deaths(self.families, tmpind)), 0)
         tmpind.append(
-            {"NAME": "Jay/Pritchett/", "SEX": "M", "BIRT": [28, 12, 2000], 'DEAT': [20, 7, 2020], "FAMS": ["F1", "F2"], "AGE": -1,
+            {"NAME": "Jay/Pritchett/", "SEX": "M", "BIRT": [28, 12, 2000],
+             'DEAT': [20, 7, 2020], "FAMS": ["F1", "F2"], "AGE": -1,
              "INDI": "I333"}
         )
         self.assertEqual(len(recent_deaths(self.families, tmpind)), 1)

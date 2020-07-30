@@ -1,5 +1,5 @@
 # The UserStory program by developer&tester Chengyi Zhang
-from collections import defaultdict, Counter
+from collections import defaultdict
 from Utils.Logger import Logger
 import datetime
 from typing import List
@@ -218,11 +218,13 @@ def parents_not_too_old(families_from_db, individuals_from_db):
                 if fam['HUSB'] != '-':
                     for father in fam['HUSB']:
                         if id_indi[father]['AGE'] - child['AGE'] > 80:
-                            ret.append(('his', 'Father', father, one, ", while age of the child is negative" if child['AGE'] < 0 else ""))
+                            ret.append(('his', 'Father', father, one,
+                                        ", while age of the child is negative" if child['AGE'] < 0 else ""))
                 if fam['WIFE'] != '-':
                     for mother in fam['WIFE']:
                         if id_indi[mother]['AGE'] - child['AGE'] > 60:
-                            ret.append(('her', 'Mother', mother, one, ", while age of the child is negative" if child['AGE'] < 0 else ""))
+                            ret.append(('her', 'Mother', mother, one,
+                                        ", while age of the child is negative" if child['AGE'] < 0 else ""))
     return ret
 
 

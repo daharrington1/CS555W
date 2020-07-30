@@ -12,7 +12,6 @@ from Utils.UserStory21 import find_mistitled_spouse
 from Utils.UserStory13 import find_invalid_sibling_spacing
 from Utils.indiDateChecker import indiDateChecker
 from Utils.spouseCrossChecker import spouseCrossChecker
-from Utils.UserStory28 import sort_children_by_age
 from Utils.UserStory35 import born_within_one_month
 
 logger = Logger()
