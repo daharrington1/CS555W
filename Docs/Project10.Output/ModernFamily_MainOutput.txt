@@ -19,8 +19,8 @@ Individuals
 |   I2   |      Gloria /Unknown/      |   F    | 10/05/1971 |  49  | True  |    N/A     |   N/A    | F1,F3,F129 |
 |  I20   |       Haley /Dunphy/       |   F    | 10/12/1993 |  27  | True  |    N/A     |    F6    |    F10     |
 |  I21   |      Dylan /Marshall/      |   M    | 03/04/1991 |  29  | True  |    N/A     |   N/A    |    F10     |
-|  I22   |      Poppy /Marshall/      |   F    | 30/07/2019 |  1   | True  |    N/A     |   F10    |    N/A     |
-|  I23   |     George /Marshall/      |   M    | 30/07/2019 |  1   | True  |    N/A     |   F10    |    F13     |
+|  I22   |      Poppy /Marshall/      |   F    | 29/08/2019 |  1   | True  |    N/A     |   F10    |    N/A     |
+|  I23   |     George /Marshall/      |   M    | 29/08/2019 |  1   | True  |    N/A     |   F10    |    F13     |
 |  I24   |       Alex /Dunphy/        |   F    | 14/01/1997 |  23  | True  |    N/A     |    F6    |    N/A     |
 |  I25   |       Luke /Dunphy/        |   M    | 28/11/1998 |  22  | True  |    N/A     |    F6    |    F12     |
 |  I26   |      Alicia /Miller/       |   F    | 25/01/2007 |  13  | True  |    N/A     |   F11    |    F12     |
@@ -120,8 +120,8 @@ Error: Individual: US11: Individual I1 has more than 1 spouse at the same time
 Error: Individual: US11: Individual I2 has more than 1 spouse at the same time
 Error: Individual: US11: Individual I6 has more than 1 spouse at the same time
 Error: Family: US12: Mother I26 is too old compared to her child I30, while age of the child is negative
-Anomaly: Individual: US13: I279 birth is less than 8 months away from a non-twin
 Anomaly: Individual: US13: I280 birth is less than 8 months away from a non-twin
+Anomaly: Individual: US13: I279 birth is less than 8 months away from a non-twin
 Warning: Family: US14: F11 has 7 children with the same birthday (1/25/2007): I26, I32, I33, I34, I35, I36, I41
 Warning: Family: US15: Family F11 has 15 or more children (17)
 Warning: Family: US16: F4 has multiple last names: ['Pritchett', 'Tucker', 'Tucker-Pritchett']
@@ -135,7 +135,7 @@ Error: Family: US24: Family F1 and Family F129 share the same spouses by name an
 Info: Family: US28: Children are sorted in order in the Family Table
 Info: Individual: US30: Living Married: I1,I10,I16,I17,I18,I19,I2,I20,I21,I23,I25,I26,I31,I4,I5,I6,I7
 Info: Individual: US31: Living Single: I14,I15,I22,I24,I279,I280,I281,I29,I30,I32,I33,I34,I35,I36,I37,I38,I39,I40,I41,I42,I43,I44,I45,I46,I9
-Warning: Family: US32: F10 has 2 children with the same birthday (7/30/2019): I22, I23
+Warning: Family: US32: F10 has 2 children with the same birthday (8/29/2019): I22, I23
 Warning: Family: US32: F11 has 7 children with the same birthday (1/25/2007): I26, I32, I33, I34, I35, I36, I41
 Anomaly: Family: US33: I26 & I29 & I32 & I33 & I34 & I35 & I36 & I37 & I38 & I39 & I40 & I41 & I42 & I44 & I46 are an orphans in family F11
 Anomaly: Family: US33: I279 & I280 are an orphans in family F70
@@ -144,7 +144,7 @@ Anomaly: Family: US34: In family F13, I23 is more than twice as old as I31
 Anomaly: Family: US34: In family F128, I6 is more than twice as old as I10
 Anomaly: Family: US34: In family F130, I10086 is more than twice as old as I128
 Info: Individual: US35: I281 Was born in the last 30 days!
-Warning: Individual: US38: Individual I22's birthday JUL 30 is coming soon
-Warning: Individual: US38: Individual I23's birthday JUL 30 is coming soon
+Warning: Individual: US38: Individual I22's birthday AUG 29 is coming soon
+Warning: Individual: US38: Individual I23's birthday AUG 29 is coming soon
 Info: Family: US39: FAMILY (F128) has an upcoming anniversary: 8/27/2007
 Error: Individual: US42: 32/11/1989 is an invalid date
