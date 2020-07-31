@@ -5,7 +5,7 @@ Individuals
 |   I1   |      Jay /Pritchett/       |   M    | 23/05/1947 |  73  | True  |    N/A     |   N/A    | F1,F2,F129 |
 |  I10   |      Joe /Pritchett/       |   M    | 04/01/2013 |  7   | True  |    N/A     |    F1    |    F128    |
 | I10086 |      Luke /Hastings/       |   M    | 23/05/2025 | 175  | False | 29/11/2200 |   N/A    |    F130    |
-|  I11   |       Frank /Dunphy/       |   M    | 01/01/1945 |  75  | False | 15/01/2020 |   N/A    |   F7,F8    |
+|  I11   |       Frank /Dunphy/       |   M    | 01/01/1945 |  75  | False | 30/07/2020 |   N/A    |   F7,F8    |
 |  I12   |     Lorraine /Dunphy/      |   F    | 01/01/1965 |  55  | True  |    N/A     |   N/A    |     F8     |
 | I12345 |      Justin /Lively/       |   M    | 03/03/1900 |  89  | False | 32/11/1989 |   N/A    |    N/A     |
 |  I128  |      Jay /Pritchett/       |   M    | 23/05/1947 |  0   | False | 20/05/1947 |   N/A    |    F130    |
@@ -62,7 +62,7 @@ US29: Dead Individuals
 |   Id   |       Name       | Gender |  Birthday  |  Age | Alive |   Death    | Child Id | Spouse Id |
 +--------+------------------+--------+------------+------+-------+------------+----------+-----------+
 | I10086 | Luke /Hastings/  |   M    | 23/05/2025 | 175  | False | 29/11/2200 |   N/A    |   F130    |
-|  I11   |  Frank /Dunphy/  |   M    | 01/01/1945 |  75  | False | 15/01/2020 |   N/A    |   F7,F8   |
+|  I11   |  Frank /Dunphy/  |   M    | 01/01/1945 |  75  | False | 30/07/2020 |   N/A    |   F7,F8   |
 | I12345 | Justin /Lively/  |   M    | 03/03/1900 |  89  | False | 32/11/1989 |   N/A    |    N/A    |
 |  I128  | Jay /Pritchett/  |   M    | 23/05/1947 |  0   | False | 20/05/1947 |   N/A    |   F130    |
 |  I13   |  Grace /Dunphy/  |   F    | 01/01/1945 |  64  | False | 01/01/2009 |   N/A    |    F7     |
@@ -120,8 +120,8 @@ Error: Individual: US11: Individual I1 has more than 1 spouse at the same time
 Error: Individual: US11: Individual I2 has more than 1 spouse at the same time
 Error: Individual: US11: Individual I6 has more than 1 spouse at the same time
 Error: Family: US12: Mother I26 is too old compared to her child I30, while age of the child is negative
-Anomaly: Individual: US13: I280 birth is less than 8 months away from a non-twin
 Anomaly: Individual: US13: I279 birth is less than 8 months away from a non-twin
+Anomaly: Individual: US13: I280 birth is less than 8 months away from a non-twin
 Warning: Family: US14: F11 has 7 children with the same birthday (1/25/2007): I26, I32, I33, I34, I35, I36, I41
 Warning: Family: US15: Family F11 has 15 or more children (17)
 Warning: Family: US16: F4 has multiple last names: ['Pritchett', 'Tucker', 'Tucker-Pritchett']
@@ -144,6 +144,7 @@ Anomaly: Family: US34: In family F13, I23 is more than twice as old as I31
 Anomaly: Family: US34: In family F128, I6 is more than twice as old as I10
 Anomaly: Family: US34: In family F130, I10086 is more than twice as old as I128
 Info: Individual: US35: I281 Was born in the last 30 days!
+Info: Individual: US36: I11 just passed away less than 30 days ago
 Warning: Individual: US38: Individual I22's birthday AUG 29 is coming soon
 Warning: Individual: US38: Individual I23's birthday AUG 29 is coming soon
 Info: Family: US39: FAMILY (F128) has an upcoming anniversary: 8/27/2007

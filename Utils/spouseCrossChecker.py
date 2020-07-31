@@ -285,13 +285,13 @@ class spouseCrossChecker:
 
     def us14_mult_births(self):
         """
-        User Story 14: Logs families with multiple births of 5
+        User Story 14: Logs families with multiple births of 6
                        or more children in the same family
 
         :param object parameters
         :returns None
         """
-        self._mult_births(14, 5)
+        self._mult_births(14, 6)
 
     def us32_mult_births(self):
         """

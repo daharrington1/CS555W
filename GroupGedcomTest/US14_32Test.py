@@ -537,12 +537,10 @@ class US14_32Test(unittest.TestCase):
             spousecheck.us14_mult_births()
 
         ret = self.logger.get_logs()
-        self.assertEqual(len(ret), 1,
+        self.assertEqual(len(ret), 0,
                          "Did not get the expected results")
 
-        expected_ret = [
-            ('Warning', 'Family', 14, 'F4 has 5 children with the same birthday (5/1/2019): I31, I32, I33, I34, I35')
-         ]
+        expected_ret = []
         self.assertListEqual(expected_ret, ret,
                              "Expected Return does not match")
 
